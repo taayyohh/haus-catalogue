@@ -2,44 +2,42 @@
 
 pragma solidity 0.8.13;
 
-import {ERC721Upgradeable} from "@openzeppelin/contracts-upgradeable/token/ERC721/ERC721Upgradeable.sol";
-import {IERC2981Upgradeable, IERC165Upgradeable} from "@openzeppelin/contracts-upgradeable/interfaces/IERC2981Upgradeable.sol";
-import {OwnableUpgradeable} from "@openzeppelin/contracts-upgradeable/access/OwnableUpgradeable.sol";
-import {CountersUpgradeable} from "@openzeppelin/contracts-upgradeable/utils/CountersUpgradeable.sol";
-import {MerkleProofUpgradeable} from "@openzeppelin/contracts-upgradeable/utils/cryptography/MerkleProofUpgradeable.sol";
-import {UUPSUpgradeable} from "@openzeppelin/contracts-upgradeable/proxy/utils/UUPSUpgradeable.sol";
+import {IERC2981Upgradeable, IERC165Upgradeable} from "../lib/openzeppelin-contracts-upgradeable/contracts/interfaces/IERC2981Upgradeable.sol";
+import {OwnableUpgradeable} from "../lib/openzeppelin-contracts-upgradeable/contracts/access/OwnableUpgradeable.sol";
+import {CountersUpgradeable} from "../lib/openzeppelin-contracts-upgradeable/contracts/utils/CountersUpgradeable.sol";
+import {MerkleProofUpgradeable} from "../lib/openzeppelin-contracts-upgradeable/contracts/utils/cryptography/MerkleProofUpgradeable.sol";
+import {ERC721Upgradeable} from "../lib/openzeppelin-contracts-upgradeable/contracts/token/ERC721/ERC721Upgradeable.sol";
+import {UUPSUpgradeable} from "../lib/openzeppelin-contracts-upgradeable/contracts/proxy/utils/UUPSUpgradeable.sol";
+
 
 /**
 --------------------------------------------------------------------------------------------------------------------
 
                                     ,,
-  .g8"""bgd         mm            `7MM
-.dP'     `M         MM              MM
-dM'       ` ,6"Yb.mmMMmm  ,6"Yb.    MM  ,pW"Wq.   .P"Ybmmm
-MM         8)   MM  MM   8)   MM    MM 6W'   `Wb :MI  I8
-MM.         ,pm9MM  MM    ,pm9MM    MM 8M     M8  WmmmP"
-`Mb.     ,'8M   MM  MM   8M   MM    MM YA.   ,A9 8M
-  `"bmmmd' `Moo9^Yo.`Mbmo`Moo9^Yo..JMML.`Ybmd9'   YMMMMMb
-                                                 6'     dP
-                                                 Ybmmmd'
-
-************************************************
-LEGAL DISCLAIMER:
-https://catalog.works/terms
-************************************************
+.____                  .__    .______ ___
+|    |    __ __   ____ |__| __| _/   |   \_____   __ __  ______
+|    |   |  |  \_/ ___\|  |/ __ /    ~    \__  \ |  |  \/  ___/
+|    |___|  |  /\  \___|  / /_/ \    Y    // __ \|  |  /\___ \
+|_______ \____/  \___  >__\____ |\___|_  /(____  /____//____  >
+        \/           \/        \/      \/      \/           \/
+_________         __         .__
+\_   ___ \_____ _/  |______  |  |   ____   ____  __ __   ____
+/    \  \/\__  \\   __\__  \ |  |  /  _ \ / ___\|  |  \_/ __ \
+\     \____/ __ \|  |  / __ \|  |_(  <_> ) /_/  >  |  /\  ___/
+ \______  (____  /__| (____  /____/\____/\___  /|____/  \___  >
+        \/     \/          \/           /_____/             \/
 
 ---------------------------------------------------------------------------------------------------------------------
 
-@title                      :   Catalog
-@author                     :   COMPUTER DATA (brett henderson) of Catalog Records Inc.
-@notice                     :   The Catalog Shared Creator Contract is an upgradeable ERC721 contract, purpose built
-                                to facilitate the creation of Catalog records.
+@title                      :   Haus Catalogue
+@author                     :   @taayyohh
+@notice                     :   NFT Experiment to build LucidHaus treasury.
 @dev                        :   Upgradeable ERC721 Contract, inherits functionality from ERC721Upgradeable.
                                 This contract conforms to the EIP-2981 NFT Royalty Standard.
 
 ---------------------------------------------------------------------------------------------------------------------
  */
-contract Catalog is ERC721Upgradeable, IERC2981Upgradeable, OwnableUpgradeable, UUPSUpgradeable {
+contract HausCatalogue is ERC721Upgradeable, IERC2981Upgradeable, OwnableUpgradeable, UUPSUpgradeable {
     using CountersUpgradeable for CountersUpgradeable.Counter;
 
     /*//////////////////////////////////////////////////////////////
