@@ -8,7 +8,6 @@ import { ConnectButton } from '@rainbow-me/rainbowkit';
 const Home: NextPage = () => {
   return (
     <div className={styles.container}>
-      <ConnectButton />
     </div>
   )
 }
