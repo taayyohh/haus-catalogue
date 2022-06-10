@@ -1,11 +1,10 @@
 import React from 'react'
 import {ethers} from "ethers"
-import {Signer} from "@ethersproject/abstract-signer/src.ts/index";
 import {useLayoutStore} from "../../stores/useLayoutStore";
 import HAUS_ABI from "out/Catalogue.sol/HausCatalogue.json"
 
 const Catalogue  = () => {
-    const signer = useLayoutStore(state => state.signer)
+    const signer = useLayoutStore((state: any) => state.signer)
     const catalogueContract = React.useMemo(async () => {
         if(!signer) return
         try {
