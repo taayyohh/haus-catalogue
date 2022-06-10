@@ -3,7 +3,7 @@ import React           from 'react'
 
 const Nav = () => {
     return (
-        <div>
+        <div className="p-4">
             <ConnectButton />
         </div>
     )
