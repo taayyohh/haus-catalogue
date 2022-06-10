@@ -7,6 +7,7 @@ import HAUS_ABI from "out/Catalogue.sol/HausCatalogue.json"
 const Catalogue  = () => {
     const signer = useLayoutStore(state => state.signer)
     const catalogueContract = React.useMemo(async () => {
+        if(!signer) return
         try {
             return new ethers.Contract(process.env.HAUS_CATALOGUE || '', HAUS_ABI.abi, signer)
         } catch (err) {
