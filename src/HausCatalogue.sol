@@ -8,6 +8,7 @@ import {CountersUpgradeable} from "../lib/openzeppelin-contracts-upgradeable/con
 import {MerkleProofUpgradeable} from "../lib/openzeppelin-contracts-upgradeable/contracts/utils/cryptography/MerkleProofUpgradeable.sol";
 import {ERC721Upgradeable} from "../lib/openzeppelin-contracts-upgradeable/contracts/token/ERC721/ERC721Upgradeable.sol";
 import {UUPSUpgradeable} from "../lib/openzeppelin-contracts-upgradeable/contracts/proxy/utils/UUPSUpgradeable.sol";
+import "../lib/foundry-upgrades/lib/openzeppelin-contracts/contracts/utils/Checkpoints.sol";
 
 
 /**
@@ -39,6 +40,30 @@ _________         __         .__
  */
 contract HausCatalogue is ERC721Upgradeable, IERC2981Upgradeable, OwnableUpgradeable, UUPSUpgradeable {
     using CountersUpgradeable for CountersUpgradeable.Counter;
+
+
+    uint256 public constant MIN_PRICE = 0.05 ether;
+    uint256 public constant GOAL = 600 ether;
+    uint256 public constant MAX_SUPPLY = GOAL / MIN_PRICE;
+    address private constant LUCIDHAUS = 0xD0F562B76F07f9FA36929029cF6B55e55Ae04Eb4;
+
+    function adjustSupply(uint256 price) private returns (uint256) {
+        GOAL = GOAL - price;
+        MAX_SUPPLY = GOAL / MIN_PRICE;
+        return MAX_SUPPLY;
+    }
+
+    /*
+        23 Releases
+            - 5 arists
+
+
+
+    */
+
+
+
+
 
     /*//////////////////////////////////////////////////////////////
     //EVENTS
@@ -127,29 +152,27 @@ contract HausCatalogue is ERC721Upgradeable, IERC2981Upgradeable, OwnableUpgrade
 @notice mints a new token
         @param _data input TokenData struct, containing metadataURI, creator, royaltyPayout, royaltyBPS
         @param _content input ContentData struct, containing contentURI, contentHash.
-        @param _proof merkle proof for the artist address.
         @return tokenId of the minted token
-        @dev mints a new token to msg.sender with a valid input creator address proof. Emits a ContentUpdated event to track contentURI/contentHash updates.
+        @dev mints a new token to msg.sender from the catalogue. Emits a ContentUpdated event to track contentURI/contentHash updates.
      */
     function mint(
         TokenData calldata _data,
-        ContentData calldata _content,
-        bytes32[] calldata _proof
-    ) external returns (uint256) {
-        require(
-            MerkleProofUpgradeable.verify(
-                _proof,
-                merkleRoot,
-                keccak256(abi.encodePacked(_data.creator))
-            ),
-            "!valid proof"
-        );
+        ContentData calldata _content
+    ) external payable returns (uint256) {
         require(_data.royaltyBPS < 10000, "royalty !< 10000");
 
         uint256 tokenId = _tokenIdCounter.current();
 
+        require(_tokenIdCounter <= MAX_SUPPLY, "Exceeds max supply");
+        require(msg.value >= MIN_PRICE, "Insufficient payment, 0.05 ETH per item");
+
+        ///TODO: check if _data.metadataURI is one of the pre-approved uris
+        adjustSupply(msg.value);  /// TODO:Check
+
         _mint(msg.sender, tokenId);
         tokenData[tokenId] = _data;
+
+        //** subtract price from total
 
         // Emit event to track ContentURI
         emit ContentUpdated(tokenId, _content.contentHash, _content.contentURI);

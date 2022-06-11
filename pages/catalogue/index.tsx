@@ -1,7 +1,7 @@
 import React from 'react'
 import {ethers} from "ethers"
 import {useLayoutStore} from "../../stores/useLayoutStore";
-import HAUS_ABI from "out/Catalogue.sol/HausCatalogue.json"
+import HAUS_ABI from "out/HausCatalogue.sol/HausCatalogue.json"
 
 const Catalogue  = () => {
     const signer = useLayoutStore((state: any) => state.signer)
