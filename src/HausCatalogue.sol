@@ -54,7 +54,7 @@ contract HausCatalogue is ERC721Upgradeable, IERC2981Upgradeable, OwnableUpgrade
     //STATE/STORAGE/CALLDATA
     //////////////////////////////////////////////////////////////*/
 
-    /// @notice Storage for readable properties of a Catalog NFT
+    /// @notice Storage for readable properties of a Haus Catalogue NFT
     /// @param metadataURI URI of the metadata (ipfs://)
     /// @param creator Address of the creator
     /// @param royaltyPayout payout address for royalties (EIP2981)
@@ -250,7 +250,7 @@ contract HausCatalogue is ERC721Upgradeable, IERC2981Upgradeable, OwnableUpgrade
 //////////////////////////////////////////////////////////////*/
 
 /**
-@notice override function gets royalty information for a token (EIP-2981)
+        @notice override function gets royalty information for a token (EIP-2981)
         @param _tokenId token id corresponding to the token of which to get royalty information
         @param _salePrice final sale price of token used to calculate royalty payout
         @dev conforms to EIP-2981
@@ -269,7 +269,7 @@ contract HausCatalogue is ERC721Upgradeable, IERC2981Upgradeable, OwnableUpgrade
     }
 
 /**
-@notice override function to check if contract supports given interface
+        @notice override function to check if contract supports given interface
         @param interfaceId id of interface to check
         @inheritdoc IERC165Upgradeable
      */
