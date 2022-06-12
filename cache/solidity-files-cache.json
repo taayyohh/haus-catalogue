@@ -934,8 +934,8 @@
       }
     },
     "src/HausCatalogue.sol": {
-      "lastModificationDate": 1654988372810,
-      "contentHash": "4cc69527692ea88d0e5c1c58c73d81e3",
+      "lastModificationDate": 1655009675381,
+      "contentHash": "282d862132b5427f02050352e03f9f75",
       "sourceName": "src/HausCatalogue.sol",
       "solcConfig": {
         "settings": {

@@ -8,7 +8,6 @@ import {CountersUpgradeable} from "../lib/openzeppelin-contracts-upgradeable/con
 import {MerkleProofUpgradeable} from "../lib/openzeppelin-contracts-upgradeable/contracts/utils/cryptography/MerkleProofUpgradeable.sol";
 import {ERC721Upgradeable} from "../lib/openzeppelin-contracts-upgradeable/contracts/token/ERC721/ERC721Upgradeable.sol";
 import {UUPSUpgradeable} from "../lib/openzeppelin-contracts-upgradeable/contracts/proxy/utils/UUPSUpgradeable.sol";
-import "../lib/foundry-upgrades/lib/openzeppelin-contracts/contracts/utils/Checkpoints.sol";
 
 
 /**
@@ -43,9 +42,9 @@ contract HausCatalogue is ERC721Upgradeable, IERC2981Upgradeable, OwnableUpgrade
 
 
     uint256 public constant MIN_PRICE = 0.05 ether;
-    uint256 public constant GOAL = 600 ether;
-    uint256 public constant MAX_SUPPLY = GOAL / MIN_PRICE;
-    address private constant LUCIDHAUS = 0xD0F562B76F07f9FA36929029cF6B55e55Ae04Eb4;
+    uint256 public GOAL = 600 ether;
+    uint256 public MAX_SUPPLY = GOAL / MIN_PRICE;
+    address payable LUCIDHAUS = payable(0xD0F562B76F07f9FA36929029cF6B55e55Ae04Eb4);
 
     function adjustSupply(uint256 price) private returns (uint256) {
         GOAL = GOAL - price;
@@ -163,7 +162,7 @@ contract HausCatalogue is ERC721Upgradeable, IERC2981Upgradeable, OwnableUpgrade
 
         uint256 tokenId = _tokenIdCounter.current();
 
-        require(_tokenIdCounter <= MAX_SUPPLY, "Exceeds max supply");
+        require(tokenId <= MAX_SUPPLY, "Exceeds max supply");
         require(msg.value >= MIN_PRICE, "Insufficient payment, 0.05 ETH per item");
 
         ///TODO: check if _data.metadataURI is one of the pre-approved uris

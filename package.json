@@ -9,6 +9,7 @@
     "lint": "next lint"
   },
   "dependencies": {
+    "@bundlr-network/client": "^0.7.8",
     "@rainbow-me/rainbowkit": "^0.2.4",
     "arbundles": "^0.6.19",
     "arweave": "^1.11.4",
