@@ -2,6 +2,7 @@ import React from 'react'
 import Nav   from './Nav'
 import {useSigner} from "wagmi";
 import {useLayoutStore} from "stores/useLayoutStore";
+import Player from "./Player";
 
 
 type Props = {
@@ -30,6 +31,7 @@ const Layout = ({children}: Props) => {
         <div className="bg-rose-50 min-h-screen">
             <Nav />
             {children}
+            <Player />
         </div>
     )
 }

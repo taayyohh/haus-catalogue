@@ -1,12 +1,16 @@
 import React from 'react'
 import {ethers} from "ethers"
 import {useLayoutStore} from "../../stores/useLayoutStore";
+import {usePlayerStore} from "../../stores/usePlayerStore";
+
 // import HAUS_ABI from "../../out/HausCatalogue.sol/HausCatalogue.json"
 import Bundlr from '@bundlr-network/client';
 
 const Catalogue  = () => {
     const signer = useLayoutStore((state: any) => state.signer)
     const provider = useLayoutStore((state: any) => state.provider)
+    const { addToQueue, queuedMusic } = usePlayerStore((state: any) => state)
+
 
     /* Initialize Catalogue from Arweave */
     const [catalogue, setCatalogue] = React.useState([])
@@ -44,6 +48,7 @@ const Catalogue  = () => {
     React.useMemo(async () => {
         const catalogue = await _catalogue
 
+        // @ts-ignore
         setCatalogue(catalogue)
     }, [_catalogue])
 
@@ -66,19 +71,20 @@ const Catalogue  = () => {
     //
     // }, [catalogueContract])
 
-    const [queuedMusic, setQueuedMusic] = React.useState('')
-
-
+    interface Release {
+        image: string,
+        songs: [],
+        name: string
+    }
 
     return (
         <div className="flex flex-col w-8/12 mx-auto">
             {catalogue.length > 0 ? (
                 <div className="grid grid-cols-4 gap-8 py-8">
-                    {catalogue.map((release) => (
-                        <div className="flex flex-col items-center w-full">
+                    {catalogue.map((release: Release) => (
+                        <div key={release.image} className="flex flex-col items-center w-full" onClick={() => addToQueue([...queuedMusic, ...release.songs])}>
                             <img src={release.image} />
                             <div>{release.name}</div>
-                            {console.log('cat', catalogue)}
                         </div>
                     ))}
                 </div>
