@@ -26,10 +26,10 @@ const Layout = ({children}: Props) => {
 
 
     return (
-        <>
+        <div className="bg-rose-50 min-h-screen">
             <Nav />
             {children}
-        </>
+        </div>
     )
 }
 
