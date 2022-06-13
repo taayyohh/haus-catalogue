@@ -8,10 +8,10 @@ const Catalogue  = () => {
     const signer = useLayoutStore((state: any) => state.signer)
     const provider = useLayoutStore((state: any) => state.provider)
 
-    const [cat, setCat] = React.useState([])
-
-    const catalogue = React.useMemo(async () => {
-        const _catalogue = [
+    /* Initialize Catalogue from Arweave */
+    const [catalogue, setCatalogue] = React.useState([])
+    const _catalogue = React.useMemo(async () => {
+        const jsonArray = [
             'https://arweave.net/h6Sz9VUsEIvsAPpzi3BHAG8AfgiNnq9wUkI4gOCU1CY',
             'https://arweave.net/DttB642UC40s8c3Y7tY97KExyokVnaszx0TDmnDdcgo',
             'https://arweave.net/r-egbnh3oS0j-LGwfEE5HoOYRJ0IJjf3RSdXwwcmZq0',
@@ -33,7 +33,7 @@ const Catalogue  = () => {
             'https://arweave.net/JVG3U2JkZzLQ65PyOKgD-yqFFBFQhIxgTkAFn3plfOY',
         ]
 
-        return await Promise.all(_catalogue.map(url => fetch(url)))
+        return await Promise.all(jsonArray.map(url => fetch(url)))
             .then(async (res) => {
                 return Promise.all(
                     res.map(async (data) => await data.json())
@@ -41,13 +41,11 @@ const Catalogue  = () => {
             })
 
     }, [])
-
     React.useMemo(async () => {
-        const cat = await catalogue
+        const catalogue = await _catalogue
 
-        setCat(cat)
-
-    }, [catalogue])
+        setCatalogue(catalogue)
+    }, [_catalogue])
 
 
 
@@ -74,13 +72,13 @@ const Catalogue  = () => {
 
     return (
         <div className="flex flex-col w-8/12 mx-auto">
-            {cat.length > 0 ? (
+            {catalogue.length > 0 ? (
                 <div className="grid grid-cols-4 gap-8 py-8">
-                    {cat.map((release) => (
+                    {catalogue.map((release) => (
                         <div className="flex flex-col items-center w-full">
                             <img src={release.image} />
                             <div>{release.name}</div>
-                            {console.log('cat', cat)}
+                            {console.log('cat', catalogue)}
                         </div>
                     ))}
                 </div>
