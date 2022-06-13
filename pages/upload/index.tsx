@@ -19,23 +19,25 @@ const Upload = () => {
     const [buffer, setBuffer] = React.useState(null)
     const [txId, setTxId] = React.useState(null)
     const [priceOfUpload, setPriceOfUpload] = React.useState(0)
-    const [file, setFile] = React.useState(null)
+    const [file, setFile] = React.useState({name: '', type: ''})
     const [localUrl, setLocalUrl] = React.useState(null)
 
 
     const getBalance = React.useMemo(async () => {
         if (!instance) return
 
+        // @ts-ignore
         const balance = await instance.getLoadedBalance()
         setWalletBalance(parseFloat(ethers.utils.formatEther(balance.toString())))
     }, [instance])
 
-    const handleSubmit = (values: { file: {}; }) => {
+    const handleSubmit = (values: { file: any; }) => {
         createBundlrTx(values.file, values.file.type)
     }
 
-    const getPrice = React.useCallback(async (files) => {
+    const getPrice = React.useCallback(async (files: { size: any; }[]) => {
         try {
+            // @ts-ignore
             const price = await instance.getPrice(files[0]?.size)
             setPriceOfUpload(parseFloat(ethers.utils.formatEther(price.toString())))
         } catch (err) {
@@ -44,20 +46,19 @@ const Upload = () => {
 
     }, [instance])
 
-    const getBuffer = React.useCallback(async (file) => {
-        const tags = [{name: "Content-Type", value: file.type}]
-        const blob = new Blob([file], {type: file.type})
+    const getBuffer = React.useCallback(async (file: Blob) => {
+        const blob = new Blob([file], {type: file?.type})
 
         let reader = new FileReader()
         reader.onload = async function (evt) {
-            console.log(evt.target.result);
+            // @ts-ignore
             setBuffer(evt.target.result)
         }
         reader.readAsArrayBuffer(blob)
 
     }, [instance])
 
-    const createBundlrTx = async (data, value: string) => {
+    const createBundlrTx = async (data: {}, value: string) => {
         try {
             await provider._ready()
             const tags = [{name: "Content-Type", value}]
@@ -80,10 +81,16 @@ const Upload = () => {
 
     }, [buffer])
 
-    const handleFund = React.useCallback(async (price) => {
-        const amount = ethers.utils.parseEther(price.toString()).toString()
-        const fund = await instance.fund(amount, 1.1)
-        await getBalance
+    const handleFund = React.useCallback(async (price: { toString: () => string; }) => {
+        if(!instance) return
+        try {
+            const amount = ethers.utils.parseEther(price.toString()).toString()
+            // @ts-ignore
+            await instance.fund(amount, 1.1)
+            await getBalance
+        } catch(err) {
+            console.log('err', err)
+        }
 
     }, [instance])
 
@@ -93,12 +100,16 @@ const Upload = () => {
     const infoSectionHeading = "text-lg font-bold"
 
 
+    // @ts-ignore
+    // @ts-ignore
+    // @ts-ignore
+    // @ts-ignore
     return (
         <div className="mt-8 flex flex-col max-w-xl mx-auto bg-rose-200 p-8 rounded-xl">
             <div className="flex center items-center justify-center text-2xl mb-4">
                 <div className="flex ml-2">
                     <div className="flex overflow-hidden h-8 w-8 mr-2 rounded-full">
-                        <img src="https://docs.bundlr.network/img/logo.svg"/>
+                        <img src="https://docs.bundlr.network/img/logo.svg" alt="bundlr logo"/>
                     </div>
                     <a className="text-xl" href={'https://bundlr.network/'}>Bundlr Uploader</a>
                 </div>
@@ -148,10 +159,15 @@ const Upload = () => {
                                             name="file"
                                             type="file"
                                             onChange={(event) => {
+                                                // @ts-ignore
                                                 props.setFieldValue("file", event.currentTarget.files[0]);
+                                                // @ts-ignore
                                                 setFile(event.currentTarget.files[0])
+                                                // @ts-ignore
                                                 setLocalUrl(URL.createObjectURL(event.currentTarget.files[0]))
+                                                // @ts-ignore
                                                 getPrice(event.currentTarget.files)
+                                                // @ts-ignore
                                                 getBuffer(event.currentTarget.files[0])
                                             }}
                                         />
@@ -170,7 +186,8 @@ const Upload = () => {
                             const instance = await bundlr
                             if (!!instance) {
                                 await instance.ready()
-                                await setInstance(instance)
+                                // @ts-ignore
+                                setInstance(instance)
                             }
                         }}
                     >
@@ -178,7 +195,7 @@ const Upload = () => {
                     </button>
                 </div>
             )}
-            {file && (
+            {file.name.length > 0 ? (
                 <div className={infoSection}>
                     <div className={infoSectionHeading}>File to Upload:</div>
                     <div className="flex flex-col items-center w-full justify-center pt-2 pb-4">
@@ -187,7 +204,7 @@ const Upload = () => {
                     </div>
                     {localUrl && file.type.includes("image") && (
                         <div className="flex overflow-hidden h-32 w-32">
-                            <img src={localUrl}/>
+                            <img src={localUrl} alt='uploaded image thumbnail'/>
                         </div>
                     )}
                     {localUrl && file.type.includes("audio") && (
@@ -196,7 +213,7 @@ const Upload = () => {
                         </audio>
                     )}
                 </div>
-            )}
+            ) : null}
 
 
             {!!txId && (
@@ -213,7 +230,6 @@ const Upload = () => {
 
         </div>
     )
-
 }
 
 export default Upload

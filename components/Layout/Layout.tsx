@@ -10,6 +10,7 @@ type Props = {
 
 const Layout = ({children}: Props) => {
     const { data, isError, isLoading } = useSigner()
+    // @ts-ignore
     const { setSigner, setProvider } = useLayoutStore()
     const signer = React.useMemo(() => {
         return data
