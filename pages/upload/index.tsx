@@ -25,8 +25,10 @@ const Upload = () => {
 
 
     const getBalance = React.useMemo(async () => {
-        if (!instance) return
+        console.log('i', instance)
+        console.log('b', instance)
 
+        if (!instance) return
         // @ts-ignore
         const balance = await instance.getLoadedBalance()
         setWalletBalance(parseFloat(ethers.utils.formatEther(balance.toString())))
@@ -91,6 +93,8 @@ const Upload = () => {
             await getBalance
         } catch(err) {
             console.log('err', err)
+            await getBalance
+
         }
 
     }, [instance])
@@ -160,7 +164,7 @@ const Upload = () => {
                                                 // @ts-ignore
                                                 setFile(event.currentTarget.files[0])
                                                 // @ts-ignore
-                                                setLocalUrl(URL.createObjectURL(event.currentTarget.files[0]))
+                                                setLocalUrl(URL?.createObjectURL(event.currentTarget.files[0]))
                                                 // @ts-ignore
                                                 getPrice(event.currentTarget.files)
                                                 // @ts-ignore
