@@ -10,6 +10,7 @@ const Upload = () => {
     /* initialize bundler */
     const bundlr = React.useMemo(async () => {
         if (!provider) return
+
         return new Bundlr("https://node1.bundlr.network", "matic", provider)
     }, [provider])
 
@@ -99,11 +100,6 @@ const Upload = () => {
     const infoSection = "flex flex-col items-center bg-rose-100 p-4 rounded-xl shadow-inner mb-2"
     const infoSectionHeading = "text-lg font-bold"
 
-
-    // @ts-ignore
-    // @ts-ignore
-    // @ts-ignore
-    // @ts-ignore
     return (
         <div className="mt-8 flex flex-col max-w-xl mx-auto bg-rose-200 p-8 rounded-xl">
             <div className="flex center items-center justify-center text-2xl mb-4">
@@ -209,12 +205,16 @@ const Upload = () => {
                     )}
                     {localUrl && file.type.includes("audio") && (
                         <audio controls>
-                            <source src={localUrl} type="audio/ogg"/>
+                            <source src={localUrl} type={file.type} />
                         </audio>
+                    )}
+                    {localUrl && file.type.includes("video") && (
+                        <video controls>
+                            <source src={localUrl} type={file.type}/>
+                        </video>
                     )}
                 </div>
             ) : null}
-
 
             {!!txId && (
                 <div className={infoSection}>
@@ -227,7 +227,6 @@ const Upload = () => {
             <div className="text-xs flex justify-end mt-4">
                 built by {" "}<a href={"https://github.com/taayyohh"} className="ml-1">taayohh</a>
             </div>
-
         </div>
     )
 }
