@@ -10,9 +10,7 @@ type Props = {
 
 const Layout = ({children}: Props) => {
     const { data, isError, isLoading } = useSigner()
-    // @ts-ignore //TODO: ??
     const { setSigner, setProvider } = useLayoutStore()
-    /* Save Signer Object globally */
     const signer = React.useMemo(() => {
         return data
     }, [isLoading, isError, data])
@@ -23,6 +21,8 @@ const Layout = ({children}: Props) => {
             setProvider(signer?.provider)
         }
     }, [signer])
+
+
 
 
     return (

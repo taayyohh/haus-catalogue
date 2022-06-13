@@ -3,23 +3,28 @@ import {ethers} from "ethers"
 import {useLayoutStore} from "../../stores/useLayoutStore";
 import HAUS_ABI from "out/HausCatalogue.sol/HausCatalogue.json"
 import Bundlr from '@bundlr-network/client';
-import * as fs from "fs";
-
 
 const Catalogue  = () => {
     const signer = useLayoutStore((state: any) => state.signer)
     const provider = useLayoutStore((state: any) => state.provider)
-    const jwk = process.env.PRIVATE_KEY
     const bundlr = new Bundlr(
         "https://devnet.bundlr.network",
         "ethereum",
         process.env.PRIVATE_KEY,
         {
-            providerUrl: process.env.ROPSTEN,
+            providerUrl: process.env.RPC_URL,
         }
     )
 
-    console.log('b', bundlr)
+    // console.log('b', bundlr)
+    /*   */
+   const handleUpload = React.useMemo(async () => {
+        if(!bundlr.address) return
+        console.log('b', bundlr)
+        // return bundlr
+
+    }, [bundlr])
+
 
 
 
