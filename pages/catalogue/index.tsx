@@ -7,7 +7,6 @@ import Bundlr from '@bundlr-network/client';
 const Catalogue  = () => {
     const signer = useLayoutStore((state: any) => state.signer)
     const provider = useLayoutStore((state: any) => state.provider)
-    const abi = HAUS_ABI.abi
 
     const bundlr = new Bundlr(
         "https://devnet.bundlr.network",
@@ -18,22 +17,11 @@ const Catalogue  = () => {
         }
     )
 
-    // console.log('b', bundlr)
-    /*   */
-   const handleUpload = React.useMemo(async () => {
-        if(!bundlr.address) return
-        console.log('b', bundlr)
-        // return bundlr
-
-    }, [bundlr])
-
-
-
 
     const catalogueContract = React.useMemo(async () => {
         if(!signer) return
         try {
-            return new ethers.Contract(process.env.HAUS_CATALOGUE || '', abi, signer)
+            return new ethers.Contract(process.env.HAUS_CATALOGUE || '', HAUS_ABI.abi, signer)
         } catch (err) {
             console.log("err", err)
         }
