@@ -4,7 +4,6 @@ import { useLayoutStore } from "../../stores/useLayoutStore"
 import { usePlayerStore } from "../../stores/usePlayerStore"
 
 // import HAUS_ABI from "../../out/HausCatalogue.sol/HausCatalogue.json"
-import Bundlr from "@bundlr-network/client"
 
 const Catalogue = () => {
   const signer = useLayoutStore((state: any) => state.signer)
@@ -47,6 +46,29 @@ const Catalogue = () => {
     setCatalogue(catalogue)
   }, [_catalogue])
 
+
+  /*  generate random song  */
+  const random = React.useMemo(() => {
+    const releases = catalogue.reduce((acc = [], cv) => {
+      // @ts-ignore
+      acc.push({artist: cv.primaryArtist, songs: cv.songs, image: cv.image,})
+
+      return acc
+    }, [])
+
+    const random = (max: []) => Math.floor( Math.random() * max.length)
+    // @ts-ignore
+    const randomRelease = releases[random(releases)]
+    // @ts-ignore
+    const randomSong = randomRelease?.songs[random(randomRelease?.songs)]
+
+    // @ts-ignore
+    return {artist: randomRelease?.artist, image: randomRelease?.image, song: randomSong}
+
+  }, [catalogue])
+
+  console.log('r', random)
+
   // const catalogueContract = React.useMemo(async () => {
   //     if(!signer) return
   //     try {
@@ -70,21 +92,40 @@ const Catalogue = () => {
   }
 
   return (
-    <div className="mx-auto flex w-8/12 flex-col">
-      {catalogue.length > 0 ? (
-        <div className="grid grid-cols-4 gap-8 py-8">
-          {catalogue.map((release: Release) => (
-            <div
-              key={release.image}
-              className="flex w-full flex-col items-center"
-              onClick={() => addToQueue([...queuedMusic, ...release.songs])}
-            >
-              <img src={release.image} />
-              <div>{release.name}</div>
-            </div>
-          ))}
+    <div className="absolute top-0 left-0 w-screen h-full mx-auto box-border min-w-0 m-0">
+
+      <div className="box-border m-0 min-w-0 w-screen mx-auto">
+        <div className="grid place-items-center sticky top-0 h-screen w-screen bg-slate-500 z-0">
+          <div className="absolute w-full bg-rose-600 -z-10">
+            {random && (
+                <div>
+                  <div>
+                    <img src={random.image} />
+                  </div>
+                </div>
+            )}
+          </div>
         </div>
-      ) : null}
+
+        <div className="relative mx-auto flex w-full bg-slate-500 flex-col">
+          {catalogue.length > 0 ? (
+              <div className="w-11/12 mx-auto">
+                <div className="grid grid-cols-5 gap-8 py-8">
+                  {catalogue.map((release: Release) => (
+                      <div
+                          key={release.image}
+                          className="flex w-full flex-col items-center"
+                          onClick={() => addToQueue([...queuedMusic, ...release.songs])}
+                      >
+                        <img src={release.image} />
+                        <div>{release.name}</div>
+                      </div>
+                  ))}
+                </div>
+              </div>
+          ) : null}
+        </div>
+      </div>
     </div>
   )
 }

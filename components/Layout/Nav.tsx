@@ -6,7 +6,7 @@ const Nav = () => {
   const { formattedDate } = useRelativeTime()
 
   return (
-    <div className="flex justify-between p-4">
+    <div className="fixed flex w-full justify-between p-4 z-10">
       <input className="w-36" />
 
       <div>
