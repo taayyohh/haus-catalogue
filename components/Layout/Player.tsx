@@ -42,9 +42,21 @@ const Player = () => {
   const handlePlay = async (audioContext: any, url: string) => {
     const media = audioRef.current
 
+    console.log('ready state', audioRef.current.readyState)
+    console.log('duration', media.duration)
+    console.log('current time', media.currentTime)
+
+
 
     media.addEventListener('progress', (event) => {
       console.log('event', event);
+      console.log('target', event.target)
+
+      console.log('ready state', audioRef.current.readyState)
+      // if(audioRef.current.readyState) {
+      //   media.load()
+      // }
+
     });
 
 
