@@ -10,9 +10,8 @@ export const usePlayerStore = create<PlayerState>(set => ({
     addToQueue: (songs: []) => {
         set((state) => ({
             queuedMusic: [
-                ...state.queuedMusic,
                 ...songs
             ],
-        }));
-    },
+        }))
+    }
 }))

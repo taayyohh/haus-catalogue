@@ -1,12 +1,24 @@
-import {ConnectButton} from '@rainbow-me/rainbowkit'
-import React           from 'react'
+import { ConnectButton } from "@rainbow-me/rainbowkit"
+import React from "react"
+import { useRelativeTime } from "hooks/useRelativeTime"
 
 const Nav = () => {
-    return (
-        <div className="p-4">
-            <ConnectButton />
+  const { formattedDate } = useRelativeTime()
+
+  return (
+    <div className="flex justify-between p-4">
+      <input className="w-36" />
+
+      <div>
+        <div className="w-28">
+          <img src="/lucidhaus.png" />
+          <div>{formattedDate(new Date())}</div>
         </div>
-    )
+      </div>
+
+      <ConnectButton showBalance={false} label={"Connect"} chainStatus={"none"} accountStatus={"address"} />
+    </div>
+  )
 }
 
 export default Nav
