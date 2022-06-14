@@ -2,6 +2,7 @@ import React from "react"
 import { ethers } from "ethers"
 import { useLayoutStore } from "../../stores/useLayoutStore"
 import { usePlayerStore } from "../../stores/usePlayerStore"
+import {BsArrowDown, BsPlayCircle} from "react-icons/bs";
 
 // import HAUS_ABI from "../../out/HausCatalogue.sol/HausCatalogue.json"
 
@@ -67,7 +68,6 @@ const Catalogue = () => {
 
   }, [catalogue])
 
-  console.log('r', random)
 
   // const catalogueContract = React.useMemo(async () => {
   //     if(!signer) return
@@ -89,6 +89,7 @@ const Catalogue = () => {
     image: string
     songs: []
     name: string
+    primaryArtist: string
   }
 
   return (
@@ -96,14 +97,22 @@ const Catalogue = () => {
 
       <div className="box-border m-0 min-w-0 w-screen mx-auto">
         <div className="grid place-items-center sticky top-0 h-screen w-screen bg-slate-500 z-0">
-          <div className="absolute w-full bg-rose-600 -z-10">
+          <div className="flex justify-center absolute max-w-screen-xl w-full -z-10">
             {random && (
-                <div>
-                  <div>
+                <div className="flex items-center">
+                  <div className="relative h-96 w-96 rounded-full overflow-hidden" onClick={() => console.log('a', random.song)}>
                     <img src={random.image} />
+                    <BsPlayCircle size={32} />
+                  </div>
+                  <div className="flex flex-col gap-2 pl-8">
+                    <div className="text-4xl">{random?.artist}</div>
+                    <div className="text-4xl">{random?.song?.title}</div>
                   </div>
                 </div>
             )}
+          </div>
+          <div className='fixed bottom-5'>
+            <BsArrowDown size={24} />
           </div>
         </div>
 
@@ -119,6 +128,7 @@ const Catalogue = () => {
                       >
                         <img src={release.image} />
                         <div>{release.name}</div>
+                        <div>{release.primaryArtist}</div>
                       </div>
                   ))}
                 </div>
