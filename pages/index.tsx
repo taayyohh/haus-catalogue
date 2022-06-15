@@ -2,8 +2,8 @@ import React from "react"
 import { ethers } from "ethers"
 import { useLayoutStore } from "../stores/useLayoutStore"
 import { usePlayerStore } from "../stores/usePlayerStore"
-import {BsArrowDown, BsFillPlayCircleFill, BsPlayCircle} from "react-icons/bs"
-import {FaPlayCircle} from "react-icons/fa";
+import { BsArrowDown, BsFillPlayCircleFill, BsPlayCircle } from "react-icons/bs"
+import { FaPlayCircle } from "react-icons/fa"
 
 // import HAUS_ABI from "../../out/HausCatalogue.sol/HausCatalogue.json"
 
@@ -94,9 +94,9 @@ const Catalogue = () => {
     console.log("ra", random)
     addToQueue([random, ...queuedMusic])
 
-    console.log('qu', queuedMusic)
-    if(queuedMusic.length === 1) {
-      console.log('hi', media)
+    console.log("qu", queuedMusic)
+    if (queuedMusic.length === 1) {
+      console.log("hi", media)
       media.play()
     }
 
@@ -109,17 +109,15 @@ const Catalogue = () => {
         <div className="sticky top-0 z-0 grid h-screen w-screen place-items-center bg-rose-300">
           <div className="absolute -z-10 flex w-full max-w-screen-xl justify-center">
             {random && (
-              <div className="flex relative items-center">
+              <div className="relative flex items-center">
                 <div className="relative h-96 w-96 overflow-hidden rounded-full" onClick={() => handlePlay(random)}>
                   <img src={random.image} />
 
-
                   <div className="absolute top-[50%] left-[50%] -mt-[16px] -ml-[16px]">
                     <BsFillPlayCircleFill size={32} />
-
                   </div>
                 </div>
-                <div className="flex flex-col gap-2 pl-8 max-w-[300px]">
+                <div className="flex max-w-[300px] flex-col gap-2 pl-8">
                   <div className="text-4xl">{random?.artist}</div>
                   <div className="text-4xl">{random?.songs[0]?.title}</div>
                 </div>
