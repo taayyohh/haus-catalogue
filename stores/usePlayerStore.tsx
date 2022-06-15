@@ -25,9 +25,17 @@ interface PlayerState {
   addToQueue: (songs: []) => void
   media: Media
   setCurrentMedia: (media: Media) => void
+  isPlaying: boolean
+  setIsPlaying: (is: boolean) => void
 }
 
 export const usePlayerStore = create<PlayerState>(set => ({
+  isPlaying: false,
+  setIsPlaying: (is: boolean) => {
+    set(state => ({
+      isPlaying: is,
+    }))
+  },
   queuedMusic: [],
   addToQueue: (songs: []) => {
     set(state => ({
@@ -52,7 +60,7 @@ export const usePlayerStore = create<PlayerState>(set => ({
     paused: false,
     addEventListener: () => {},
     play: () => {},
-    pause: () => {}
+    pause: () => {},
   },
   setCurrentMedia: (media: Media) => set({ media }),
 }))

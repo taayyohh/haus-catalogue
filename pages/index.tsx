@@ -10,7 +10,7 @@ import { FaPlayCircle } from "react-icons/fa"
 const Catalogue = () => {
   const signer = useLayoutStore((state: any) => state.signer)
   const provider = useLayoutStore((state: any) => state.provider)
-  const { addToQueue, queuedMusic, media } = usePlayerStore((state: any) => state)
+  const { addToQueue, queuedMusic, media, isPlaying, setIsPlaying } = usePlayerStore((state: any) => state)
 
   /* Initialize Catalogue from Arweave */
   const [catalogue, setCatalogue] = React.useState([])
@@ -110,8 +110,8 @@ const Catalogue = () => {
           <div className="absolute -z-10 flex w-full max-w-screen-xl justify-center">
             {random && (
               <div className="relative flex items-center">
-                <div className="relative h-96 w-96 overflow-hidden rounded-full" onClick={() => handlePlay(random)}>
-                  <img src={random.image} />
+                <div className={`relative h-96 w-96 overflow-hidden rounded-full`} onClick={() => handlePlay(random)}>
+                  <img className={`${isPlaying ? 'animate-spin-slow' : ''}`} src={random.image} />
 
                   <div className="absolute top-[50%] left-[50%] -mt-[16px] -ml-[16px]">
                     <BsFillPlayCircleFill size={32} />

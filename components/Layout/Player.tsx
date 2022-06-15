@@ -1,11 +1,13 @@
 import React from "react"
 import { usePlayerStore } from "../../stores/usePlayerStore"
-import {BsFillPauseFill, BsFillPlayFill} from "react-icons/bs"
+import { BsFillPauseFill, BsFillPlayFill } from "react-icons/bs"
 import { BiSkipNext, BiSkipPrevious } from "react-icons/bi"
 
 const Player = () => {
   const audioRef = React.useRef(null)
-  const { addToQueue, queuedMusic, media, setCurrentMedia } = usePlayerStore((state: any) => state)
+  const { addToQueue, queuedMusic, media, setCurrentMedia, isPlaying, setIsPlaying } = usePlayerStore(
+    (state: any) => state
+  )
   const [queue, setQueue] = React.useState([])
   const [currentAudioSrc, setCurrentAudioSrc] = React.useState("")
 
@@ -77,7 +79,7 @@ const Player = () => {
       paused: false,
       addEventListener: () => {},
       play: () => {},
-      pause: () => {}
+      pause: () => {},
     }
     setCurrentMedia(media)
   }
@@ -119,7 +121,8 @@ const Player = () => {
     media.addEventListener("pause", (event: any) => {
       console.log("pause", event)
       console.log("ended", media.ended)
-      setIsPlaying(false)
+      console.log('hiiii')
+      // setIsPlaying(false)
 
       if (media.ended) {
         console.log("queue", queue)
@@ -148,8 +151,6 @@ const Player = () => {
     })
   }, [media])
 
-  const [isPlaying, setIsPlaying] = React.useState(false)
-
   const handlePlay = async () => {
     media.play()
   }
@@ -158,29 +159,29 @@ const Player = () => {
     media.pause()
   }
 
+  // @ts-ignore
   return (
-    <div className="fixed bottom-2 gap-2 left-2 left-0 flex w-full items-center">
+    <div className="fixed bottom-2 left-2 left-0 flex w-full items-center gap-2">
       <div>
-        <div className="inline-flex items-center gap-2 h-10 self-start border border-rose-500 bg-rose-400 p-2 shadow rounded">
+        <div className="inline-flex h-10 items-center gap-2 self-start rounded border border-rose-500 bg-rose-400 p-2 shadow">
           <BiSkipPrevious size={28} />
 
           {(isPlaying && (
-              <div onClick={queue.length > 0 ? () => handlePause() : () => {}}>
-                <BsFillPauseFill size={22} />
-              </div>
+            <button type="button" onClick={queue.length > 0 ? () => handlePause() : () => {}}>
+              <BsFillPauseFill size={22} />
+            </button>
           )) || (
-              <div onClick={queue.length > 0 ? () => handlePlay() : () => {}}>
-                <BsFillPlayFill size={22} />
-              </div>
+            <button type="button" onClick={queue.length > 0 ? () => handlePlay() : () => {}}>
+              <BsFillPlayFill size={22} />
+            </button>
           )}
-
 
           <BiSkipNext size={28} />
         </div>
         <audio crossOrigin="anonymous" preload={"auto"} src={currentAudioSrc} ref={audioRef} />
       </div>
       {media.currentSrc.length > 0 ? (
-        <div className="inline-flex items-center gap-2 h-10 self-start border border-rose-500 bg-rose-400 p-2 shadow rounded">
+        <div className="inline-flex h-10 items-center gap-2 self-start rounded border border-rose-500 bg-rose-400 p-2 shadow">
           <div>{queue[0]?.artist}</div>
           <div>{queue[0]?.title}</div>
         </div>
