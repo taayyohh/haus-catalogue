@@ -8,8 +8,14 @@ const Player = () => {
   const { addToQueue, queuedMusic, media, setCurrentMedia, isPlaying, setIsPlaying } = usePlayerStore(
     (state: any) => state
   )
-  const [queue, setQueue] = React.useState([])
+  type queueItem = {
+    audio: object;
+    artist: string,
+    title: string
+  };
+  const [queue, setQueue] = React.useState<any[]>([])
   const [currentAudioSrc, setCurrentAudioSrc] = React.useState("")
+
 
   interface Media {
     readyState: number
@@ -54,6 +60,7 @@ const Player = () => {
   React.useEffect(() => {
     // @ts-ignore
     const currentSrc = queue[0]?.audio
+
     if (!currentSrc) return
 
     loadMedia()
@@ -160,6 +167,7 @@ const Player = () => {
   const handlePause = async () => {
     media.pause()
   }
+
 
   // @ts-ignore
   return (
