@@ -106,7 +106,7 @@ const Upload = () => {
 
   /* styles */
   const button =
-    "inline-flex self-start p-4 bg-rose-400 text-white font-bold shadow-xl rounded-xl hover:bg-rose-500 flex hover:cursor-pointer items-center justify-center mx-auto my-2 w-full"
+    "inline-flex self-start p-4 bg-rose-300 text-white font-bold shadow-xl rounded-xl hover:bg-rose-300 flex hover:cursor-pointer items-center justify-center mx-auto my-2 w-full"
   const infoSection = "flex flex-col items-center bg-rose-100 p-4 rounded-xl shadow-inner mb-2"
   const infoSectionHeading = "text-lg font-bold"
 
@@ -134,7 +134,7 @@ const Upload = () => {
               <div>{priceOfUpload} MATIC</div>
             </div>
             {priceOfUpload - walletBalance > 0 ? (
-              <div className={`${infoSection} border border-rose-500`}>
+              <div className={`${infoSection} border border-rose-300`}>
                 <div className={infoSectionHeading}>Funding Needed</div>
                 <div className="font-bold">{priceOfUpload - walletBalance}</div>
               </div>

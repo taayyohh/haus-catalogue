@@ -5,28 +5,10 @@ import { BiSkipNext, BiSkipPrevious } from "react-icons/bi"
 
 const Player = () => {
   const audioRef = React.useRef(null)
-  const { addToQueue, queuedMusic } = usePlayerStore((state: any) => state)
+  const { addToQueue, queuedMusic, media, setCurrentMedia } = usePlayerStore((state: any) => state)
   const [queue, setQueue] = React.useState([])
   const [currentAudioSrc, setCurrentAudioSrc] = React.useState('')
-  const [media, setCurrentMedia] = React.useState({
-    readyState: 0,
-    duration: 0,
-    currentTime: 0,
-    currentSrc: '',
-    buffered: {},
-    controlsList: {},
-    ended: false,
-    error: {},
-    networkState: 0,
-    seekable: {},
-    seeking: false,
-    textTracks: {},
-    volume: 0,
-    muted: false,
-    paused: false,
-    addEventListener: (type: string, event: {}) => {},
-    play: () => {}
-  })
+
 
   interface Media {
     readyState: number
@@ -107,21 +89,21 @@ const Player = () => {
   }
 
   const mediaListener = React.useMemo(() => {
-    console.log("ready state", media.readyState)
-    console.log("duration", media.duration)
-    console.log("current time", media.currentTime)
-    console.log("currentSrc", media.currentSrc)
-    console.log("buffered", media.buffered)
-    console.log("control list", media.controlsList)
-    console.log("ended", media.ended)
-    console.log("error", media.error)
-    console.log("network state", media.networkState)
-    console.log("seekable", media.seekable)
-    console.log("seeking", media.seeking)
-    console.log("textTracks", media.textTracks)
-    console.log("volume", media.volume)
-    console.log("muted", media.muted)
-    console.log("paused", media.paused)
+    // console.log("ready state", media.readyState)
+    // console.log("duration", media.duration)
+    // console.log("current time", media.currentTime)
+    // console.log("currentSrc", media.currentSrc)
+    // console.log("buffered", media.buffered)
+    // console.log("control list", media.controlsList)
+    // console.log("ended", media.ended)
+    // console.log("error", media.error)
+    // console.log("network state", media.networkState)
+    // console.log("seekable", media.seekable)
+    // console.log("seeking", media.seeking)
+    // console.log("textTracks", media.textTracks)
+    // console.log("volume", media.volume)
+    // console.log("muted", media.muted)
+    // console.log("paused", media.paused)
 
     media.addEventListener("progress", (event: any) => {
       console.log("progress", event)
@@ -164,7 +146,7 @@ const Player = () => {
     <div className="fixed bottom-0 left-0 w-full">
       {queue.length > 0 && (
         <>
-          <div className="inline-flex items-center gap-2 self-start bg-rose-600 px-2">
+          <div className="inline-flex items-center gap-2 self-start bg-rose-400 border border-rose-500 p-2">
             <BiSkipPrevious size={28} />
 
             <div onClick={() => handlePlay()}>

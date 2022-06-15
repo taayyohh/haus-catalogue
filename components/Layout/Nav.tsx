@@ -6,8 +6,11 @@ const Nav = () => {
   const { formattedDate } = useRelativeTime()
 
   return (
-    <div className="bg-slate-500 fixed flex w-full justify-between p-4 z-10">
-      <input className="w-36" />
+    <div className="fixed z-10 flex w-full justify-between bg-rose-300 p-4">
+      <input
+        className="focus:shadow-outline w-36 rounded-xl bg-rose-200 px-4 text-rose-800 focus:outline-none"
+        placeholder="Search"
+      />
 
       <div>
         <div className="w-28">
