@@ -2,7 +2,7 @@ import React from "react"
 import { ethers } from "ethers"
 import { useLayoutStore } from "../stores/useLayoutStore"
 import { usePlayerStore } from "../stores/usePlayerStore"
-import { BsArrowDown, BsFillPlayCircleFill, BsPlayCircle } from "react-icons/bs"
+import { BsArrowDown, BsFillPlayCircleFill, BsPauseCircleFill, BsPlayCircle } from "react-icons/bs"
 import { FaPlayCircle } from "react-icons/fa"
 
 // import HAUS_ABI from "../../out/HausCatalogue.sol/HausCatalogue.json"
@@ -111,10 +111,14 @@ const Catalogue = () => {
             {random && (
               <div className="relative flex items-center">
                 <div className={`relative h-96 w-96 overflow-hidden rounded-full`} onClick={() => handlePlay(random)}>
-                  <img className={`${isPlaying ? 'animate-spin-slow' : ''}`} src={random.image} />
-
-                  <div className="absolute top-[50%] left-[50%] -mt-[16px] -ml-[16px]">
-                    <BsFillPlayCircleFill size={32} />
+                  <img className={`${isPlaying ? "animate-spin-slow" : ""}`} src={random.image} />
+                  <div
+                    className="absolute top-[50%] left-[50%] -mt-[16px] -ml-[16px]"
+                    onClick={() => {
+                      isPlaying ? media.pause() : media.play()
+                    }}
+                  >
+                    {(isPlaying && <BsPauseCircleFill size={32} />) || <BsFillPlayCircleFill size={32} />}
                   </div>
                 </div>
                 <div className="flex max-w-[300px] flex-col gap-2 pl-8">

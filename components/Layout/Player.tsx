@@ -122,12 +122,14 @@ const Player = () => {
       console.log("pause", event)
       console.log("ended", media.ended)
       console.log('hiiii')
-      // setIsPlaying(false)
+      setIsPlaying(false)
 
       if (media.ended) {
         console.log("queue", queue)
         if (queue.length > 1) {
           playNext()
+        } else {
+          setIsPlaying(false)
         }
       }
     })
