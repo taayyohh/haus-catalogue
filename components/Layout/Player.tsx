@@ -1,14 +1,13 @@
 import React from "react"
 import { usePlayerStore } from "../../stores/usePlayerStore"
-import { BsFillPlayFill } from "react-icons/bs"
+import {BsFillPauseFill, BsFillPlayFill} from "react-icons/bs"
 import { BiSkipNext, BiSkipPrevious } from "react-icons/bi"
 
 const Player = () => {
   const audioRef = React.useRef(null)
   const { addToQueue, queuedMusic, media, setCurrentMedia } = usePlayerStore((state: any) => state)
   const [queue, setQueue] = React.useState([])
-  const [currentAudioSrc, setCurrentAudioSrc] = React.useState('')
-
+  const [currentAudioSrc, setCurrentAudioSrc] = React.useState("")
 
   interface Media {
     readyState: number
@@ -28,6 +27,7 @@ const Player = () => {
     paused: boolean
     addEventListener: (type: string, event: object) => void
     play: () => void
+    pause: () => void
   }
 
   /* handle add to queue */
@@ -52,25 +52,18 @@ const Player = () => {
   React.useEffect(() => {
     // @ts-ignore
     const currentSrc = queue[0]?.audio
-    if(!currentSrc) return
+    if (!currentSrc) return
 
-    if(currentAudioSrc?.length === 0) {
-      loadMedia()
-      setCurrentAudioSrc(currentSrc)
-    } else {
-      if(currentAudioSrc !== currentSrc) {
-
-      }
-    }
+    loadMedia()
+    setCurrentAudioSrc(currentSrc)
   }, [queue])
 
-
-  const loadMedia = () => {
+  const loadMedia = async () => {
     const media: Media = audioRef.current || {
       readyState: 0,
       duration: 0,
       currentTime: 0,
-      currentSrc: '',
+      currentSrc: "",
       buffered: {},
       controlsList: {},
       ended: false,
@@ -83,9 +76,17 @@ const Player = () => {
       muted: false,
       paused: false,
       addEventListener: () => {},
-      play: () => {}
+      play: () => {},
+      pause: () => {}
     }
     setCurrentMedia(media)
+  }
+
+  const playNext = async () => {
+    await setQueue(queue.slice(1))
+    setIsPlaying(true)
+
+    console.log("media", media)
   }
 
   const mediaListener = React.useMemo(() => {
@@ -106,58 +107,84 @@ const Player = () => {
     // console.log("paused", media.paused)
 
     media.addEventListener("progress", (event: any) => {
-      console.log("progress", event)
-
+      // console.log("progress", event)
     })
 
     media.addEventListener("play", (event: any) => {
       console.log("play", event)
-
+      console.log("duration", media.duration)
+      console.log("current time", Math.floor(media.currentTime))
     })
 
     media.addEventListener("pause", (event: any) => {
       console.log("pause", event)
+      console.log("ended", media.ended)
+      setIsPlaying(false)
 
+      if (media.ended) {
+        console.log("queue", queue)
+        if (queue.length > 1) {
+          playNext()
+        }
+      }
     })
 
     media.addEventListener("playing", (event: any) => {
       console.log("playing", event)
       setIsPlaying(true)
+      console.log("current time", media.currentTime)
 
       // if(audioRef.current.readyState) {
       //   media.load()
       // }
     })
 
+    media.addEventListener("timeupdate", (event: any) => {
+      console.log("current time", media.currentTime)
 
+      // if(audioRef.current.readyState) {
+      //   media.load()
+      // }
+    })
   }, [media])
 
-
-
   const [isPlaying, setIsPlaying] = React.useState(false)
-
-
 
   const handlePlay = async () => {
     media.play()
   }
 
+  const handlePause = async () => {
+    media.pause()
+  }
+
   return (
-    <div className="fixed bottom-0 left-0 w-full">
-      {queue.length > 0 && (
-        <>
-          <div className="inline-flex items-center gap-2 self-start bg-rose-400 border border-rose-500 p-2">
-            <BiSkipPrevious size={28} />
+    <div className="fixed bottom-2 gap-2 left-2 left-0 flex w-full items-center">
+      <div>
+        <div className="inline-flex items-center gap-2 h-10 self-start border border-rose-500 bg-rose-400 p-2 shadow rounded">
+          <BiSkipPrevious size={28} />
 
-            <div onClick={() => handlePlay()}>
-              <BsFillPlayFill size={22} />
-            </div>
+          {(isPlaying && (
+              <div onClick={queue.length > 0 ? () => handlePause() : () => {}}>
+                <BsFillPauseFill size={22} />
+              </div>
+          )) || (
+              <div onClick={queue.length > 0 ? () => handlePlay() : () => {}}>
+                <BsFillPlayFill size={22} />
+              </div>
+          )}
 
-            <BiSkipNext size={28} />
-          </div>
-          <audio crossOrigin="anonymous" preload={"auto"} src={currentAudioSrc} ref={audioRef} />
-        </>
-      )}
+
+          <BiSkipNext size={28} />
+        </div>
+        <audio crossOrigin="anonymous" preload={"auto"} src={currentAudioSrc} ref={audioRef} />
+      </div>
+      {media.currentSrc.length > 0 ? (
+        <div className="inline-flex items-center gap-2 h-10 self-start border border-rose-500 bg-rose-400 p-2 shadow rounded">
+          <div>{queue[0]?.artist}</div>
+          <div>{queue[0]?.title}</div>
+        </div>
+      ) : null}
     </div>
   )
 }

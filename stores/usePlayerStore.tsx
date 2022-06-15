@@ -18,6 +18,7 @@ interface Media {
   paused: boolean
   addEventListener: (type: string, event: object) => void
   play: () => void
+  pause: () => void
 }
 interface PlayerState {
   queuedMusic: []
@@ -51,6 +52,7 @@ export const usePlayerStore = create<PlayerState>(set => ({
     paused: false,
     addEventListener: () => {},
     play: () => {},
+    pause: () => {}
   },
   setCurrentMedia: (media: Media) => set({ media }),
 }))
