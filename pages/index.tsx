@@ -92,7 +92,6 @@ const Catalogue = () => {
 
   const handlePlay = React.useCallback((random: object) => {
     console.log("ra", random)
-    addToQueue([random, ...queuedMusic])
 
     console.log("qu", queuedMusic)
     if (queuedMusic.length === 1) {
@@ -103,6 +102,12 @@ const Catalogue = () => {
     // media.play()
   }, [])
 
+  React.useEffect(() => {
+    if (!random) return
+
+    addToQueue([random])
+  }, [random])
+
   return (
     <div className="absolute top-0 left-0 m-0 mx-auto box-border h-full w-screen min-w-0">
       <div className="m-0 mx-auto box-border w-screen min-w-0">
@@ -112,14 +117,15 @@ const Catalogue = () => {
               <div className="relative flex items-center">
                 <div className={`relative h-96 w-96 overflow-hidden rounded-full`} onClick={() => handlePlay(random)}>
                   <img className={`${isPlaying ? "animate-spin-slow" : ""}`} src={random.image} />
-                  <div
+                  <button
+                    type="button"
                     className="absolute top-[50%] left-[50%] -mt-[16px] -ml-[16px]"
                     onClick={() => {
                       isPlaying ? media.pause() : media.play()
                     }}
                   >
                     {(isPlaying && <BsPauseCircleFill size={32} />) || <BsFillPlayCircleFill size={32} />}
-                  </div>
+                  </button>
                 </div>
                 <div className="flex max-w-[300px] flex-col gap-2 pl-8">
                   <div className="text-4xl">{random?.artist}</div>
@@ -128,11 +134,10 @@ const Catalogue = () => {
               </div>
             )}
           </div>
-          <div className="fixed bottom-5">
+          <div className="fixed bottom-5 animate-bounce">
             <BsArrowDown size={24} />
           </div>
         </div>
-
         <div className="relative mx-auto flex w-full flex-col bg-rose-300">
           {catalogue.length > 0 ? (
             <div className="mx-auto w-11/12">
