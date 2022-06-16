@@ -188,11 +188,17 @@ const Player = () => {
   }
 
   const handleNext = async () => {
-    // media.pause()
-    console.log('hi')
     media.pause()
     setIsPlaying(false)
     setCurrentPosition(queue.length - 1 > currentPosition ? currentPosition + 1 : 0)
+    // media.play()
+    // setIsPlaying(true)
+  }
+
+  const handlePrev = async () => {
+    media.pause()
+    setIsPlaying(false)
+    setCurrentPosition(currentPosition > 1 ? currentPosition - 1 : queue.length - 1)
     // media.play()
     // setIsPlaying(true)
   }
@@ -203,7 +209,9 @@ const Player = () => {
       <div className="flex items-center gap-4 ">
         <div>
           <div className="inline-flex h-10 items-center gap-2 self-start rounded border border-rose-300 bg-rose-200 p-2 shadow">
-            <BiSkipPrevious size={28} />
+            <button type="button" onClick={queue.length > 0 ? () => handlePrev() : () => {}}>
+              <BiSkipPrevious size={28} />
+            </button>
             {(isPlaying && (
               <button type="button" onClick={queue.length > 0 ? () => handlePause() : () => {}}>
                 <BsFillPauseFill size={22} />
