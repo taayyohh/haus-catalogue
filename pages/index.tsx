@@ -105,21 +105,21 @@ const Catalogue = () => {
           <div className="absolute -z-10 flex w-full max-w-screen-xl justify-center">
             {random && (
               <div className="relative flex flex-col items-center sm:flex-row">
-                <div className={`relative h-56 w-56 overflow-hidden rounded-full sm:h-96 sm:w-96`}>
+                <button
+                  type="button"
+                  className={`relative h-72 w-72 overflow-hidden rounded-full sm:h-96 sm:w-96`}
+                  onClick={() => {
+                    isPlaying ? media.pause() : media.play()
+                  }}
+                >
                   <img className={`${isPlaying ? "animate-spin-slow" : ""}`} src={random.image} />
-                  <button
-                    type="button"
-                    className="absolute top-[50%] left-[50%] -mt-[16px] -ml-[16px]"
-                    onClick={() => {
-                      isPlaying ? media.pause() : media.play()
-                    }}
-                  >
+                  <div className="absolute top-[50%] left-[50%] -mt-[16px] -ml-[16px]">
                     {(isPlaying && <BsPauseCircleFill size={32} />) || <BsFillPlayCircleFill size={32} />}
-                  </button>
-                </div>
-                <div className="flex max-w-[300px] flex-col gap-2 pl-8">
-                  <div className="text-3xl font-bold">{random?.songs[0]?.title}</div>
-                  <div className="text-3xl">{random?.artist}</div>
+                  </div>
+                </button>
+                <div className="mt-4 flex max-w-[320px] flex-col gap-2 sm:mt-0 sm:max-w-[400px] sm:gap-4 sm:pl-8">
+                  <div className="text-3xl font-bold sm:text-5xl">{random?.songs[0]?.title}</div>
+                  <div className="text-3xl text-rose-700 sm:text-5xl">{random?.artist}</div>
                   {currentTime.length > 0 && duration.length > 0 && (
                     <div className="text-xl">
                       {currentTime} / {duration}

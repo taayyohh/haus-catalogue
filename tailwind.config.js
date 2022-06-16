@@ -8,6 +8,9 @@ module.exports = {
     extend: {
       animation: {
         'spin-slow': 'spin 20s linear infinite',
+      },
+      fontFamily: {
+        sans: ['Anek Latin', 'sans-serif']
       }
     }
   },

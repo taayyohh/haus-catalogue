@@ -199,7 +199,7 @@ const Player = () => {
     <div className="fixed bottom-2 flex flex w-full items-center justify-between px-4">
       <div className="flex items-center gap-4 ">
         <div>
-          <div className="inline-flex h-10 items-center gap-2 self-start rounded border border-rose-500 bg-rose-400 p-2 shadow">
+          <div className="inline-flex h-10 items-center gap-2 self-start rounded border border-rose-300 bg-rose-200 p-2 shadow">
             <BiSkipPrevious size={28} />
             {(isPlaying && (
               <button type="button" onClick={queue.length > 0 ? () => handlePause() : () => {}}>
@@ -216,9 +216,9 @@ const Player = () => {
           <audio crossOrigin="anonymous" preload={"auto"} src={currentAudioSrc} ref={audioRef} />
         </div>
         {media.currentSrc.length > 0 ? (
-          <div className="inline-flex h-10 items-center gap-2 self-start rounded border border-rose-500 bg-rose-400 p-2 shadow">
-            <div>{queue[0]?.artist}</div>
+          <div className="inline-flex h-10 items-center gap-2 self-start rounded border border-rose-300 bg-rose-200 p-2 shadow">
             <div>{queue[0]?.title}</div>
+            <div className="text-rose-700">{queue[0]?.artist}</div>
           </div>
         ) : null}
       </div>
@@ -226,7 +226,7 @@ const Player = () => {
       <div className="hidden items-center gap-4 sm:visible sm:flex ">
         {currentTime && duration && (
           <div>
-            <div className="inline-flex h-10 items-center gap-2 self-start rounded border border-rose-500 bg-rose-400 p-2 shadow">
+            <div className="inline-flex h-10 items-center gap-2 self-start rounded border border-rose-300 bg-rose-200 p-2 shadow">
               {currentTime} / {duration}
             </div>
           </div>
