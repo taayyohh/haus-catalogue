@@ -19,7 +19,9 @@ const Nav = () => {
         </div>
       </div>
 
-      <ConnectButton showBalance={false} label={"Connect"} chainStatus={"none"} accountStatus={"address"} />
+        <div id="connect">
+            <ConnectButton showBalance={false} label={"Connect"} chainStatus={"none"} accountStatus={"address"} />
+        </div>
     </div>
   )
 }

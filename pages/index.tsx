@@ -113,11 +113,11 @@ const Catalogue = () => {
                   }}
                 >
                   <img className={`${isPlaying ? "animate-spin-slow" : ""}`} src={random.image} />
-                  <div className="absolute top-[50%] left-[50%] -mt-[16px] -ml-[16px]">
-                    {(isPlaying && <BsPauseCircleFill size={32} />) || <BsFillPlayCircleFill size={32} />}
+                  <div className="absolute top-[50%] left-[50%] -mt-[24px] -ml-[24px]">
+                    {(isPlaying && <BsPauseCircleFill size={48} />) || <BsFillPlayCircleFill size={48} />}
                   </div>
                 </button>
-                <div className="mt-4 flex max-w-[320px] flex-col gap-2 sm:mt-0 sm:max-w-[400px] sm:gap-4 sm:pl-8">
+                <div className="mt-4 flex max-w-[320px] flex-col sm:ml-8 gap-2 sm:mt-0 sm:max-w-[400px] sm:gap-4 sm:pl-8">
                   <div className="text-3xl font-bold sm:text-5xl">{random?.songs[0]?.title}</div>
                   <div className="text-3xl text-rose-700 sm:text-5xl">{random?.artist}</div>
                   {currentTime.length > 0 && duration.length > 0 && (
@@ -133,7 +133,7 @@ const Catalogue = () => {
             <BsArrowDown size={24} />
           </div>
         </div>
-        <div className="relative mx-auto flex w-full flex-col bg-rose-300">
+        <div className="relative mx-auto flex w-full flex-col bg-rose-300 pb-24">
           {catalogue.length > 0 ? (
             <div className="mx-auto w-11/12">
               <div className="grid grid-cols-2 gap-8 py-8 sm:grid-cols-5">
