@@ -31,6 +31,10 @@ interface PlayerState {
   setDuration: (duration: string) => void
   currentTime: string
   setCurrentTime: (duration: string) => void
+  queue: []
+  setQueue: (music: []) => void
+  currentPosition: number
+  setCurrentPosition: (position: number) => void
 }
 
 export const usePlayerStore = create<PlayerState>(set => ({
@@ -67,8 +71,12 @@ export const usePlayerStore = create<PlayerState>(set => ({
     pause: () => {},
   },
   setCurrentMedia: (media: Media) => set({ media }),
-  duration: '',
-  setDuration: (duration) => set({duration}),
-  currentTime: '',
-  setCurrentTime: (currentTime) => set({currentTime})
+  duration: "",
+  setDuration: duration => set({ duration }),
+  currentTime: "",
+  setCurrentTime: currentTime => set({ currentTime }),
+  queue: [],
+  setQueue: queue => set({ queue }),
+  currentPosition: 0,
+  setCurrentPosition: currentPosition => set({ currentPosition }),
 }))

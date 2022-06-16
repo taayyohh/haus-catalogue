@@ -22,8 +22,10 @@ const Player = () => {
     artist: string
     title: string
   }
-  const [queue, setQueue] = React.useState<any[]>([])
-  const [currentAudioSrc, setCurrentAudioSrc] = React.useState("")
+
+  const { queue, setQueue, currentPosition, setCurrentPosition } = usePlayerStore(
+      (state: any) => state
+  )
 
   interface Media {
     readyState: number
@@ -70,20 +72,8 @@ const Player = () => {
     // @ts-ignore
   }, [handleAddToQueue])
 
-
-  const [currentPosition, setCurrentPosition] = React.useState(0)
-  React.useEffect(() => {
-    // @ts-ignore
-    const currentSrc = queue[currentPosition]?.audio
-
-    if (!currentSrc) return
-
-    loadMedia()
-    setCurrentAudioSrc(currentSrc)
-  }, [queue])
-
-  const loadMedia = async () => {
-    console.log('ad', audioRef.current)
+  const loadMedia = React.useCallback(async () => {
+    console.log('ad', audioRef)
     const media: Media = audioRef.current || {
       readyState: 0,
       duration: 0,
@@ -105,14 +95,14 @@ const Player = () => {
       pause: () => {},
     }
     setCurrentMedia(media)
-  }
+  }, [])
 
-  const playNext = async () => {
-    await setQueue(queue.slice(1))
-    setIsPlaying(true)
 
-    console.log("media", media)
-  }
+
+  React.useMemo(async () => {
+    await loadMedia()
+  }, [queue, currentPosition])
+
 
   const toHHMMSS = function (secs: string) {
     let sec_num = parseInt(secs, 10) // don't forget the second param
@@ -162,7 +152,7 @@ const Player = () => {
       if (media.ended) {
         console.log("queue", queue)
         if (queue.length > 1) {
-          playNext()
+          // playNext()
         } else {
           setIsPlaying(false)
         }
@@ -199,9 +189,12 @@ const Player = () => {
 
   const handleNext = async () => {
     // media.pause()
-    console.log('hi', queue.length, queue.length - 1 < currentPosition ? currentPosition + 1 : 0)
+    console.log('hi')
+    media.pause()
+    setIsPlaying(false)
     setCurrentPosition(queue.length - 1 > currentPosition ? currentPosition + 1 : 0)
-    loadMedia()
+    // media.play()
+    // setIsPlaying(true)
   }
 
   // @ts-ignore
@@ -225,7 +218,9 @@ const Player = () => {
               <BiSkipNext size={28} />
             </button>
           </div>
-          <audio crossOrigin="anonymous" preload={"auto"} src={currentAudioSrc} ref={audioRef} />
+
+          <audio crossOrigin="anonymous" preload={"auto"} src={queue[currentPosition]?.audio} ref={audioRef} />
+
         </div>
         {media.currentSrc.length > 0 ? (
           <div className="inline-flex h-10 items-center gap-2 self-start rounded border border-rose-300 bg-rose-200 p-2 shadow">

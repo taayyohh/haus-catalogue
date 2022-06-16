@@ -10,7 +10,7 @@ import { FaPlayCircle } from "react-icons/fa"
 const Catalogue = () => {
   const signer = useLayoutStore((state: any) => state.signer)
   const provider = useLayoutStore((state: any) => state.provider)
-  const { addToQueue, queuedMusic, media, isPlaying, currentTime, duration, setIsPlaying } = usePlayerStore(
+  const { addToQueue, queuedMusic, queue, currentPosition, media, isPlaying, currentTime, duration, setIsPlaying } = usePlayerStore(
     (state: any) => state
   )
 
@@ -103,7 +103,7 @@ const Catalogue = () => {
       <div className="m-0 mx-auto box-border w-screen min-w-0">
         <div className="sticky top-0 z-0 grid h-screen w-screen place-items-center bg-rose-200">
           <div className="absolute -z-10 flex w-full max-w-screen-xl justify-center">
-            {random && (
+            {queue && (
               <div className="relative flex flex-col items-center md:flex-row">
                 <button
                   type="button"
@@ -112,14 +112,14 @@ const Catalogue = () => {
                     isPlaying ? media.pause() : media.play()
                   }}
                 >
-                  <img className={`h-full w-full ${isPlaying ? "animate-spin-slow" : ""}`} src={random.image} />
+                  <img className={`h-full w-full ${isPlaying ? "animate-spin-slow" : ""}`} src={queue[currentPosition]?.image} />
                   <div className="absolute top-[50%] left-[50%] -mt-[24px] -ml-[24px]">
                     {(isPlaying && <BsPauseCircleFill size={48} />) || <BsFillPlayCircleFill size={48} />}
                   </div>
                 </button>
                 <div className="mt-4 flex max-w-[320px] flex-col gap-2 md:ml-8 md:mt-0 sm:max-w-[400px] md:gap-4 md:pl-8">
-                  <div className="text-3xl font-bold sm:text-4xl md:text-5xl">{random?.songs[0]?.title}</div>
-                  <div className="text-3xl text-rose-700 sm:text-4xl md:text-5xl">{random?.artist}</div>
+                  <div className="text-3xl font-bold sm:text-4xl md:text-5xl">{queue[currentPosition]?.title}</div>
+                  <div className="text-3xl text-rose-700 sm:text-4xl md:text-5xl">{queue[currentPosition]?.artist}</div>
                   {currentTime.length > 0 && duration.length > 0 && (
                     <div className="text-xl">
                       {currentTime} / {duration}
