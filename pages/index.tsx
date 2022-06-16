@@ -10,7 +10,9 @@ import { FaPlayCircle } from "react-icons/fa"
 const Catalogue = () => {
   const signer = useLayoutStore((state: any) => state.signer)
   const provider = useLayoutStore((state: any) => state.provider)
-  const { addToQueue, queuedMusic, media, isPlaying, setIsPlaying } = usePlayerStore((state: any) => state)
+  const { addToQueue, queuedMusic, media, isPlaying, currentTime, duration, setIsPlaying } = usePlayerStore(
+    (state: any) => state
+  )
 
   /* Initialize Catalogue from Arweave */
   const [catalogue, setCatalogue] = React.useState([])
@@ -90,18 +92,6 @@ const Catalogue = () => {
     primaryArtist: string
   }
 
-  const handlePlay = React.useCallback((random: object) => {
-    console.log("ra", random)
-
-    console.log("qu", queuedMusic)
-    if (queuedMusic.length === 1) {
-      console.log("hi", media)
-      media.play()
-    }
-
-    // media.play()
-  }, [])
-
   React.useEffect(() => {
     if (!random) return
 
@@ -114,8 +104,8 @@ const Catalogue = () => {
         <div className="sticky top-0 z-0 grid h-screen w-screen place-items-center bg-rose-300">
           <div className="absolute -z-10 flex w-full max-w-screen-xl justify-center">
             {random && (
-              <div className="relative flex items-center">
-                <div className={`relative h-96 w-96 overflow-hidden rounded-full`} onClick={() => handlePlay(random)}>
+              <div className="relative flex flex-col items-center sm:flex-row">
+                <div className={`relative h-56 w-56 overflow-hidden rounded-full sm:h-96 sm:w-96`}>
                   <img className={`${isPlaying ? "animate-spin-slow" : ""}`} src={random.image} />
                   <button
                     type="button"
@@ -128,8 +118,13 @@ const Catalogue = () => {
                   </button>
                 </div>
                 <div className="flex max-w-[300px] flex-col gap-2 pl-8">
-                  <div className="text-4xl">{random?.artist}</div>
-                  <div className="text-4xl">{random?.songs[0]?.title}</div>
+                  <div className="text-3xl font-bold">{random?.songs[0]?.title}</div>
+                  <div className="text-3xl">{random?.artist}</div>
+                  {currentTime.length > 0 && duration.length > 0 && (
+                    <div className="text-xl">
+                      {currentTime} / {duration}
+                    </div>
+                  )}
                 </div>
               </div>
             )}
@@ -141,7 +136,7 @@ const Catalogue = () => {
         <div className="relative mx-auto flex w-full flex-col bg-rose-300">
           {catalogue.length > 0 ? (
             <div className="mx-auto w-11/12">
-              <div className="grid grid-cols-5 gap-8 py-8">
+              <div className="grid grid-cols-2 gap-8 py-8 sm:grid-cols-5">
                 {catalogue.map((release: Release) => (
                   <div
                     key={release.image}

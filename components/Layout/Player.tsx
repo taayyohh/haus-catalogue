@@ -5,9 +5,18 @@ import { BiSkipNext, BiSkipPrevious } from "react-icons/bi"
 
 const Player = () => {
   const audioRef = React.useRef(null)
-  const { addToQueue, queuedMusic, media, setCurrentMedia, isPlaying, setIsPlaying } = usePlayerStore(
-    (state: any) => state
-  )
+  const {
+    addToQueue,
+    queuedMusic,
+    media,
+    setCurrentMedia,
+    isPlaying,
+    setIsPlaying,
+    duration,
+    setDuration,
+    currentTime,
+    setCurrentTime,
+  } = usePlayerStore((state: any) => state)
   type queueItem = {
     audio: object
     artist: string
@@ -52,11 +61,10 @@ const Player = () => {
   }, [queuedMusic])
 
   React.useEffect(() => {
-    if(!!queue[0]?.artist) {
+    if (!!queue[0]?.artist) {
       setQueue([...queue, ...handleAddToQueue])
     } else {
       setQueue([...handleAddToQueue])
-
     }
 
     // @ts-ignore
@@ -106,19 +114,16 @@ const Player = () => {
   const toHHMMSS = function (secs: string) {
     let sec_num = parseInt(secs, 10) // don't forget the second param
     let hours = Math.floor(sec_num / 3600)
-    let minutes = Math.floor((sec_num - hours * 3600) / 60)
-    let seconds = sec_num - hours * 3600 - minutes * 60
+    let minutes = Math.floor((sec_num - hours * 3600) / 60) || ""
+    let seconds = sec_num - hours * 3600 - Number(minutes) * 60 || ""
     if (minutes < 10) {
-      minutes = Number("0" + minutes)
+      minutes = "0" + minutes
     }
     if (seconds < 10) {
-      seconds = Number("0" + seconds)
+      seconds = "0" + seconds
     }
     return minutes + ":" + seconds
   }
-  const [currentTime, setCurrentTime] = React.useState("")
-  const [duration, setDuration] = React.useState("")
-
   const mediaListener = React.useMemo(() => {
     // console.log("ready state", media.readyState)
     // console.log("duration", media.duration)
@@ -143,7 +148,6 @@ const Player = () => {
     media.addEventListener("play", (event: any) => {
       console.log("play", event)
       console.log("duration", media.duration)
-      setDuration(toHHMMSS(media.duration.toString()))
     })
 
     media.addEventListener("pause", (event: any) => {
@@ -165,6 +169,7 @@ const Player = () => {
     media.addEventListener("playing", (event: any) => {
       console.log("playing", event)
       setIsPlaying(true)
+      setDuration(toHHMMSS(media.duration.toString()))
 
       // if(audioRef.current.readyState) {
       //   media.load()
@@ -191,7 +196,7 @@ const Player = () => {
 
   // @ts-ignore
   return (
-    <div className="fixed bottom-2 flex flex w-full px-4 items-center justify-between">
+    <div className="fixed bottom-2 flex flex w-full items-center justify-between px-4">
       <div className="flex items-center gap-4 ">
         <div>
           <div className="inline-flex h-10 items-center gap-2 self-start rounded border border-rose-500 bg-rose-400 p-2 shadow">
@@ -218,7 +223,7 @@ const Player = () => {
         ) : null}
       </div>
 
-      <div className="flex items-center gap-4 ">
+      <div className="hidden items-center gap-4 sm:visible sm:flex ">
         {currentTime && duration && (
           <div>
             <div className="inline-flex h-10 items-center gap-2 self-start rounded border border-rose-500 bg-rose-400 p-2 shadow">

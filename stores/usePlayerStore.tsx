@@ -27,6 +27,10 @@ interface PlayerState {
   setCurrentMedia: (media: Media) => void
   isPlaying: boolean
   setIsPlaying: (is: boolean) => void
+  duration: string
+  setDuration: (duration: string) => void
+  currentTime: string
+  setCurrentTime: (duration: string) => void
 }
 
 export const usePlayerStore = create<PlayerState>(set => ({
@@ -63,4 +67,8 @@ export const usePlayerStore = create<PlayerState>(set => ({
     pause: () => {},
   },
   setCurrentMedia: (media: Media) => set({ media }),
+  duration: '',
+  setDuration: (duration) => set({duration}),
+  currentTime: '',
+  setCurrentTime: (currentTime) => set({currentTime})
 }))
