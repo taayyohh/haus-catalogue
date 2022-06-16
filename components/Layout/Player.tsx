@@ -61,7 +61,7 @@ const Player = () => {
   }, [queuedMusic])
 
   React.useEffect(() => {
-    if (!!queue[0]?.artist) {
+    if (!!queue[currentPosition]?.artist) {
       setQueue([...queue, ...handleAddToQueue])
     } else {
       setQueue([...handleAddToQueue])
@@ -70,9 +70,11 @@ const Player = () => {
     // @ts-ignore
   }, [handleAddToQueue])
 
+
+  const [currentPosition, setCurrentPosition] = React.useState(0)
   React.useEffect(() => {
     // @ts-ignore
-    const currentSrc = queue[0]?.audio
+    const currentSrc = queue[currentPosition]?.audio
 
     if (!currentSrc) return
 
@@ -81,6 +83,7 @@ const Player = () => {
   }, [queue])
 
   const loadMedia = async () => {
+    console.log('ad', audioRef.current)
     const media: Media = audioRef.current || {
       readyState: 0,
       duration: 0,
@@ -194,6 +197,13 @@ const Player = () => {
     media.pause()
   }
 
+  const handleNext = async () => {
+    // media.pause()
+    console.log('hi', queue.length, queue.length - 1 < currentPosition ? currentPosition + 1 : 0)
+    setCurrentPosition(queue.length - 1 > currentPosition ? currentPosition + 1 : 0)
+    loadMedia()
+  }
+
   // @ts-ignore
   return (
     <div className="fixed bottom-2 flex flex w-full items-center justify-between px-4">
@@ -211,14 +221,16 @@ const Player = () => {
               </button>
             )}
 
-            <BiSkipNext size={28} />
+            <button type="button" onClick={queue.length > 0 ? () => handleNext() : () => {}}>
+              <BiSkipNext size={28} />
+            </button>
           </div>
           <audio crossOrigin="anonymous" preload={"auto"} src={currentAudioSrc} ref={audioRef} />
         </div>
         {media.currentSrc.length > 0 ? (
           <div className="inline-flex h-10 items-center gap-2 self-start rounded border border-rose-300 bg-rose-200 p-2 shadow">
-            <div>{queue[0]?.title}</div>
-            <div className="text-rose-700">{queue[0]?.artist}</div>
+            <div>{queue[currentPosition]?.title}</div>
+            <div className="text-rose-700">{queue[currentPosition]?.artist}</div>
           </div>
         ) : null}
       </div>

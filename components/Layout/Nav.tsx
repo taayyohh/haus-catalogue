@@ -6,9 +6,9 @@ const Nav = () => {
   const { formattedDate } = useRelativeTime()
 
   return (
-    <div className="fixed z-10 flex w-full items-center justify-center bg-rose-300 p-4">
+    <div className="fixed z-10 flex w-full items-center justify-center bg-rose-200 p-4">
       <input
-        className="absolute left-4 focus:shadow-outline w-36 rounded h-8 bg-rose-200 px-4 text-rose-800 focus:outline-none"
+        className="focus:shadow-outline absolute left-4 h-8 w-36 rounded bg-rose-200 px-4 placeholder:text-rose-500 focus:outline-none"
         placeholder="Search"
       />
 
@@ -19,9 +19,9 @@ const Nav = () => {
         </div>
       </div>
 
-        <div id="connect" className="absolute right-4">
-            <ConnectButton showBalance={true} label={"Connect"} chainStatus={"none"} accountStatus={"address"} />
-        </div>
+      <div id="connect" className="absolute right-4">
+        <ConnectButton showBalance={true} label={"Connect"} chainStatus={"none"} accountStatus={"address"} />
+      </div>
     </div>
   )
 }
