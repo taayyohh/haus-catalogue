@@ -4,6 +4,7 @@ import { useLayoutStore } from "../stores/useLayoutStore"
 import { usePlayerStore } from "../stores/usePlayerStore"
 import { BsArrowDown, BsFillPlayCircleFill, BsPauseCircleFill, BsPlayCircle } from "react-icons/bs"
 import { FaPlayCircle } from "react-icons/fa"
+import {AnimatePresence, motion} from "framer-motion"
 
 // import HAUS_ABI from "../../out/HausCatalogue.sol/HausCatalogue.json"
 
@@ -104,29 +105,47 @@ const Catalogue = () => {
         <div className="sticky top-0 z-0 grid h-screen w-screen place-items-center bg-rose-200">
           <div className="absolute -z-10 flex w-full max-w-screen-xl justify-center">
             {queue && (
-              <div className="relative flex flex-col items-center md:flex-row">
-                <button
-                  type="button"
-                  className={`sm-h-32 w-h-32 relative h-72 w-72 overflow-hidden rounded-full border sm:h-96 sm:min-h-[330px] sm:w-96 sm:min-w-[330px]`}
-                  onClick={() => {
-                    isPlaying ? media.pause() : media.play()
-                  }}
-                >
-                  <img className={`h-full w-full ${isPlaying ? "animate-spin-slow" : ""}`} src={queue[currentPosition]?.image} />
-                  <div className="absolute top-[50%] left-[50%] -mt-[24px] -ml-[24px]">
-                    {(isPlaying && <BsPauseCircleFill size={48} />) || <BsFillPlayCircleFill size={48} />}
-                  </div>
-                </button>
-                <div className="mt-4 flex max-w-[320px] flex-col gap-2 md:ml-8 md:mt-0 sm:max-w-[400px] md:gap-4 md:pl-8">
-                  <div className="text-3xl font-bold sm:text-4xl md:text-5xl">{queue[currentPosition]?.title}</div>
-                  <div className="text-3xl text-rose-700 sm:text-4xl md:text-5xl">{queue[currentPosition]?.artist}</div>
-                  {currentTime.length > 0 && duration.length > 0 && (
-                    <div className="text-xl">
-                      {currentTime} / {duration}
+                <AnimatePresence exitBeforeEnter={true}>
+                  <motion.div
+                      className="relative flex flex-col items-center md:flex-row"
+                      key={queue[currentPosition]?.audio}
+                      variants={{
+                        closed: {
+                          y: 10,
+                          opacity: 0
+                        },
+                        open: {
+                          y: 0,
+                          opacity: 1
+                        }
+                      }}
+                      initial="closed"
+                      animate="open"
+                      exit="closed"
+                  >
+                    <button
+                        type="button"
+                        className={`sm-h-32 w-h-32 relative h-72 w-72 overflow-hidden rounded-full border sm:h-96 sm:min-h-[330px] sm:w-96 sm:min-w-[330px]`}
+                        onClick={() => {
+                          isPlaying ? media.pause() : media.play()
+                        }}
+                    >
+                      <img className={`h-full w-full ${isPlaying ? "animate-spin-slow" : ""}`} src={queue[currentPosition]?.image} />
+                      <div className="absolute top-[50%] left-[50%] -mt-[24px] -ml-[24px]">
+                        {(isPlaying && <BsPauseCircleFill size={48} />) || <BsFillPlayCircleFill size={48} />}
+                      </div>
+                    </button>
+                    <div className="mt-4 flex max-w-[320px] flex-col gap-2 md:ml-8 md:mt-0 sm:max-w-[400px] md:gap-4 md:pl-8">
+                      <div className="text-3xl font-bold sm:text-4xl md:text-5xl">{queue[currentPosition]?.title}</div>
+                      <div className="text-3xl text-rose-700 sm:text-4xl md:text-5xl">{queue[currentPosition]?.artist}</div>
+                      {currentTime.length > 0 && duration.length > 0 && (
+                          <div className="text-xl">
+                            {currentTime} / {duration}
+                          </div>
+                      )}
                     </div>
-                  )}
-                </div>
-              </div>
+                  </motion.div>
+                </AnimatePresence>
             )}
           </div>
           <div className="fixed bottom-5 animate-bounce">

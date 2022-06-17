@@ -152,7 +152,7 @@ const Player = () => {
       if (media.ended) {
         console.log("queue", queue)
         if (queue.length > 1) {
-          // playNext()
+          handleNext()
         } else {
           setIsPlaying(false)
         }
