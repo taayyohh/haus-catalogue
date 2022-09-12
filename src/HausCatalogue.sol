@@ -25,9 +25,9 @@ d88'   88b`?88P'`88b`?88P'?8b`?888P'     `?888P'`?88P'`88b  `?8b  `?88P'`88b  88
 
 ---------------------------------------------------------------------------------------------------------------------                                                                                                                                                                                                                                                                                                                           
 
-@title                      :   Haus Catalogue
+@title                      :   LucidHaus Catalogue
 @author                     :   @taayyohh of LucidHaus, LLC. fork of Catalog by COMPUTER DATA (brett henderson) of Catalog Records Inc.
-@notice                     :   The Haus Catalogue Shared Creator Contract is an upgradeable ERC721 contract, purpose built
+@notice                     :   The LucidHaus Catalogue Shared Creator Contract is an upgradeable ERC721 contract, purpose built
                                 to facilitate the creation of  Haus Catalogue Releases.
 @dev                        :   Upgradeable ERC721 Contract, inherits functionality from ERC721Upgradeable. 
                                 This contract conforms to the EIP-2981 NFT Royalty Standard.

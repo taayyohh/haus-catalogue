@@ -17,7 +17,7 @@ contract HausCatalogueManager is OwnableUpgradeable, UUPSUpgradeable {
     catalogueImpl = _catalogueImpl;
     address managerProxy;
     managerProxy = address(
-      new ERC1967Proxy(address(catalogueImpl), abi.encodeWithSignature("LucidHaus Catalogue", "LUCID"))
+      new ERC1967Proxy(address(catalogueImpl), abi.encodeWithSignature(_name, _symbol))
     );
     emit HausCatalogueDeployed(managerProxy);
   }
