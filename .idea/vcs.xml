@@ -5,6 +5,7 @@
     <mapping directory="$PROJECT_DIR$/lib/forge-std" vcs="Git" />
     <mapping directory="$PROJECT_DIR$/lib/forge-std/lib/ds-test" vcs="Git" />
     <mapping directory="$PROJECT_DIR$/lib/openzeppelin-contracts" vcs="Git" />
+    <mapping directory="$PROJECT_DIR$/lib/openzeppelin-contracts-upgradeable" vcs="Git" />
     <mapping directory="$PROJECT_DIR$/lib/solmate" vcs="Git" />
     <mapping directory="$PROJECT_DIR$/lib/solmate/lib/ds-test" vcs="Git" />
   </component>

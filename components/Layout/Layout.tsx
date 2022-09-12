@@ -10,17 +10,17 @@ type Props = {
 
 const Layout = ({ children }: Props) => {
   const { data, isError, isLoading } = useSigner()
-  // @ts-ignore
   const { setSigner, setProvider } = useLayoutStore()
   const signer = React.useMemo(() => {
     return data
   }, [isLoading, isError, data])
 
   React.useEffect(() => {
-    if (!!signer) {
-      setSigner(signer)
-      setProvider(signer?.provider)
-    }
+    if (!signer) return
+    if (!signer.provider) return
+
+    setSigner(signer)
+    setProvider(signer.provider)
   }, [signer])
 
   return (

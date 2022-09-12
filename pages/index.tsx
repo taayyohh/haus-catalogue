@@ -3,20 +3,16 @@ import { ethers } from "ethers"
 import { useLayoutStore } from "../stores/useLayoutStore"
 import { usePlayerStore } from "../stores/usePlayerStore"
 import { BsArrowDown, BsFillPlayCircleFill, BsPauseCircleFill, BsPlayCircle } from "react-icons/bs"
-import { FaPlayCircle } from "react-icons/fa"
-import {AnimatePresence, motion} from "framer-motion"
-
-// import HAUS_ABI from "../../out/HausCatalogue.sol/HausCatalogue.json"
+import { AnimatePresence, motion } from "framer-motion"
+import HAUS_ABI from "../out/HausCatalogue.sol/HausCatalogue.json"
 
 const Catalogue = () => {
-  const signer = useLayoutStore((state: any) => state.signer)
-  const provider = useLayoutStore((state: any) => state.provider)
-  const { addToQueue, queuedMusic, queue, currentPosition, media, isPlaying, currentTime, duration, setIsPlaying } = usePlayerStore(
-    (state: any) => state
-  )
+  const { signer } = useLayoutStore()
+  const { addToQueue, queuedMusic, queue, currentPosition, media, isPlaying, currentTime, duration, setIsPlaying } =
+    usePlayerStore((state: any) => state)
 
   /* Initialize Catalogue from Arweave */
-  const [catalogue, setCatalogue] = React.useState([])
+  const [catalogue, setCatalogue] = React.useState<any[]>([])
   const _catalogue = React.useMemo(async () => {
     const jsonArray = [
       "https://arweave.net/h6Sz9VUsEIvsAPpzi3BHAG8AfgiNnq9wUkI4gOCU1CY",
@@ -47,44 +43,42 @@ const Catalogue = () => {
   React.useMemo(async () => {
     const catalogue = await _catalogue
 
-    // @ts-ignore
     setCatalogue(catalogue)
   }, [_catalogue])
 
   /*  generate random song  */
   const random = React.useMemo(() => {
     const releases = catalogue.reduce((acc = [], cv) => {
-      // @ts-ignore
       acc.push({ artist: cv.primaryArtist, songs: cv.songs, image: cv.image })
 
       return acc
     }, [])
 
     const random = (max: []) => Math.floor(Math.random() * max.length)
-    // @ts-ignore
     const randomRelease = releases[random(releases)]
-    // @ts-ignore
     const randomSong = randomRelease?.songs[random(randomRelease?.songs)]
-
-    // @ts-ignore
     return { artist: randomRelease?.artist, image: randomRelease?.image, songs: [randomSong] }
   }, [catalogue])
 
-  // const catalogueContract = React.useMemo(async () => {
-  //     if(!signer) return
-  //     try {
-  //         return new ethers.Contract(process.env.HAUS_CATALOGUE || '', HAUS_ABI.abi, signer)
-  //     } catch (err) {
-  //         console.log("err", err)
-  //     }
-  // }, [signer])
+  const catalogueContract = React.useMemo(async () => {
+    if (!signer) return
+
+    try {
+      return new ethers.Contract("0xb12e12c36414c5512B07239F0EdACc70facF5B9D" || "", HAUS_ABI.abi, signer)
+    } catch (err) {
+      console.log("err", err)
+    }
+  }, [signer, HAUS_ABI])
+
   //
-  // React.useMemo(async () => {
-  //     const contract = await catalogueContract
-  //     if(!contract) return
-  //     console.log('c', await contract)
-  //
-  // }, [catalogueContract])
+  React.useMemo(async () => {
+    const contract = await catalogueContract
+    if (!contract) return
+
+    const name = await contract.name
+    console.log("name", name)
+    console.log("c", await contract)
+  }, [catalogueContract])
 
   interface Release {
     image: string
@@ -105,47 +99,52 @@ const Catalogue = () => {
         <div className="sticky top-0 z-0 grid h-screen w-screen place-items-center bg-rose-200">
           <div className="absolute -z-10 flex w-full max-w-screen-xl justify-center">
             {queue && (
-                <AnimatePresence exitBeforeEnter={true}>
-                  <motion.div
-                      className="relative flex flex-col items-center md:flex-row"
-                      key={queue[currentPosition]?.audio}
-                      variants={{
-                        closed: {
-                          y: 10,
-                          opacity: 0
-                        },
-                        open: {
-                          y: 0,
-                          opacity: 1
-                        }
-                      }}
-                      initial="closed"
-                      animate="open"
-                      exit="closed"
+              <AnimatePresence exitBeforeEnter={true}>
+                <motion.div
+                  className="relative flex flex-col items-center md:flex-row"
+                  key={queue[currentPosition]?.audio}
+                  variants={{
+                    closed: {
+                      y: 10,
+                      opacity: 0,
+                    },
+                    open: {
+                      y: 0,
+                      opacity: 1,
+                    },
+                  }}
+                  initial="closed"
+                  animate="open"
+                  exit="closed"
+                >
+                  <button
+                    type="button"
+                    className={`sm-h-32 w-h-32 relative h-72 w-72 overflow-hidden rounded-full border sm:h-96 sm:min-h-[330px] sm:w-96 sm:min-w-[330px]`}
+                    onClick={() => {
+                      isPlaying ? media.pause() : media.play()
+                    }}
                   >
-                    <button
-                        type="button"
-                        className={`sm-h-32 w-h-32 relative h-72 w-72 overflow-hidden rounded-full border sm:h-96 sm:min-h-[330px] sm:w-96 sm:min-w-[330px]`}
-                        onClick={() => {
-                          isPlaying ? media.pause() : media.play()
-                        }}
-                    >
-                      <img className={`h-full w-full ${isPlaying ? "animate-spin-slow" : ""}`} src={queue[currentPosition]?.image} />
-                      <div className="absolute top-[50%] left-[50%] -mt-[24px] -ml-[24px]">
-                        {(isPlaying && <BsPauseCircleFill size={48} />) || <BsFillPlayCircleFill size={48} />}
-                      </div>
-                    </button>
-                    <div className="mt-4 flex max-w-[320px] flex-col gap-2 md:ml-8 md:mt-0 sm:max-w-[400px] md:gap-4 md:pl-8">
-                      <div className="text-3xl font-bold sm:text-4xl md:text-5xl">{queue[currentPosition]?.title}</div>
-                      <div className="text-3xl text-rose-700 sm:text-4xl md:text-5xl">{queue[currentPosition]?.artist}</div>
-                      {currentTime.length > 0 && duration.length > 0 && (
-                          <div className="text-xl">
-                            {currentTime} / {duration}
-                          </div>
-                      )}
+                    <img
+                      className={`h-full w-full ${isPlaying ? "animate-spin-slow" : ""}`}
+                      src={queue[currentPosition]?.image}
+                    />
+                    <div className="absolute top-[50%] left-[50%] -mt-[24px] -ml-[24px]">
+                      {(isPlaying && <BsPauseCircleFill size={48} />) || <BsFillPlayCircleFill size={48} />}
                     </div>
-                  </motion.div>
-                </AnimatePresence>
+                  </button>
+                  <div className="mt-4 flex max-w-[320px] flex-col gap-2 sm:max-w-[400px] md:ml-8 md:mt-0 md:gap-4 md:pl-8">
+                    <div className="text-3xl font-bold sm:text-4xl md:text-5xl">{queue[currentPosition]?.title}</div>
+                    <div className="text-3xl text-rose-700 sm:text-4xl md:text-5xl">
+                      {queue[currentPosition]?.artist}
+                    </div>
+                    {currentTime.length > 0 && duration.length > 0 && (
+                      <div className="text-xl">
+                        {currentTime} / {duration}
+                      </div>
+                    )}
+                  </div>
+                </motion.div>
+              </AnimatePresence>
             )}
           </div>
           <div className="fixed bottom-5 animate-bounce">
