@@ -2,7 +2,7 @@
 
 # dependencies
 /node_modules
-/utils/merkle.ts
+utils/merkle.ts
 /.pnp
 .pnp.js
 
