@@ -12,6 +12,46 @@
     ]
   },
   "files": {
+    "lib/openzeppelin-contracts/contracts/access/Ownable.sol": {
+      "lastModificationDate": 1660514551875,
+      "contentHash": "d1ca0e010fbe72cf869af3855d460ae7",
+      "sourceName": "lib/openzeppelin-contracts/contracts/access/Ownable.sol",
+      "solcConfig": {
+        "settings": {
+          "optimizer": {
+            "enabled": true,
+            "runs": 200
+          },
+          "metadata": {
+            "bytecodeHash": "ipfs"
+          },
+          "outputSelection": {
+            "*": {
+              "": [
+                "ast"
+              ],
+              "*": [
+                "abi",
+                "evm.bytecode",
+                "evm.deployedBytecode",
+                "evm.methodIdentifiers"
+              ]
+            }
+          },
+          "evmVersion": "london",
+          "libraries": {}
+        }
+      },
+      "imports": [
+        "lib/openzeppelin-contracts/contracts/utils/Context.sol"
+      ],
+      "versionRequirement": "^0.8.0",
+      "artifacts": {
+        "Ownable": {
+          "0.8.15+commit.e14f2714.Darwin.appleclang": "Ownable.sol/Ownable.json"
+        }
+      }
+    },
     "lib/openzeppelin-contracts/contracts/interfaces/draft-IERC1822.sol": {
       "lastModificationDate": 1660514551879,
       "contentHash": "2858d98e74e67987ec81b39605230b74",
@@ -249,6 +289,44 @@
       "artifacts": {
         "Address": {
           "0.8.15+commit.e14f2714.Darwin.appleclang": "Address.sol/Address.json"
+        }
+      }
+    },
+    "lib/openzeppelin-contracts/contracts/utils/Context.sol": {
+      "lastModificationDate": 1660514551892,
+      "contentHash": "5f2c5c4b6af2dd4551027144797bc8be",
+      "sourceName": "lib/openzeppelin-contracts/contracts/utils/Context.sol",
+      "solcConfig": {
+        "settings": {
+          "optimizer": {
+            "enabled": true,
+            "runs": 200
+          },
+          "metadata": {
+            "bytecodeHash": "ipfs"
+          },
+          "outputSelection": {
+            "*": {
+              "": [
+                "ast"
+              ],
+              "*": [
+                "abi",
+                "evm.bytecode",
+                "evm.deployedBytecode",
+                "evm.methodIdentifiers"
+              ]
+            }
+          },
+          "evmVersion": "london",
+          "libraries": {}
+        }
+      },
+      "imports": [],
+      "versionRequirement": "^0.8.0",
+      "artifacts": {
+        "Context": {
+          "0.8.15+commit.e14f2714.Darwin.appleclang": "Context.sol/Context.json"
         }
       }
     },
@@ -1114,8 +1192,8 @@
       }
     },
     "src/HausCatalogueManager.sol": {
-      "lastModificationDate": 1662956324535,
-      "contentHash": "81da5c452a48df30d1e361a2698f5649",
+      "lastModificationDate": 1663009419266,
+      "contentHash": "bd4860575ad3b238313947ccef777dc0",
       "sourceName": "src/HausCatalogueManager.sol",
       "solcConfig": {
         "settings": {
@@ -1144,22 +1222,15 @@
         }
       },
       "imports": [
+        "lib/openzeppelin-contracts/contracts/access/Ownable.sol",
         "lib/openzeppelin-contracts/contracts/interfaces/draft-IERC1822.sol",
         "lib/openzeppelin-contracts/contracts/proxy/ERC1967/ERC1967Proxy.sol",
         "lib/openzeppelin-contracts/contracts/proxy/ERC1967/ERC1967Upgrade.sol",
         "lib/openzeppelin-contracts/contracts/proxy/Proxy.sol",
         "lib/openzeppelin-contracts/contracts/proxy/beacon/IBeacon.sol",
         "lib/openzeppelin-contracts/contracts/utils/Address.sol",
-        "lib/openzeppelin-contracts/contracts/utils/StorageSlot.sol",
-        "node_modules/@openzeppelin/contracts-upgradeable/access/OwnableUpgradeable.sol",
-        "node_modules/@openzeppelin/contracts-upgradeable/interfaces/draft-IERC1822Upgradeable.sol",
-        "node_modules/@openzeppelin/contracts-upgradeable/proxy/ERC1967/ERC1967UpgradeUpgradeable.sol",
-        "node_modules/@openzeppelin/contracts-upgradeable/proxy/beacon/IBeaconUpgradeable.sol",
-        "node_modules/@openzeppelin/contracts-upgradeable/proxy/utils/Initializable.sol",
-        "node_modules/@openzeppelin/contracts-upgradeable/proxy/utils/UUPSUpgradeable.sol",
-        "node_modules/@openzeppelin/contracts-upgradeable/utils/AddressUpgradeable.sol",
-        "node_modules/@openzeppelin/contracts-upgradeable/utils/ContextUpgradeable.sol",
-        "node_modules/@openzeppelin/contracts-upgradeable/utils/StorageSlotUpgradeable.sol"
+        "lib/openzeppelin-contracts/contracts/utils/Context.sol",
+        "lib/openzeppelin-contracts/contracts/utils/StorageSlot.sol"
       ],
       "versionRequirement": "^0.8.15",
       "artifacts": {

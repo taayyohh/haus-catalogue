@@ -8,20 +8,21 @@ const Settings = () => {
 
   const [contract, setContract] = React.useState<any>()
   React.useMemo(async () => {
-      console.log('s', signer, HAUS_ABI)
     if (!signer) return
 
     try {
-      const contract: any = new ethers.Contract("0x768F1A5242BBc348C1A652f82d9AaaF029D927E4" || "", HAUS_ABI, signer)
+      const contract: any = new ethers.Contract("0x072883a56fb005a25e4afbea4bc6d60a9c0a4eae" || "", HAUS_ABI.abi, signer)
       setContract(contract)
     } catch (err) {
       console.log("err", err)
     }
   }, [signer, HAUS_ABI])
 
-  console.log("c", contract)
+    console.log("c", contract?.owner())
 
-  return (
+
+
+    return (
     <div>
       <div>Settings</div>
       <div

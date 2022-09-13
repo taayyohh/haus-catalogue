@@ -2,10 +2,10 @@ pragma solidity ^0.8.10;
 
 import {ERC721Upgradeable} from "@openzeppelin/contracts-upgradeable/token/ERC721/ERC721Upgradeable.sol";
 import {IERC2981Upgradeable, IERC165Upgradeable} from "@openzeppelin/contracts-upgradeable/interfaces/IERC2981Upgradeable.sol";
-import {OwnableUpgradeable} from "@openzeppelin/contracts-upgradeable/access/OwnableUpgradeable.sol";
 import {CountersUpgradeable} from "@openzeppelin/contracts-upgradeable/utils/CountersUpgradeable.sol";
 import {MerkleProofUpgradeable} from "@openzeppelin/contracts-upgradeable/utils/cryptography/MerkleProofUpgradeable.sol";
 import {UUPSUpgradeable} from "@openzeppelin/contracts-upgradeable/proxy/utils/UUPSUpgradeable.sol";
+import { Ownable } from "../utils/Ownable.sol";
 
 /**
 --------------------------------------------------------------------------------------------------------------------
@@ -34,7 +34,7 @@ d88'   88b`?88P'`88b`?88P'?8b`?888P'     `?888P'`?88P'`88b  `?8b  `?88P'`88b  88
 
 ---------------------------------------------------------------------------------------------------------------------    
  */
-contract HausCatalogue is ERC721Upgradeable, IERC2981Upgradeable, OwnableUpgradeable, UUPSUpgradeable {
+contract HausCatalogue is ERC721Upgradeable, IERC2981Upgradeable, Ownable, UUPSUpgradeable {
   using CountersUpgradeable for CountersUpgradeable.Counter;
 
   /*
@@ -94,9 +94,9 @@ contract HausCatalogue is ERC721Upgradeable, IERC2981Upgradeable, OwnableUpgrade
         @dev contains constructor logic, initializes proxied contract. must be called upon deployment.
   
    */
-  function initialize(string memory _name, string memory _symbol) public initializer {
+  function initialize(string memory _name, string memory _symbol, address _owner) public initializer {
     __ERC721_init(_name, _symbol);
-    __Ownable_init();
+    __Ownable_init(_owner);
     __UUPSUpgradeable_init();
 
     /// Start tokenId @ 1
