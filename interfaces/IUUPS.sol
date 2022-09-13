@@ -1,8 +1,9 @@
 // SPDX-License-Identifier: MIT
 pragma solidity ^0.8.15;
 
-import { IERC1822Proxiable } from "@openzeppelin/contracts/interfaces/draft-IERC1822.sol";
 import { IERC1967Upgrade } from "./IERC1967Upgrade.sol";
+import { IERC1822Proxiable } from "./IERC1822Proxiable.sol";
+
 
 /// @title IUUPS
 /// @author Rohan Kulkarni
