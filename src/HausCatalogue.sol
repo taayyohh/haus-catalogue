@@ -2,10 +2,11 @@ pragma solidity ^0.8.10;
 
 import {ERC721Upgradeable} from "@openzeppelin/contracts-upgradeable/token/ERC721/ERC721Upgradeable.sol";
 import {IERC2981Upgradeable, IERC165Upgradeable} from "@openzeppelin/contracts-upgradeable/interfaces/IERC2981Upgradeable.sol";
-import {OwnableUpgradeable} from "@openzeppelin/contracts-upgradeable/access/OwnableUpgradeable.sol";
 import {CountersUpgradeable} from "@openzeppelin/contracts-upgradeable/utils/CountersUpgradeable.sol";
 import {MerkleProofUpgradeable} from "@openzeppelin/contracts-upgradeable/utils/cryptography/MerkleProofUpgradeable.sol";
-import {UUPSUpgradeable} from "@openzeppelin/contracts-upgradeable/proxy/utils/UUPSUpgradeable.sol";
+import {Ownable} from "./utils/Ownable.sol"
+import {UUPS} from "./proxy/UUPS.sol"
+import {ERC721} from "./token/ERC721.sol"
 
 /**
 --------------------------------------------------------------------------------------------------------------------
@@ -34,7 +35,7 @@ d88'   88b`?88P'`88b`?88P'?8b`?888P'     `?888P'`?88P'`88b  `?8b  `?88P'`88b  88
 
 ---------------------------------------------------------------------------------------------------------------------    
  */
-contract HausCatalogue is ERC721Upgradeable, IERC2981Upgradeable, OwnableUpgradeable, UUPSUpgradeable {
+contract HausCatalogue is ERC721, IERC2981Upgradeable, UUPS, Ownable {
   using CountersUpgradeable for CountersUpgradeable.Counter;
 
   /*
