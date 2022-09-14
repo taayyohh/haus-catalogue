@@ -4,9 +4,9 @@ import {ERC721Upgradeable} from "@openzeppelin/contracts-upgradeable/token/ERC72
 import {IERC2981Upgradeable, IERC165Upgradeable} from "@openzeppelin/contracts-upgradeable/interfaces/IERC2981Upgradeable.sol";
 import {CountersUpgradeable} from "@openzeppelin/contracts-upgradeable/utils/CountersUpgradeable.sol";
 import {MerkleProofUpgradeable} from "@openzeppelin/contracts-upgradeable/utils/cryptography/MerkleProofUpgradeable.sol";
-import {Ownable} from "./utils/Ownable.sol"
-import {UUPS} from "./proxy/UUPS.sol"
-import {ERC721} from "./token/ERC721.sol"
+import {Ownable} from "lib//utils/Ownable.sol";
+import {UUPS} from "lib/proxy/UUPS.sol";
+import {ERC721} from "lib/token/ERC721.sol";
 
 /**
 --------------------------------------------------------------------------------------------------------------------
@@ -29,7 +29,7 @@ d88'   88b`?88P'`88b`?88P'?8b`?888P'     `?888P'`?88P'`88b  `?8b  `?88P'`88b  88
 @title                      :   LucidHaus Catalogue
 @author                     :   @taayyohh of LucidHaus, LLC. fork of Catalog by COMPUTER DATA (brett henderson) of Catalog Records Inc.
 @notice                     :   The LucidHaus Catalogue Shared Creator Contract is an upgradeable ERC721 contract, purpose built
-                                to facilitate the creation of  Haus Catalogue Releases.
+                                to facilitate the creation of  LucidHaus Catalogue Releases.
 @dev                        :   Upgradeable ERC721 Contract, inherits functionality from ERC721Upgradeable. 
                                 This contract conforms to the EIP-2981 NFT Royalty Standard.
 
@@ -95,10 +95,13 @@ contract HausCatalogue is ERC721, IERC2981Upgradeable, UUPS, Ownable {
         @dev contains constructor logic, initializes proxied contract. must be called upon deployment.
   
    */
-  function initialize(string memory _name, string memory _symbol) public initializer {
+  function initialize(
+    string memory _name,
+    string memory _symbol,
+    address _owner
+  ) public initializer {
     __ERC721_init(_name, _symbol);
-    __Ownable_init();
-    __UUPSUpgradeable_init();
+    __Ownable_init(_owner);
 
     /// Start tokenId @ 1
     _tokenIdCounter.increment();
@@ -118,14 +121,14 @@ contract HausCatalogue is ERC721, IERC2981Upgradeable, UUPS, Ownable {
   }
 
   /*
-  
+
       MINT
 
         @notice mints a new token
         @param _data input TokenData struct, containing metadataURI, creator, royaltyPayout, royaltyBPS
         @param _content input ContentData struct, containing contentURI, contentHash.
         @param _proof merkle proof for the artist address.
-        @return tokenId of the minted token 
+        @return tokenId of the minted token
         @dev mints a new token to msg.sender with a valid input creator address proof. Emits a ContentUpdated event to track contentURI/contentHash updates.
      */
   function mint(
@@ -152,13 +155,13 @@ contract HausCatalogue is ERC721, IERC2981Upgradeable, UUPS, Ownable {
   }
 
   /*
-  
+
         WRITE
 
         @notice Emits an event to be used to track content updates on a token
         @param _tokenId token id corresponding to the token to update
         @param _content struct containing new/updated contentURI and hash.
-        @dev access controlled function, restricted to owner/admin. 
+        @dev access controlled function, restricted to owner/admin.
    */
 
   function updateContentURI(uint256 _tokenId, ContentData calldata _content) external onlyOwner {
@@ -210,9 +213,9 @@ contract HausCatalogue is ERC721, IERC2981Upgradeable, UUPS, Ownable {
   }
 
   /*
-  
+
         READ
-   
+
         @notice gets the creator address of a given tokenId
         @param _tokenId identifier of token to get creator for
         @return creator address of given tokenId
@@ -225,12 +228,12 @@ contract HausCatalogue is ERC721, IERC2981Upgradeable, UUPS, Ownable {
   }
 
   /*
-  
+
         @notice gets the address for the royalty payout of a token/record
         @param _tokenId identifier of token to get royalty payout address for
         @return royalty payout address of given tokenId
-        @dev basic public getter method for royalty payout address 
-   
+        @dev basic public getter method for royalty payout address
+
    */
   function royaltyPayoutAddress(uint256 _tokenId) public view returns (address) {
     address r = tokenData[_tokenId].royaltyPayout;
@@ -238,9 +241,9 @@ contract HausCatalogue is ERC721, IERC2981Upgradeable, UUPS, Ownable {
   }
 
   /*
-    
+
         OVERRIDES
-        
+
         @notice override function gets royalty information for a token (EIP-2981)
         @param _tokenId token id corresponding to the token of which to get royalty information
         @param _salePrice final sale price of token used to calculate royalty payout
@@ -261,14 +264,16 @@ contract HausCatalogue is ERC721, IERC2981Upgradeable, UUPS, Ownable {
         @param interfaceId id of interface to check
         @inheritdoc IERC165Upgradeable
    */
-  function supportsInterface(bytes4 interfaceId)
-    public
-    view
-    virtual
-    override(ERC721Upgradeable, IERC165Upgradeable)
+  function supportsInterface(bytes4 _interfaceId)
+    external
+    pure
+    override(ERC721, IERC165Upgradeable)
     returns (bool)
   {
-    return type(IERC2981Upgradeable).interfaceId == interfaceId || ERC721Upgradeable.supportsInterface(interfaceId);
+    return
+      _interfaceId == 0x01ffc9a7 || // ERC165 Interface ID
+      _interfaceId == 0x80ac58cd || // ERC721 Interface ID
+      _interfaceId == 0x5b5e139f; // ERC721Metadata Interface ID
   }
 
   /*
@@ -278,7 +283,6 @@ contract HausCatalogue is ERC721, IERC2981Upgradeable, UUPS, Ownable {
         @dev override function, returns metadataURI of token stored in tokenData
    */
   function tokenURI(uint256 _tokenId) public view override returns (string memory) {
-    require(_exists(_tokenId), "ERC721Metadata: URI query for nonexistent token");
     return tokenData[_tokenId].metadataURI;
   }
 
