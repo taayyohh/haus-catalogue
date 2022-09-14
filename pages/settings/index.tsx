@@ -11,18 +11,18 @@ const Settings = () => {
     if (!signer) return
 
     try {
-      const contract: any = new ethers.Contract("0x072883a56fb005a25e4afbea4bc6d60a9c0a4eae" || "", HAUS_ABI.abi, signer)
+      const contract: any = new ethers.Contract(
+        "0x3da452152183140f1eb94b55a86f1671d51d63f4" || "",
+        HAUS_ABI.abi,
+        signer
+      )
       setContract(contract)
     } catch (err) {
       console.log("err", err)
     }
   }, [signer, HAUS_ABI])
 
-    console.log("c", contract?.owner())
-
-
-
-    return (
+  return (
     <div>
       <div>Settings</div>
       <div

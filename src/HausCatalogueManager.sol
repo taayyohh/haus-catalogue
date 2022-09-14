@@ -17,7 +17,10 @@ contract HausCatalogueManager {
 
     address managerProxy;
     managerProxy = address(
-      new ERC1967Proxy(address(catalogueImpl), abi.encodeWithSignature("initialize(string,string)", _name, _symbol, _owner))
+      new ERC1967Proxy(
+        address(catalogueImpl),
+        abi.encodeWithSignature("initialize(string,string,address)", _name, _symbol, _owner)
+      )
     );
     emit HausCatalogueDeployed(managerProxy);
   }
