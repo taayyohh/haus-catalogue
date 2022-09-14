@@ -73,7 +73,6 @@ const Player = () => {
   }, [handleAddToQueue])
 
   const loadMedia = React.useCallback(async () => {
-    console.log('ad', audioRef)
     const media: Media = audioRef.current || {
       readyState: 0,
       duration: 0,
