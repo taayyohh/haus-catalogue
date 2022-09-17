@@ -28,10 +28,10 @@ import {ERC721} from "lib/token/ERC721.sol";
 ---------------------------------------------------------------------------------------------------------------------                                                                                                                                                                                                                                                                                                                           
 
 @title                      :   LucidHaus Catalogue
-@author                     :   @taayyohh of LucidHaus, LLC. fork of Catalog by COMPUTER DATA (brett henderson) of Catalog Records Inc.
-@notice                     :   The LucidHaus Catalogue Shared Creator Contract is an upgradeable ERC721 contract, purpose built
-                                to facilitate the creation of  LucidHaus Catalogue Releases.
-@dev                        :   Upgradeable ERC721 Contract, inherits functionality from ERC721Upgradeable. 
+@author                     :   @taayyohh
+@dev                        :   The LucidHaus Catalogue Shared Creator Contract is an upgradeable ERC721 contract,
+                                purpose built to facilitate the creation of  LucidHaus Catalogue Releases.
+                                Upgradeable ERC721 Contract, inherits functionality from ERC721Upgradeable.
                                 This contract conforms to the EIP-2981 NFT Royalty Standard.
 
 ---------------------------------------------------------------------------------------------------------------------    

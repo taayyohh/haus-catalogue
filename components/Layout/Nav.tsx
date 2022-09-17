@@ -1,6 +1,7 @@
 import { ConnectButton } from "@rainbow-me/rainbowkit"
 import React from "react"
 import { useRelativeTime } from "hooks/useRelativeTime"
+import Link from "next/link";
 
 const Nav = () => {
   const { formattedDate } = useRelativeTime()
@@ -14,7 +15,9 @@ const Nav = () => {
 
       <div>
         <div className="w-24">
-          <img src="/lucidhaus.png" />
+            <Link href={'/'}>
+                <img src="/lucidhaus.png" />
+            </Link>
           {/*<div>{formattedDate(new Date())}</div>*/}
         </div>
       </div>

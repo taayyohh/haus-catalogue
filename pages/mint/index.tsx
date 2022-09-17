@@ -2,14 +2,20 @@ import React from "react"
 import { ethers } from "ethers"
 import HAUS_ABI from "out/HausCatalogue.sol/HausCatalogue.json"
 import { useLayoutStore } from "stores/useLayoutStore"
+import MetadataForm from "./MetaDataForm/MetadataForm"
 import { MerkleTree } from "merkletreejs"
 const SHA256 = require("crypto-js/sha256")
 
-const Settings: React.FC<any> = ({ allow }) => {
+const Mint: React.FC<{ allow: string[] }> = ({ allow }) => {
   const { signer, signerAddress } = useLayoutStore()
+  const leaves = allow?.map(x => SHA256(x))
+  const tree = new MerkleTree(leaves, SHA256)
+  const root = tree.getRoot().toString("hex")
+  const leaf = (address: string) => SHA256(address)
+  const proof = (leaf: any) => tree.getHexProof(leaf)
+
   const [contract, setContract] = React.useState<any>()
   const [owner, setOwner] = React.useState("")
-
   React.useMemo(async () => {
     if (!signer) return
 
@@ -31,36 +37,19 @@ const Settings: React.FC<any> = ({ allow }) => {
     setOwner(await contract.owner())
   }, [contract])
 
-  /*
-  
-    generate root
-  
-
-   */
-  const leaves = allow?.map((x: string) => SHA256(x))
-  const tree = new MerkleTree(leaves, SHA256)
-  const root = tree.getRoot().toString("hex")
-
   return (
     <div>
-      <div>Settings</div>
+      <div>Mint</div>
       {owner && signerAddress && ethers.utils.getAddress(owner) === ethers.utils.getAddress(signerAddress) && (
-        <div>
-          <div
-            className={"mt-24"}
-            onClick={() => {
-              contract?.updateRoot(ethers.utils.hexlify('0x' + root))
-            }}
-          >
-            update root
-          </div>
+        <div className={"mx-auto mt-28 w-1/3"}>
+          <MetadataForm merkle={{ proof, leaf, root, tree, leaves }} contract={contract} />
         </div>
       )}
     </div>
   )
 }
 
-export default Settings
+export default Mint
 
 export async function getStaticProps() {
   const allow = process.env.MERKLE?.split(",")

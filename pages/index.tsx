@@ -43,13 +43,20 @@ const Catalogue = () => {
   React.useMemo(async () => {
     const catalogue = await _catalogue
 
+    console.log('c', catalogue.length)
+
     setCatalogue(catalogue)
   }, [_catalogue])
 
   /*  generate random song  */
   const random = React.useMemo(() => {
     const releases = catalogue.reduce((acc = [], cv) => {
+      let count = 0
       acc.push({ artist: cv.primaryArtist, songs: cv.songs, image: cv.image })
+
+      count = count + cv.songs.length
+
+      console.log('c', count)
 
       return acc
     }, [])

@@ -10,7 +10,7 @@ type Props = {
 
 const Layout = ({ children }: Props) => {
   const { data, isError, isLoading } = useSigner()
-  const { setSigner, setProvider } = useLayoutStore()
+  const { setSigner, setProvider, setSignerAddress } = useLayoutStore()
   const signer = React.useMemo(() => {
     return data
   }, [isLoading, isError, data])
@@ -21,6 +21,18 @@ const Layout = ({ children }: Props) => {
 
     setSigner(signer)
     setProvider(signer.provider)
+  }, [signer])
+
+  /*
+
+  extract signer Address
+
+*/
+  React.useMemo(async () => {
+    if (!!signer) {
+      /* @ts-ignore */ //TODO: handle this
+      setSignerAddress(await signer._address)
+    }
   }, [signer])
 
   return (
