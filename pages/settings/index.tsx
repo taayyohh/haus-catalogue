@@ -1,6 +1,6 @@
 import React from "react"
 import { ethers } from "ethers"
-import HAUS_ABI from "out/HausCatalogue.sol/HausCatalogue.json"
+import HAUS_ABI from "ABI/HausCatalogue.json"
 import { useLayoutStore } from "stores/useLayoutStore"
 import { MerkleTree } from "merkletreejs"
 const SHA256 = require("crypto-js/sha256")

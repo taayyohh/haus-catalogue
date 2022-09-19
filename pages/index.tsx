@@ -4,7 +4,7 @@ import { useLayoutStore } from "stores/useLayoutStore"
 import { usePlayerStore } from "stores/usePlayerStore"
 import { BsArrowDown, BsFillPlayCircleFill, BsPauseCircleFill, BsPlayCircle } from "react-icons/bs"
 import { AnimatePresence, motion } from "framer-motion"
-import HAUS_ABI from "out/HausCatalogue.sol/HausCatalogue.json"
+import HAUS_ABI from "ABI/HausCatalogue.json"
 
 const Catalogue = () => {
   const { signer } = useLayoutStore()
