@@ -1,10 +1,10 @@
 import React from "react"
 import { ethers } from "ethers"
-import { useLayoutStore } from "../stores/useLayoutStore"
-import { usePlayerStore } from "../stores/usePlayerStore"
+import { useLayoutStore } from "stores/useLayoutStore"
+import { usePlayerStore } from "stores/usePlayerStore"
 import { BsArrowDown, BsFillPlayCircleFill, BsPauseCircleFill, BsPlayCircle } from "react-icons/bs"
 import { AnimatePresence, motion } from "framer-motion"
-import HAUS_ABI from "../out/HausCatalogue.sol/HausCatalogue.json"
+import HAUS_ABI from "out/HausCatalogue.sol/HausCatalogue.json"
 
 const Catalogue = () => {
   const { signer } = useLayoutStore()
@@ -43,7 +43,7 @@ const Catalogue = () => {
   React.useMemo(async () => {
     const catalogue = await _catalogue
 
-    console.log('c', catalogue.length)
+    console.log("c", catalogue.length)
 
     setCatalogue(catalogue)
   }, [_catalogue])
@@ -56,7 +56,7 @@ const Catalogue = () => {
 
       count = count + cv.songs.length
 
-      console.log('c', count)
+      console.log("c", count)
 
       return acc
     }, [])
