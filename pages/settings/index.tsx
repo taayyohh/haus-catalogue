@@ -20,6 +20,8 @@ const Settings: React.FC<any> = ({ allow }) => {
         signer
       )
       setContract(contract)
+
+      console.log("ROOT", await contract.merkleRoot())
     } catch (err) {
       console.log("err", err)
     }
@@ -39,7 +41,7 @@ const Settings: React.FC<any> = ({ allow }) => {
    */
   const leaves = allow?.map((x: string) => SHA256(x))
   const tree = new MerkleTree(leaves, SHA256)
-  const root = tree.getRoot().toString("hex")
+  const root = tree.getHexRoot()
 
   return (
     <div>
@@ -49,7 +51,7 @@ const Settings: React.FC<any> = ({ allow }) => {
           <div
             className={"mt-24"}
             onClick={() => {
-              contract?.updateRoot(ethers.utils.hexlify('0x' + root))
+              contract?.updateRoot(root)
             }}
           >
             update root

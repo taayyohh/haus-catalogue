@@ -10,7 +10,7 @@ const Mint: React.FC<{ allow: string[] }> = ({ allow }) => {
   const { signer, signerAddress } = useLayoutStore()
   const leaves = allow?.map(x => SHA256(x))
   const tree = new MerkleTree(leaves, SHA256)
-  const root = tree.getRoot().toString("hex")
+  const root = tree.getHexRoot()
   const leaf = (address: string) => SHA256(address)
   const proof = (leaf: any) => tree.getHexProof(leaf)
 

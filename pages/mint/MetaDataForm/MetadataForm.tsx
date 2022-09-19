@@ -12,43 +12,36 @@ const MetadataForm: React.FC<{ merkle: any; contract: Contract }> = ({ merkle, c
 
   const submitCallBack = React.useCallback(
     async (values: any) => {
-      console.log("sub", values)
-       if (!signerAddress) return
-      // //  /*
-      // //
-      //  sanitize values for Metadata Upload
-      //
-      //
-      // */
-      //
+      if (!signerAddress) return
+      /*
+    
+         sanitize values for Metadata Upload
+     
+     */
       values.title = values.name
       values.project.title = values.title
       values.project.description = values.description
       values.attributes.artist = values.artist
-      //
-
       const metadata = await client.store(values)
-      //
-      console.log("v", values)
-      console.log("Metadata URI: ", metadata.url)
-
-      const tokenData = [metadata.url, signerAddress, signerAddress, 1000]
+      const tokenData = {
+        metadataURI: metadata.url,
+        creator: signerAddress,
+        royaltyPayout: signerAddress,
+        royaltyBPS: 10000,
+      }
 
       const cid = new CID(values.cid).toV0()
       const hash = cid.toString(cid.multibaseName)
       const contentHash = ethers.utils.base58.decode(hash).slice(2)
-      console.log("d", contentHash)
-      const contentData = [values.losslessAudio, contentHash]
+      const contentData = {
+        contentURI: values.losslessAudio,
+        contentHash,
+      }
 
       const leaf = merkle.leaf(signerAddress)
       const proof = merkle.proof(leaf)
-      console.log("p", ethers.utils.concat(proof))
 
-      // console.log(tokenData, contentData, proof)
-        console.log(merkle.tree.verify(proof, leaf, merkle.root)) // true
-
-
-        // contract.mint(tokenData, contentData, ethers.utils.concat(proof))
+      contract.mint(tokenData, contentData, proof)
     },
     [signerAddress, merkle, contract]
   )
