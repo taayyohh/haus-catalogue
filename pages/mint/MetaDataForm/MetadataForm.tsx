@@ -1,6 +1,6 @@
 import React from "react"
 import Form from "components/Fields/Form"
-import { fields } from "./fields"
+import { metadataFields } from "../../../components/Fields/fields/metadataFields"
 import { NFTStorage } from "nft.storage"
 import { useLayoutStore } from "stores/useLayoutStore"
 import { ethers, Contract } from "ethers"
@@ -101,7 +101,7 @@ const MetadataForm: React.FC<{ merkle: any; contract: Contract }> = ({ merkle, c
     <div>
       <div className={"mb-8 text-3xl"}>Mint to LucidHaus Catalogue</div>
       <div className={"mb-24"}>
-        <Form fields={fields} initialValues={initialValues} submitCallback={submitCallBack} />
+        <Form fields={metadataFields} initialValues={initialValues} submitCallback={submitCallBack} />
       </div>
     </div>
   )
