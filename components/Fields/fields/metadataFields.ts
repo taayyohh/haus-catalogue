@@ -55,5 +55,29 @@ export const metadataFields = [
   },
 ]
 
-
-
+export const metadataInitialValues = {
+  animation_url: "",
+  artist: "",
+  attributes: {
+    artist: "",
+  },
+  description: "",
+  duration: "",
+  external_url: "",
+  image: "",
+  losslessAudio: "",
+  mimeType: "",
+  name: "",
+  project: {
+    artwork: {
+      uri: "",
+      mimeType: "",
+    },
+    title: "",
+    description: "",
+  },
+  title: "",
+  trackNumber: "",
+  version: "lucidhaus-0.0.1",
+  contentHash: "",
+}
