@@ -13,7 +13,7 @@
   },
   "files": {
     "lib/openzeppelin-contracts/contracts/interfaces/draft-IERC1822.sol": {
-      "lastModificationDate": 1663556160208,
+      "lastModificationDate": 1663561267157,
       "contentHash": "2858d98e74e67987ec81b39605230b74",
       "sourceName": "lib/openzeppelin-contracts/contracts/interfaces/draft-IERC1822.sol",
       "solcConfig": {
@@ -51,7 +51,7 @@
       }
     },
     "lib/openzeppelin-contracts/contracts/proxy/ERC1967/ERC1967Proxy.sol": {
-      "lastModificationDate": 1663556160214,
+      "lastModificationDate": 1663561267164,
       "contentHash": "4dc333aadc9d31f2f64821f3640ad1ed",
       "sourceName": "lib/openzeppelin-contracts/contracts/proxy/ERC1967/ERC1967Proxy.sol",
       "solcConfig": {
@@ -96,7 +96,7 @@
       }
     },
     "lib/openzeppelin-contracts/contracts/proxy/ERC1967/ERC1967Upgrade.sol": {
-      "lastModificationDate": 1663556160214,
+      "lastModificationDate": 1663561267164,
       "contentHash": "6baa887a798e95b14f34e093f117e9b2",
       "sourceName": "lib/openzeppelin-contracts/contracts/proxy/ERC1967/ERC1967Upgrade.sol",
       "solcConfig": {
@@ -139,7 +139,7 @@
       }
     },
     "lib/openzeppelin-contracts/contracts/proxy/Proxy.sol": {
-      "lastModificationDate": 1663556160214,
+      "lastModificationDate": 1663561267164,
       "contentHash": "40b3d81a836d50ff47e03893dcaaf204",
       "sourceName": "lib/openzeppelin-contracts/contracts/proxy/Proxy.sol",
       "solcConfig": {
@@ -177,7 +177,7 @@
       }
     },
     "lib/openzeppelin-contracts/contracts/proxy/beacon/IBeacon.sol": {
-      "lastModificationDate": 1663556160214,
+      "lastModificationDate": 1663561267164,
       "contentHash": "b6bd23bf19e90b771337037706470933",
       "sourceName": "lib/openzeppelin-contracts/contracts/proxy/beacon/IBeacon.sol",
       "solcConfig": {
@@ -215,7 +215,7 @@
       }
     },
     "lib/openzeppelin-contracts/contracts/utils/Address.sol": {
-      "lastModificationDate": 1663556160219,
+      "lastModificationDate": 1663561267169,
       "contentHash": "1907721a20f3940c8c10d080893ced64",
       "sourceName": "lib/openzeppelin-contracts/contracts/utils/Address.sol",
       "solcConfig": {
@@ -253,7 +253,7 @@
       }
     },
     "lib/openzeppelin-contracts/contracts/utils/StorageSlot.sol": {
-      "lastModificationDate": 1663556160220,
+      "lastModificationDate": 1663561267170,
       "contentHash": "c9f7c6d2f963f3675e70a7298b3453bf",
       "sourceName": "lib/openzeppelin-contracts/contracts/utils/StorageSlot.sol",
       "solcConfig": {
@@ -363,44 +363,6 @@
       "artifacts": {
         "Proxy": {
           "0.8.15+commit.e14f2714.Darwin.appleclang": "contracts/proxy/Proxy.sol/Proxy.json"
-        }
-      }
-    },
-    "node_modules/@openzeppelin/contracts/token/ERC20/IERC20.sol": {
-      "lastModificationDate": 1659013955676,
-      "contentHash": "ad7c2d0af148c8f9f097d65deeb4da6b",
-      "sourceName": "node_modules/@openzeppelin/contracts/token/ERC20/IERC20.sol",
-      "solcConfig": {
-        "settings": {
-          "optimizer": {
-            "enabled": true,
-            "runs": 200
-          },
-          "metadata": {
-            "bytecodeHash": "ipfs"
-          },
-          "outputSelection": {
-            "*": {
-              "": [
-                "ast"
-              ],
-              "*": [
-                "abi",
-                "evm.bytecode",
-                "evm.deployedBytecode",
-                "evm.methodIdentifiers"
-              ]
-            }
-          },
-          "evmVersion": "london",
-          "libraries": {}
-        }
-      },
-      "imports": [],
-      "versionRequirement": "^0.8.0",
-      "artifacts": {
-        "IERC20": {
-          "0.8.15+commit.e14f2714.Darwin.appleclang": "IERC20.sol/IERC20.json"
         }
       }
     },
@@ -963,8 +925,8 @@
       }
     },
     "src/HausCatalogue.sol": {
-      "lastModificationDate": 1663554881982,
-      "contentHash": "891e6d8bde27d1dd9d5dd606200a1d7c",
+      "lastModificationDate": 1663639025934,
+      "contentHash": "55e7caec0474d52fe6a72190c0fa7d6b",
       "sourceName": "src/HausCatalogue.sol",
       "solcConfig": {
         "settings": {
@@ -1074,44 +1036,6 @@
         }
       }
     },
-    "src/lib/interfaces/IEIP712.sol": {
-      "lastModificationDate": 1663193526053,
-      "contentHash": "108b4f6acc35b4378e9c9bcb37ce51d7",
-      "sourceName": "src/lib/interfaces/IEIP712.sol",
-      "solcConfig": {
-        "settings": {
-          "optimizer": {
-            "enabled": true,
-            "runs": 200
-          },
-          "metadata": {
-            "bytecodeHash": "ipfs"
-          },
-          "outputSelection": {
-            "*": {
-              "": [
-                "ast"
-              ],
-              "*": [
-                "abi",
-                "evm.bytecode",
-                "evm.deployedBytecode",
-                "evm.methodIdentifiers"
-              ]
-            }
-          },
-          "evmVersion": "london",
-          "libraries": {}
-        }
-      },
-      "imports": [],
-      "versionRequirement": "^0.8.4",
-      "artifacts": {
-        "IEIP712": {
-          "0.8.15+commit.e14f2714.Darwin.appleclang": "IEIP712.sol/IEIP712.json"
-        }
-      }
-    },
     "src/lib/interfaces/IERC1967Upgrade.sol": {
       "lastModificationDate": 1663193526053,
       "contentHash": "9a8f95b3332f54a8c4efb8b2a5fb4ea5",
@@ -1185,47 +1109,6 @@
       "artifacts": {
         "IERC721": {
           "0.8.15+commit.e14f2714.Darwin.appleclang": "interfaces/IERC721.sol/IERC721.json"
-        }
-      }
-    },
-    "src/lib/interfaces/IERC721Votes.sol": {
-      "lastModificationDate": 1663193715244,
-      "contentHash": "6c9416941c1e21851a5cc5a665533d0d",
-      "sourceName": "src/lib/interfaces/IERC721Votes.sol",
-      "solcConfig": {
-        "settings": {
-          "optimizer": {
-            "enabled": true,
-            "runs": 200
-          },
-          "metadata": {
-            "bytecodeHash": "ipfs"
-          },
-          "outputSelection": {
-            "*": {
-              "": [
-                "ast"
-              ],
-              "*": [
-                "abi",
-                "evm.bytecode",
-                "evm.deployedBytecode",
-                "evm.methodIdentifiers"
-              ]
-            }
-          },
-          "evmVersion": "london",
-          "libraries": {}
-        }
-      },
-      "imports": [
-        "src/lib/interfaces/IEIP712.sol",
-        "src/lib/interfaces/IERC721.sol"
-      ],
-      "versionRequirement": "^0.8.4",
-      "artifacts": {
-        "IERC721Votes": {
-          "0.8.15+commit.e14f2714.Darwin.appleclang": "IERC721Votes.sol/IERC721Votes.json"
         }
       }
     },
@@ -1305,44 +1188,6 @@
         }
       }
     },
-    "src/lib/interfaces/IPausable.sol": {
-      "lastModificationDate": 1663193715245,
-      "contentHash": "abf1c66f8a0ce7bbdbf0bab762316ccb",
-      "sourceName": "src/lib/interfaces/IPausable.sol",
-      "solcConfig": {
-        "settings": {
-          "optimizer": {
-            "enabled": true,
-            "runs": 200
-          },
-          "metadata": {
-            "bytecodeHash": "ipfs"
-          },
-          "outputSelection": {
-            "*": {
-              "": [
-                "ast"
-              ],
-              "*": [
-                "abi",
-                "evm.bytecode",
-                "evm.deployedBytecode",
-                "evm.methodIdentifiers"
-              ]
-            }
-          },
-          "evmVersion": "london",
-          "libraries": {}
-        }
-      },
-      "imports": [],
-      "versionRequirement": "^0.8.4",
-      "artifacts": {
-        "IPausable": {
-          "0.8.15+commit.e14f2714.Darwin.appleclang": "IPausable.sol/IPausable.json"
-        }
-      }
-    },
     "src/lib/interfaces/IUUPS.sol": {
       "lastModificationDate": 1663558973212,
       "contentHash": "41dd93ff323d95748a05e9cc3bd469b9",
@@ -1381,46 +1226,6 @@
       "artifacts": {
         "IUUPS": {
           "0.8.15+commit.e14f2714.Darwin.appleclang": "interfaces/IUUPS.sol/IUUPS.json"
-        }
-      }
-    },
-    "src/lib/interfaces/IWETH.sol": {
-      "lastModificationDate": 1663558973212,
-      "contentHash": "addc8002efc840a323661a6e62a1555b",
-      "sourceName": "src/lib/interfaces/IWETH.sol",
-      "solcConfig": {
-        "settings": {
-          "optimizer": {
-            "enabled": true,
-            "runs": 200
-          },
-          "metadata": {
-            "bytecodeHash": "ipfs"
-          },
-          "outputSelection": {
-            "*": {
-              "": [
-                "ast"
-              ],
-              "*": [
-                "abi",
-                "evm.bytecode",
-                "evm.deployedBytecode",
-                "evm.methodIdentifiers"
-              ]
-            }
-          },
-          "evmVersion": "london",
-          "libraries": {}
-        }
-      },
-      "imports": [
-        "node_modules/@openzeppelin/contracts/token/ERC20/IERC20.sol"
-      ],
-      "versionRequirement": "^0.8.15",
-      "artifacts": {
-        "IWETH": {
-          "0.8.15+commit.e14f2714.Darwin.appleclang": "IWETH.sol/IWETH.json"
         }
       }
     },
@@ -1595,44 +1400,6 @@
         }
       }
     },
-    "src/lib/storage/EIP712StorageV1.sol": {
-      "lastModificationDate": 1663193526056,
-      "contentHash": "83df1db2320869b8e947a2974bf7c24b",
-      "sourceName": "src/lib/storage/EIP712StorageV1.sol",
-      "solcConfig": {
-        "settings": {
-          "optimizer": {
-            "enabled": true,
-            "runs": 200
-          },
-          "metadata": {
-            "bytecodeHash": "ipfs"
-          },
-          "outputSelection": {
-            "*": {
-              "": [
-                "ast"
-              ],
-              "*": [
-                "abi",
-                "evm.bytecode",
-                "evm.deployedBytecode",
-                "evm.methodIdentifiers"
-              ]
-            }
-          },
-          "evmVersion": "london",
-          "libraries": {}
-        }
-      },
-      "imports": [],
-      "versionRequirement": "^0.8.4",
-      "artifacts": {
-        "EIP712StorageV1": {
-          "0.8.15+commit.e14f2714.Darwin.appleclang": "EIP712StorageV1.sol/EIP712StorageV1.json"
-        }
-      }
-    },
     "src/lib/storage/InitializableStorageV1.sol": {
       "lastModificationDate": 1663193526056,
       "contentHash": "39d39a6527ca87b1a75646e4608e127c",
@@ -1715,54 +1482,6 @@
         }
       }
     },
-    "src/lib/token/ERC721Votes.sol": {
-      "lastModificationDate": 1663193715245,
-      "contentHash": "74fef497490de7082ba5990a3ee2bc14",
-      "sourceName": "src/lib/token/ERC721Votes.sol",
-      "solcConfig": {
-        "settings": {
-          "optimizer": {
-            "enabled": true,
-            "runs": 200
-          },
-          "metadata": {
-            "bytecodeHash": "ipfs"
-          },
-          "outputSelection": {
-            "*": {
-              "": [
-                "ast"
-              ],
-              "*": [
-                "abi",
-                "evm.bytecode",
-                "evm.deployedBytecode",
-                "evm.methodIdentifiers"
-              ]
-            }
-          },
-          "evmVersion": "london",
-          "libraries": {}
-        }
-      },
-      "imports": [
-        "src/lib/interfaces/IEIP712.sol",
-        "src/lib/interfaces/IERC721.sol",
-        "src/lib/interfaces/IERC721Votes.sol",
-        "src/lib/interfaces/IInitializable.sol",
-        "src/lib/token/ERC721.sol",
-        "src/lib/utils/Address.sol",
-        "src/lib/utils/EIP712.sol",
-        "src/lib/utils/Initializable.sol",
-        "src/lib/utils/TokenReceiver.sol"
-      ],
-      "versionRequirement": "^0.8.4",
-      "artifacts": {
-        "ERC721Votes": {
-          "0.8.15+commit.e14f2714.Darwin.appleclang": "ERC721Votes.sol/ERC721Votes.json"
-        }
-      }
-    },
     "src/lib/utils/Address.sol": {
       "lastModificationDate": 1663193526057,
       "contentHash": "936822907d9b8b16978c03900ecfaa16",
@@ -1798,49 +1517,6 @@
       "artifacts": {
         "Address": {
           "0.8.15+commit.e14f2714.Darwin.appleclang": "lib/utils/Address.sol/Address.json"
-        }
-      }
-    },
-    "src/lib/utils/EIP712.sol": {
-      "lastModificationDate": 1663193526057,
-      "contentHash": "26a6058a2801edb7c7a96d3a61ad0030",
-      "sourceName": "src/lib/utils/EIP712.sol",
-      "solcConfig": {
-        "settings": {
-          "optimizer": {
-            "enabled": true,
-            "runs": 200
-          },
-          "metadata": {
-            "bytecodeHash": "ipfs"
-          },
-          "outputSelection": {
-            "*": {
-              "": [
-                "ast"
-              ],
-              "*": [
-                "abi",
-                "evm.bytecode",
-                "evm.deployedBytecode",
-                "evm.methodIdentifiers"
-              ]
-            }
-          },
-          "evmVersion": "london",
-          "libraries": {}
-        }
-      },
-      "imports": [
-        "src/lib/interfaces/IEIP712.sol",
-        "src/lib/interfaces/IInitializable.sol",
-        "src/lib/utils/Address.sol",
-        "src/lib/utils/Initializable.sol"
-      ],
-      "versionRequirement": "^0.8.4",
-      "artifacts": {
-        "EIP712": {
-          "0.8.15+commit.e14f2714.Darwin.appleclang": "EIP712.sol/EIP712.json"
         }
       }
     },
@@ -1882,6 +1558,44 @@
       "artifacts": {
         "Initializable": {
           "0.8.15+commit.e14f2714.Darwin.appleclang": "lib/utils/Initializable.sol/Initializable.json"
+        }
+      }
+    },
+    "src/lib/utils/Merkle.sol": {
+      "lastModificationDate": 1663620624759,
+      "contentHash": "1913fdc51cb424c4e0c81364afcbdadb",
+      "sourceName": "src/lib/utils/Merkle.sol",
+      "solcConfig": {
+        "settings": {
+          "optimizer": {
+            "enabled": true,
+            "runs": 200
+          },
+          "metadata": {
+            "bytecodeHash": "ipfs"
+          },
+          "outputSelection": {
+            "*": {
+              "": [
+                "ast"
+              ],
+              "*": [
+                "abi",
+                "evm.bytecode",
+                "evm.deployedBytecode",
+                "evm.methodIdentifiers"
+              ]
+            }
+          },
+          "evmVersion": "london",
+          "libraries": {}
+        }
+      },
+      "imports": [],
+      "versionRequirement": "^0.8.0",
+      "artifacts": {
+        "MerkleProof": {
+          "0.8.15+commit.e14f2714.Darwin.appleclang": "Merkle.sol/MerkleProof.json"
         }
       }
     },
@@ -1928,49 +1642,6 @@
         }
       }
     },
-    "src/lib/utils/Pausable.sol": {
-      "lastModificationDate": 1663193526058,
-      "contentHash": "4ebfbd8e3a5f16ef057806f698af5c17",
-      "sourceName": "src/lib/utils/Pausable.sol",
-      "solcConfig": {
-        "settings": {
-          "optimizer": {
-            "enabled": true,
-            "runs": 200
-          },
-          "metadata": {
-            "bytecodeHash": "ipfs"
-          },
-          "outputSelection": {
-            "*": {
-              "": [
-                "ast"
-              ],
-              "*": [
-                "abi",
-                "evm.bytecode",
-                "evm.deployedBytecode",
-                "evm.methodIdentifiers"
-              ]
-            }
-          },
-          "evmVersion": "london",
-          "libraries": {}
-        }
-      },
-      "imports": [
-        "src/lib/interfaces/IInitializable.sol",
-        "src/lib/interfaces/IPausable.sol",
-        "src/lib/utils/Address.sol",
-        "src/lib/utils/Initializable.sol"
-      ],
-      "versionRequirement": "^0.8.4",
-      "artifacts": {
-        "Pausable": {
-          "0.8.15+commit.e14f2714.Darwin.appleclang": "Pausable.sol/Pausable.json"
-        }
-      }
-    },
     "src/lib/utils/ReentrancyGuard.sol": {
       "lastModificationDate": 1663193526058,
       "contentHash": "4ef202b33903903883212db089a46994",
@@ -2010,44 +1681,6 @@
       "artifacts": {
         "ReentrancyGuard": {
           "0.8.15+commit.e14f2714.Darwin.appleclang": "ReentrancyGuard.sol/ReentrancyGuard.json"
-        }
-      }
-    },
-    "src/lib/utils/SafeCast.sol": {
-      "lastModificationDate": 1663193526058,
-      "contentHash": "1a233548fc155a79fc6c1d617c11a7df",
-      "sourceName": "src/lib/utils/SafeCast.sol",
-      "solcConfig": {
-        "settings": {
-          "optimizer": {
-            "enabled": true,
-            "runs": 200
-          },
-          "metadata": {
-            "bytecodeHash": "ipfs"
-          },
-          "outputSelection": {
-            "*": {
-              "": [
-                "ast"
-              ],
-              "*": [
-                "abi",
-                "evm.bytecode",
-                "evm.deployedBytecode",
-                "evm.methodIdentifiers"
-              ]
-            }
-          },
-          "evmVersion": "london",
-          "libraries": {}
-        }
-      },
-      "imports": [],
-      "versionRequirement": "^0.8.4",
-      "artifacts": {
-        "SafeCast": {
-          "0.8.15+commit.e14f2714.Darwin.appleclang": "SafeCast.sol/SafeCast.json"
         }
       }
     },

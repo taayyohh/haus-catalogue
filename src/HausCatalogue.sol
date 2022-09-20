@@ -87,14 +87,14 @@ contract HausCatalogue is ERC721, IERC2981Upgradeable, UUPS, Ownable {
   bytes32 public merkleRoot;
 
   /*
-  
-        INITIALIZATION 
-  
+
+        INITIALIZATION
+
         @notice Initializes contract with default values
         @param _name name of the contract
         @param _symbol symbol of the contract
         @dev contains constructor logic, initializes proxied contract. must be called upon deployment.
-  
+
    */
   function initialize(
     string memory _name,
@@ -265,12 +265,7 @@ contract HausCatalogue is ERC721, IERC2981Upgradeable, UUPS, Ownable {
         @param interfaceId id of interface to check
         @inheritdoc IERC165Upgradeable
    */
-  function supportsInterface(bytes4 _interfaceId)
-    external
-    pure
-    override(ERC721, IERC165Upgradeable)
-    returns (bool)
-  {
+  function supportsInterface(bytes4 _interfaceId) external pure override(ERC721, IERC165Upgradeable) returns (bool) {
     return
       _interfaceId == 0x01ffc9a7 || // ERC165 Interface ID
       _interfaceId == 0x80ac58cd || // ERC721 Interface ID

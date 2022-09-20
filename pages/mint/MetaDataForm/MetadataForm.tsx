@@ -5,6 +5,7 @@ import { NFTStorage } from "nft.storage"
 import { useLayoutStore } from "stores/useLayoutStore"
 import { ethers, Contract } from "ethers"
 import CID from "cids"
+const SHA256 = require("crypto-js/sha256")
 
 const MetadataForm: React.FC<{ merkle: any; contract: Contract }> = ({ merkle, contract }) => {
   const client = new NFTStorage({ token: process.env.NFT_STORAGE_TOKEN ? process.env.NFT_STORAGE_TOKEN : "" })
@@ -25,9 +26,9 @@ const MetadataForm: React.FC<{ merkle: any; contract: Contract }> = ({ merkle, c
       const metadata = await client.store(values)
       const tokenData = {
         metadataURI: metadata.url,
-        creator: signerAddress,
-        royaltyPayout: signerAddress,
-        royaltyBPS: 10000,
+        creator: ethers.utils.getAddress(signerAddress),
+        royaltyPayout: ethers.utils.getAddress(signerAddress),
+        royaltyBPS: 1000,
       }
 
       const cid = new CID(values.cid).toV0()
@@ -39,8 +40,12 @@ const MetadataForm: React.FC<{ merkle: any; contract: Contract }> = ({ merkle, c
       }
 
       const leaf = merkle.leaf(signerAddress)
-      const proof = merkle.proof(leaf)
+      const proof = merkle.hexProof(leaf)
+      // const positions = merkle.proof(leaf).map((x: { position: string }) => (x.position === "right" ? 1 : 0))con
 
+      console.log("proof", proof,  await contract.merkleRoot())
+      console.log(merkle.tree.verify(proof, leaf, await contract.merkleRoot())) // true
+      console.log("params", tokenData, contentData, proof)
       contract.mint(tokenData, contentData, proof)
     },
     [signerAddress, merkle, contract]

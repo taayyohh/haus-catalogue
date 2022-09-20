@@ -5,14 +5,17 @@ import { useLayoutStore } from "stores/useLayoutStore"
 import MetadataForm from "./MetaDataForm/MetadataForm"
 import { MerkleTree } from "merkletreejs"
 const SHA256 = require("crypto-js/sha256")
+const keccak256 = require('keccak256')
+
 
 const Mint: React.FC<{ allow: string[] }> = ({ allow }) => {
   const { signer, signerAddress } = useLayoutStore()
-  const leaves = allow?.map(x => SHA256(x))
-  const tree = new MerkleTree(leaves, SHA256)
-  const root = tree.getHexRoot()
-  const leaf = (address: string) => SHA256(address)
-  const proof = (leaf: any) => tree.getHexProof(leaf)
+  const leaves = allow?.map(x => keccak256(x))
+  const tree = new MerkleTree(leaves, keccak256, { sort: true })
+  const leaf = (address: string) => keccak256(address)
+  const hexProof = (leaf: any) => tree.getHexProof(leaf)
+  const positionalHexProof = (leaf: any) => tree.getPositionalHexProof(leaf)
+  const proof = (leaf: any) => tree.getProof(leaf)
 
   const [contract, setContract] = React.useState<any>()
   const [owner, setOwner] = React.useState("")
@@ -20,11 +23,7 @@ const Mint: React.FC<{ allow: string[] }> = ({ allow }) => {
     if (!signer) return
 
     try {
-      const contract: any = new ethers.Contract(
-        "0x3da452152183140f1eb94b55a86f1671d51d63f4" || "",
-        HAUS_ABI.abi,
-        signer
-      )
+      const contract: any = new ethers.Contract(process.env.HAUS_CATALOGUE_PROXY || "", HAUS_ABI.abi, signer)
       setContract(contract)
     } catch (err) {
       console.log("err", err)
@@ -42,7 +41,7 @@ const Mint: React.FC<{ allow: string[] }> = ({ allow }) => {
       <div>Mint</div>
       {owner && signerAddress && ethers.utils.getAddress(owner) === ethers.utils.getAddress(signerAddress) && (
         <div className={"mx-auto mt-28 w-1/3"}>
-          <MetadataForm merkle={{ proof, leaf, root, tree, leaves }} contract={contract} />
+          <MetadataForm merkle={{ hexProof, positionalHexProof, proof, leaf, tree, leaves }} contract={contract} />
         </div>
       )}
     </div>
