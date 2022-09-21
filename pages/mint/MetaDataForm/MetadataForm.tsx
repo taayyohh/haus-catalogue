@@ -5,25 +5,36 @@ import { NFTStorage } from "nft.storage"
 import { useLayoutStore } from "stores/useLayoutStore"
 import { ethers, Contract } from "ethers"
 import CID from "cids"
-const SHA256 = require("crypto-js/sha256")
+import { FormikValues } from "formik"
 
 const MetadataForm: React.FC<{ merkle: any; contract: Contract }> = ({ merkle, contract }) => {
   const client = new NFTStorage({ token: process.env.NFT_STORAGE_TOKEN ? process.env.NFT_STORAGE_TOKEN : "" })
   const { signerAddress } = useLayoutStore()
 
+  /*
+    
+      handle form submission
+     
+  */
   const submitCallBack = React.useCallback(
-    async (values: any) => {
-      if (!signerAddress) return
+    async (values: any, formik: FormikValues) => {
+      if (!signerAddress || !contract) return
+
       /*
     
-         sanitize values for Metadata Upload
+        sanitize values for Metadata Upload
      
-     */
+      */
       values.title = values.name
       values.project.title = values.title
       values.project.description = values.description
       values.attributes.artist = values.artist
       const metadata = await client.store(values)
+      /*
+    
+         construct TokenData Struct
+     
+     */
       const tokenData = {
         metadataURI: metadata.url,
         creator: ethers.utils.getAddress(signerAddress),
@@ -31,6 +42,11 @@ const MetadataForm: React.FC<{ merkle: any; contract: Contract }> = ({ merkle, c
         royaltyBPS: 1000,
       }
 
+      /*
+      
+           construct ContentData Struct
+       
+       */
       const cid = new CID(values.cid).toV0()
       const hash = cid.toString(cid.multibaseName)
       const contentHash = ethers.utils.base58.decode(hash).slice(2)
@@ -39,14 +55,19 @@ const MetadataForm: React.FC<{ merkle: any; contract: Contract }> = ({ merkle, c
         contentHash,
       }
 
+      /*
+      
+           construct proof
+       
+       */
       const leaf = merkle.leaf(signerAddress)
       const proof = merkle.hexProof(leaf)
-      // const positions = merkle.proof(leaf).map((x: { position: string }) => (x.position === "right" ? 1 : 0))con
 
-      console.log("proof", proof,  await contract.merkleRoot())
-      console.log(merkle.tree.verify(proof, leaf, await contract.merkleRoot())) // true
-      console.log("params", tokenData, contentData, proof)
       contract.mint(tokenData, contentData, proof)
+      contract.on("ContentUpdated", (tokenId, contentHash, contentURI) => {
+        formik.resetForm()
+        console.log("ContentUpdated", tokenId, contentHash, contentURI)
+      })
     },
     [signerAddress, merkle, contract]
   )

@@ -51,12 +51,7 @@ const Catalogue = () => {
   /*  generate random song  */
   const random = React.useMemo(() => {
     const releases = catalogue.reduce((acc = [], cv) => {
-      let count = 0
       acc.push({ artist: cv.primaryArtist, songs: cv.songs, image: cv.image })
-
-      count = count + cv.songs.length
-
-      console.log("c", count)
 
       return acc
     }, [])
@@ -83,8 +78,6 @@ const Catalogue = () => {
     if (!contract) return
 
     const name = await contract.name
-    console.log("name", name)
-    console.log("c", await contract)
   }, [catalogueContract])
 
   interface Release {

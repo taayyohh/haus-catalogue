@@ -4,9 +4,7 @@ import HAUS_ABI from "ABI/HausCatalogue.json"
 import { useLayoutStore } from "stores/useLayoutStore"
 import MetadataForm from "./MetaDataForm/MetadataForm"
 import { MerkleTree } from "merkletreejs"
-const SHA256 = require("crypto-js/sha256")
-const keccak256 = require('keccak256')
-
+const keccak256 = require("keccak256")
 
 const Mint: React.FC<{ allow: string[] }> = ({ allow }) => {
   const { signer, signerAddress } = useLayoutStore()
@@ -24,6 +22,7 @@ const Mint: React.FC<{ allow: string[] }> = ({ allow }) => {
 
     try {
       const contract: any = new ethers.Contract(process.env.HAUS_CATALOGUE_PROXY || "", HAUS_ABI.abi, signer)
+
       setContract(contract)
     } catch (err) {
       console.log("err", err)

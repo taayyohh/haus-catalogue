@@ -53,6 +53,7 @@ const Player = () => {
     return queuedMusic.reduce((acc = [], cv: any) => {
       const artist = cv.artist
       const image = cv.image
+
       return cv.songs.reduce((acc = [], cv: any) => {
         // @ts-ignore
         acc.push({ ...cv, artist, image })
@@ -179,6 +180,7 @@ const Player = () => {
   }, [media])
 
   const handlePlay = async () => {
+    console.log('m', media)
     media.play()
   }
 
@@ -225,7 +227,6 @@ const Player = () => {
               <BiSkipNext size={28} />
             </button>
           </div>
-
           <audio crossOrigin="anonymous" preload={"auto"} src={queue[currentPosition]?.audio} ref={audioRef} />
 
         </div>

@@ -3,9 +3,7 @@ import { ethers } from "ethers"
 import HAUS_ABI from "ABI/HausCatalogue.json"
 import { useLayoutStore } from "stores/useLayoutStore"
 import { MerkleTree } from "merkletreejs"
-const SHA256 = require("crypto-js/sha256")
-const keccak256 = require('keccak256')
-
+const keccak256 = require("keccak256")
 
 const Settings: React.FC<any> = ({ allow }) => {
   const { signer, signerAddress } = useLayoutStore()
@@ -18,8 +16,6 @@ const Settings: React.FC<any> = ({ allow }) => {
     try {
       const contract: any = new ethers.Contract(process.env.HAUS_CATALOGUE_PROXY || "", HAUS_ABI.abi, signer)
       setContract(contract)
-
-      console.log("ROOT", await contract.merkleRoot())
     } catch (err) {
       console.log("err", err)
     }
@@ -40,8 +36,6 @@ const Settings: React.FC<any> = ({ allow }) => {
   const leaves = allow?.map((x: string) => keccak256(x))
   const tree = new MerkleTree(leaves, keccak256, { sort: true })
   const root = tree.getHexRoot()
-  // const _root = tree.getRoot()
-  // const hexroot = buf2hex(root)
 
   return (
     <div>

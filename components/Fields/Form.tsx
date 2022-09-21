@@ -92,7 +92,7 @@ const Form: React.FC<FormProps> = ({
         submitCallback(updates, setHasConfirmed, formik)
       }
     } else {
-      submitCallback(_values)
+      submitCallback(_values, formik)
     }
   }
 
