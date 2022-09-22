@@ -1,37 +1,63 @@
-import { gql, request } from "graphql-request"
+import {gql, request} from "graphql-request"
 
 export const discographyQuery = async () => {
   const endpoint = "https://api.zora.co/graphql"
 
   const req = gql`
     query DiscographyQuery {
-      collections(
-        networks: { chain: GOERLI, network: ETHEREUM }
-        where: { collectionAddresses: "0x3da452152183140F1EB94b55A86f1671d51d63F4" }
-      ) {
-        nodes {
-          description
-          name
-          symbol
-        }
-      }
       tokens(
-        where: { collectionAddresses: "0x3da452152183140F1EB94b55A86f1671d51d63F4" }
-        networks: { chain: GOERLI, network: ETHEREUM }
+        networks: {chain: GOERLI, network: ETHEREUM}
+        where: {collectionAddresses: "0x3da452152183140f1eb94b55a86f1671d51d63f4"}
       ) {
         nodes {
           token {
-            collectionAddress
-            collectionName
-            owner
             tokenId
+            tokenUrl
+            metadata
+            mintInfo {
+              originatorAddress
+              toAddress
+            }
+            owner
+            name
+            lastRefreshTime
+            description
+            image {
+              url
+              size
+              mimeType
+              mediaEncoding {
+                ... on ImageEncodingTypes {
+                  large
+                  poster
+                }
+                ... on AudioEncodingTypes {
+                  large
+                  original
+                }
+              }
+            }
+            collectionName
+            collectionAddress
+            content {
+              mediaEncoding {
+                ... on ImageEncodingTypes {
+                  large
+                  poster
+                }
+                ... on AudioEncodingTypes {
+                  large
+                }
+              }
+              url
+              size
+              mimeType
+            }
           }
         }
       }
     }
   `
 
-  const data = await request(endpoint, req)
-  console.log("d", data)
-  return data
+  return await request(endpoint, req)
 }

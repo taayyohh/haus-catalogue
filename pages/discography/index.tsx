@@ -20,7 +20,7 @@ const Discography: React.FC<any> = ({ discography }) => {
         reserveAuctionABI.abi,
         signer
       )
-      console.log("r", reserveAuction)
+      // console.log("r", reserveAuction)
 
       setContract(contract)
     } catch (err) {
@@ -65,6 +65,8 @@ const Discography: React.FC<any> = ({ discography }) => {
   React.useMemo(async () => {
     const catalogue = await _catalogue
 
+    console.log(catalogue)
+
     setCatalogue(catalogue)
   }, [_catalogue])
 
@@ -72,6 +74,7 @@ const Discography: React.FC<any> = ({ discography }) => {
     <div>
       <div>hi</div>
       <div>discography</div>
+
       <div className="relative mx-auto flex w-full flex-col bg-rose-200 pb-24">
         {catalogue?.length > 0 ? (
           <div className="mx-auto w-11/12">
@@ -89,7 +92,7 @@ const Discography: React.FC<any> = ({ discography }) => {
 
 export default Discography
 
-export async function getStaticProps() {
+export async function getServerSideProps() {
   try {
     // zora api queries
     const discography = await discographyQuery()

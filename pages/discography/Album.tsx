@@ -2,167 +2,157 @@ import React from "react"
 import { usePlayerStore } from "stores/usePlayerStore"
 import { useLayoutStore } from "stores/useLayoutStore"
 import { ethers } from "ethers"
-import HAUS_ABI from "ABI/HausCatalogue.json"
-import reserveAuctionABI from "@zoralabs/v3/dist/artifacts/ReserveAuctionCoreEth.sol/ReserveAuctionCoreEth.json"
-import zoraModuleManagerABI from "@zoralabs/v3/dist/artifacts/ZoraModuleManager.sol/ZoraModuleManager.json"
-import { toSeconds } from "../../utils/helpers"
+import { fromSeconds, toSeconds } from "utils/helpers"
+import AnimatedModal from "components/Modal/Modal"
+import useContracts from "hooks/useContracts"
+import dayjs from "dayjs"
 
 const Album: React.FC<any> = ({ release, token }) => {
   const { addToQueue, queuedMusic } = usePlayerStore((state: any) => state)
   const { signer, signerAddress } = useLayoutStore()
   const [contract, setContract] = React.useState<any>()
-
-  React.useMemo(async () => {
-    if (!signer) return
-
-    try {
-      const hausContract: any = new ethers.Contract(process.env.HAUS_CATALOGUE_PROXY || "", HAUS_ABI.abi, signer)
-      const reserveAuctionContract = new ethers.Contract(
-        "0x2506d9f5a2b0e1a2619bcce01cd3e7c289a13163",
-        reserveAuctionABI.abi,
-        signer
-      )
-      const zoraModuleManager = new ethers.Contract(
-        "0x9458E29713B98BF452ee9B2C099289f533A5F377",
-        zoraModuleManagerABI.abi,
-        signer
-      )
-      setContract({ hausContract, reserveAuctionContract, zoraModuleManager })
-    } catch (err) {
-      console.log("err", err)
-    }
-  }, [signer, HAUS_ABI])
+  const { zoraContracts, hausCatalogueContract, createAuction, settleAuction } = useContracts()
 
   /*
-
-    Transfer Helper Approval
-
+  
+    handle create auction
+  
    */
-  const [isApproved, setIsApproved] = React.useState<boolean>(false)
-  React.useMemo(async () => {
-    if (!contract?.hausContract || !signerAddress) return
+  const handleCreateAuction = React.useCallback(async () => {
+    if (!createAuction) return
 
-    const isApproved = await contract.hausContract.isApprovedForAll(
-      signerAddress, // NFT owner address
-      "0xd1adAF05575295710dE1145c3c9427c364A70a7f" // V3 Module Transfer Helper to approve
-    )
-    setIsApproved(isApproved)
-  }, [contract?.hausContract, signerAddress])
-
-  const handleApproval = React.useCallback(async () => {
-    await contract.hausContract.setApprovalForAll("0xd1adAF05575295710dE1145c3c9427c364A70a7f", true)
-  }, [contract?.reserveAuctionContract, contract?.hausContract])
-
-  /*
-
-    Module Manager Approval
-
-   */
-  const [isModuleManagerApproved, setIsModuleManagerApproved] = React.useState<boolean>(false)
-  React.useMemo(async () => {
-    if (!signerAddress || !contract?.zoraModuleManager) return
-
-    const approved = await contract?.zoraModuleManager?.isModuleApproved(
-      signerAddress,
-      "0x2506d9f5a2b0e1a2619bcce01cd3e7c289a13163"
-    )
-
-    setIsModuleManagerApproved(approved)
-  }, [signerAddress, contract?.zoraModuleManager])
-
-  const handleApprovalManager = React.useCallback(async () => {
-    await contract?.zoraModuleManager.setApprovalForModule("0x2506d9f5a2b0e1a2619bcce01cd3e7c289a13163", true)
-  }, [contract?.zoraModuleManager])
-
-  const createAuction = React.useCallback(async () => {
-    if (!contract?.reserveAuctionContract) return
-
-    await contract?.reserveAuctionContract.createAuction(
+    await createAuction(
       token?.collectionAddress,
       Number(token.tokenId),
       toSeconds({ days: 1 }),
-      ethers.utils.parseEther("1"),
+      ethers.utils.parseEther(".05"),
       token.owner,
       Date.now()
     )
-  }, [contract?.reserveAuctionContract, token, release])
+  }, [createAuction, token, release])
 
+  /*
+  
+    handle settle auction
+  
+   */
+  const handleSettleAuction = React.useCallback(async () => {
+    if (!createAuction) return
+
+    await settleAuction(token?.collectionAddress, Number(token.tokenId))
+  }, [createAuction, token, release])
 
   const [auctionInfo, setAuctionInfo] = React.useState<any>()
   React.useMemo(async () => {
-    if (!contract?.reserveAuctionContract) return
+    if (!zoraContracts?.ReserveAuctionCoreEth) return
 
-    const c = contract?.reserveAuctionContract
-    const a = await c.auctionForNFT(token.collectionAddress, token.tokenId)
+    const auction = await zoraContracts?.ReserveAuctionCoreEth.auctionForNFT(token.collectionAddress, token.tokenId)
 
-    console.log("ca", contract?.reserveAuctionContract)
-    console.log('a', a)
-    console.log('rserve', ethers.utils.formatEther(a?.reservePrice))
     setAuctionInfo({
-      reservePrice: ethers.utils.formatEther(a?.reservePrice)
+      reservePrice: ethers.utils.formatEther(auction?.reservePrice),
+      highestBid: ethers.utils.formatEther(auction?.highestBid),
+      highestBidder: ethers.utils.getAddress(auction?.highestBidder),
+      duration: {
+        seconds: auction?.duration,
+        time: fromSeconds(auction?.duration),
+      },
+      sellerFundsRecipient: auction?.sellerFundsRecipient,
+      seller: auction?.seller,
+      firstBidTime: auction?.firstBidTime,
+      startTime: auction?.startTime,
+      endTime: auction?.firstBidTime + auction?.duration,
     })
-    //
-    // duration
-    //     :
-    //     86400
-    // firstBidTime
-    //     :
-    //     0
-    // highestBid
-    //     :
-    //     BigNumber {_hex: '0x00', _isBigNumber: true}
-    // highestBidder
-    //     :
-    //     "0x0000000000000000000000000000000000000000"
-    // reservePrice
-    //     :
-    //     BigNumber {_hex: '0x0de0b6b3a7640000', _isBigNumber: true}
-    // seller
-    //     :
-    //     "0xbF6f6491d05dECd4b08A65dEdCC2ef2b4424F617"
-    // sellerFundsRecipient
-    //     :
-    //     "0xbF6f6491d05dECd4b08A65dEdCC2ef2b4424F617"
-    // startTime
-    //     :
-    //     1569152771
-    // length
-    //     :
+  }, [zoraContracts?.ReserveAuctionCoreEth, token])
+
+  const handleCreateBid = React.useCallback(() => {
+    if (!contract?.reserveAuctionContract || !token) return
+
+    contract?.reserveAuctionContract.createBid(token.collectionAddress, token.tokenId, {
+      value: ethers.utils.parseEther(".08"),
+    })
+  }, [contract?.reserveAuctionContract, token])
+
+  const handleSetAuctionReservePrice = React.useCallback(() => {
+    if (!contract?.reserveAuctionContract || !token) return
 
 
-        }, [contract?.reserveAuctionContract, token])
+    contract?.reserveAuctionContract.setAuctionReservePrice(
+      token.collectionAddress,
+      token.tokenId,
+      ethers.utils.parseEther(".01")
+    )
+  }, [contract?.reserveAuctionContract, token])
+
+
+  const [countDownString, setCountdownString] = React.useState("")
+  React.useEffect(() => {
+    if (!auctionInfo) return
+
+    // console.log('aaaa', auctionInfo?.seller === 0)
+
+    const endAuction = (interval: NodeJS.Timer) => {
+      clearInterval(interval)
+      setCountdownString("0h 0m 0s")
+      // setAuctionCompleted(true)
+    }
+
+    const interval = setInterval(() => {
+      const now = dayjs.unix(Date.now() / 1000)
+      const end = dayjs.unix(auctionInfo?.endTime as number)
+      let countdown = end.diff(now, "second")
+
+      countdown > 0 ? countdown-- : endAuction(interval)
+      const countdownString = `${Math.floor(countdown / 3600)}h ${Math.floor((countdown % 3600) / 60)}m ${
+        countdown % 60
+      }s`
+      setCountdownString(countdownString)
+    }, 1000)
+    return () => {
+      clearInterval(interval)
+    }
+  }, [auctionInfo])
 
   return (
     <div
-      key={release.image}
+      key={release?.image}
       className="flex w-full flex-col items-center"
-      onClick={() =>
-        addToQueue([
-          ...queuedMusic,
-          {
-            artist: release.artist,
-            image: release.project.artwork.uri.replace("ipfs://", "https://ipfs.io/ipfs/"),
-            songs: [
-              {
-                audio: [release.losslessAudio.replace("ipfs://", "https://ipfs.io/ipfs/")],
-                title: release.title,
-                trackNumber: release.trackNumber,
-              },
-            ],
-          },
-        ])
-      }
+      // onClick={() =>
+      //   addToQueue([
+      //     ...queuedMusic,
+      //     {
+      //       artist: release?.artist,
+      //       image: release?.project.artwork.uri.replace("ipfs://", "https://ipfs.io/ipfs/"),
+      //       songs: [
+      //         {
+      //           audio: [release?.losslessAudio.replace("ipfs://", "https://ipfs.io/ipfs/")],
+      //           title: release?.title,
+      //           trackNumber: release?.trackNumber,
+      //         },
+      //       ],
+      //     },
+      //   ])
+      // }
     >
-      <img src={release.project.artwork.uri.replace("ipfs://", "https://ipfs.io/ipfs/")} />
+      <img src={release?.project?.artwork.uri.replace("ipfs://", "https://ipfs.io/ipfs/")} />
       <div className="flex w-full flex-col items-start py-2">
-        <div className="text-xl font-bold">{release.name}</div>
-        <div>{release.artist}</div>
-        {!isApproved && <div onClick={() => handleApproval()}>allow zora auction</div>}
-        {!isModuleManagerApproved && <div onClick={() => handleApprovalManager()}>allow zora manager </div>}
-        {isApproved && isModuleManagerApproved && <div onClick={() => createAuction()}>create auction</div>}
-        {auctionInfo?.reservePrice > 0 && (
-            <div>Bid: {auctionInfo?.reservePrice}</div>
-        )}
+        <div className="text-xl font-bold">{release?.name}</div>
+        <div>{release?.artist}</div>
+        {auctionInfo?.reservePrice > 0 && <div>Bid: {auctionInfo?.reservePrice}</div>}
+        <AnimatedModal trigger={<div>create bid</div>}>
+          <div onClick={() => handleCreateBid()}>create bid</div>
+        </AnimatedModal>
+
+        <div onClick={() => handleSetAuctionReservePrice()}>update auction reserve price</div>
+        {<div onClick={() => handleCreateAuction()}>create auction</div>}
+        {<div onClick={() => handleSettleAuction()}>settle auction</div>}
+
+        <div className={"relative flex items-center gap-3 rounded-2xl bg-rose-300 px-3 py-1 text-sm"}>
+          <div className={"relative h-2 w-2 rounded-full"}>
+            <span className="absolute inline-flex h-full w-full animate-pulse rounded-full bg-rose-800 opacity-75"></span>
+          </div>
+
+          {countDownString}
+        </div>
       </div>
     </div>
   )

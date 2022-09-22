@@ -1,31 +1,20 @@
 import React from "react"
 import { ethers } from "ethers"
-import HAUS_ABI from "ABI/HausCatalogue.json"
 import { useLayoutStore } from "stores/useLayoutStore"
 import { MerkleTree } from "merkletreejs"
+import useContracts from "hooks/useContracts"
 const keccak256 = require("keccak256")
 
 const Settings: React.FC<any> = ({ allow }) => {
-  const { signer, signerAddress } = useLayoutStore()
-  const [contract, setContract] = React.useState<any>()
-  const [owner, setOwner] = React.useState("")
-
-  React.useMemo(async () => {
-    if (!signer) return
-
-    try {
-      const contract: any = new ethers.Contract(process.env.HAUS_CATALOGUE_PROXY || "", HAUS_ABI.abi, signer)
-      setContract(contract)
-    } catch (err) {
-      console.log("err", err)
-    }
-  }, [signer, HAUS_ABI])
-
-  React.useMemo(async () => {
-    if (!contract) return
-
-    setOwner(await contract.owner())
-  }, [contract])
+  const { signerAddress } = useLayoutStore()
+  const {
+    hausCatalogueContract,
+    owner,
+    isApprovedForAll,
+    handleApprovalManager,
+    handleApprovalTransferHelper,
+    isModuleApproved,
+  } = useContracts()
 
   /*
   
@@ -38,20 +27,28 @@ const Settings: React.FC<any> = ({ allow }) => {
   const root = tree.getHexRoot()
 
   return (
-    <div>
-      <div>Settings</div>
+    <div className={"mx-auto w-3/4 pt-24"}>
+      <div className={"pb-8 text-4xl"}>Settings</div>
       {owner && signerAddress && ethers.utils.getAddress(owner) === ethers.utils.getAddress(signerAddress) && (
         <div>
-          <div
-            className={"mt-24"}
-            onClick={() => {
-              contract?.updateRoot(root)
-            }}
-          >
-            update root
+          <div>
+            <div>The Merkle Proof Root</div>
+
+            <button
+              className={
+                "inline-flex self-start rounded-xl border-2 border-rose-400 py-2 px-4 text-rose-400 hover:bg-rose-400 hover:text-white"
+              }
+              onClick={() => {
+                hausCatalogueContract?.updateRoot(root)
+              }}
+            >
+              update root
+            </button>
           </div>
         </div>
       )}
+      {!isApprovedForAll && <div onClick={() => handleApprovalTransferHelper()}>allow zora auction</div>}
+      {!isModuleApproved && <div onClick={() => handleApprovalManager()}>allow zora manager </div>}
     </div>
   )
 }
