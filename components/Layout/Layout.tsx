@@ -3,6 +3,7 @@ import Nav from "./Nav"
 import { useSigner } from "wagmi"
 import { useLayoutStore } from "stores/useLayoutStore"
 import Player from "./Player"
+import {discographyQuery} from "../../query/discography";
 
 type Props = {
   children: JSX.Element
@@ -45,3 +46,22 @@ const Layout = ({ children }: Props) => {
 }
 
 export default Layout
+
+
+export async function getServerSideProps() {
+  try {
+    // zora api queries
+    const discography = await discographyQuery()
+    return {
+      props: {
+        discography,
+      },
+    }
+  } catch (error: any) {
+    console.log("err", error)
+    return {
+      notFound: true,
+    }
+  }
+}
+

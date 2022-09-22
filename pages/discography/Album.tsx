@@ -4,14 +4,16 @@ import { useLayoutStore } from "stores/useLayoutStore"
 import { ethers } from "ethers"
 import { fromSeconds, toSeconds } from "utils/helpers"
 import AnimatedModal from "components/Modal/Modal"
-import useContracts from "hooks/useContracts"
+import useHausCatalogue from "hooks/useHausCatalogue"
 import dayjs from "dayjs"
+import useZoraV3 from "hooks/useZoraV3"
 
 const Album: React.FC<any> = ({ release, token }) => {
   const { addToQueue, queuedMusic } = usePlayerStore((state: any) => state)
   const { signer, signerAddress } = useLayoutStore()
   const [contract, setContract] = React.useState<any>()
-  const { zoraContracts, hausCatalogueContract, createAuction, settleAuction } = useContracts()
+  const { hausCatalogueContract } = useHausCatalogue()
+  const { zoraContracts, createAuction, cancelAuction, settleAuction } = useZoraV3()
 
   /*
   
@@ -27,7 +29,7 @@ const Album: React.FC<any> = ({ release, token }) => {
       toSeconds({ days: 1 }),
       ethers.utils.parseEther(".05"),
       token.owner,
-      Date.now()
+      Math.floor(Date.now() / 1000)
     )
   }, [createAuction, token, release])
 
@@ -40,7 +42,18 @@ const Album: React.FC<any> = ({ release, token }) => {
     if (!createAuction) return
 
     await settleAuction(token?.collectionAddress, Number(token.tokenId))
-  }, [createAuction, token, release])
+  }, [createAuction, token])
+
+  /*
+
+   handle settle auction
+
+  */
+  const handleCancelAuction = React.useCallback(async () => {
+    if (!cancelAuction) return
+
+    await settleAuction(token?.collectionAddress, Number(token.tokenId))
+  }, [cancelAuction, token])
 
   const [auctionInfo, setAuctionInfo] = React.useState<any>()
   React.useMemo(async () => {
@@ -65,24 +78,22 @@ const Album: React.FC<any> = ({ release, token }) => {
   }, [zoraContracts?.ReserveAuctionCoreEth, token])
 
   const handleCreateBid = React.useCallback(() => {
-    if (!contract?.reserveAuctionContract || !token) return
+    if (!zoraContracts?.ReserveAuctionCoreEth || !token) return
 
-    contract?.reserveAuctionContract.createBid(token.collectionAddress, token.tokenId, {
+    zoraContracts?.ReserveAuctionCoreEth.createBid(token.collectionAddress, token.tokenId, {
       value: ethers.utils.parseEther(".08"),
     })
-  }, [contract?.reserveAuctionContract, token])
+  }, [zoraContracts?.ReserveAuctionCoreEth, token])
 
   const handleSetAuctionReservePrice = React.useCallback(() => {
-    if (!contract?.reserveAuctionContract || !token) return
+    if (!zoraContracts?.ReserveAuctionCoreEth || !token) return
 
-
-    contract?.reserveAuctionContract.setAuctionReservePrice(
+    zoraContracts?.ReserveAuctionCoreEth.setAuctionReservePrice(
       token.collectionAddress,
       token.tokenId,
       ethers.utils.parseEther(".01")
     )
-  }, [contract?.reserveAuctionContract, token])
-
+  }, [zoraContracts?.ReserveAuctionCoreEth, token])
 
   const [countDownString, setCountdownString] = React.useState("")
   React.useEffect(() => {
@@ -107,9 +118,9 @@ const Album: React.FC<any> = ({ release, token }) => {
       }s`
       setCountdownString(countdownString)
     }, 1000)
-    return () => {
-      clearInterval(interval)
-    }
+    // return () => {
+    //   clearInterval(interval)
+    // }
   }, [auctionInfo])
 
   return (
@@ -135,18 +146,35 @@ const Album: React.FC<any> = ({ release, token }) => {
     >
       <img src={release?.project?.artwork.uri.replace("ipfs://", "https://ipfs.io/ipfs/")} />
       <div className="flex w-full flex-col items-start py-2">
-        <div className="text-xl font-bold">{release?.name}</div>
-        <div>{release?.artist}</div>
-        {auctionInfo?.reservePrice > 0 && <div>Bid: {auctionInfo?.reservePrice}</div>}
-        <AnimatedModal trigger={<div>create bid</div>}>
-          <div onClick={() => handleCreateBid()}>create bid</div>
-        </AnimatedModal>
+        <div className={"flex w-full flex-row items-start justify-between"}>
+          <div className={"flex flex-col"}>
+            <div className="text-xl font-bold">{release?.name}</div>
+            <div>{release?.artist}</div>
+          </div>
+          {auctionInfo?.reservePrice > 0 && (
+            <AnimatedModal
+              trigger={
+                <div
+                  className={
+                    "relative flex cursor-pointer items-center gap-1 rounded-2xl bg-rose-300 px-3 py-1 text-sm hover:bg-rose-700 hover:text-white"
+                  }
+                >
+                  <span className={"text-xs"}>Bid:</span> {auctionInfo?.reservePrice}
+                  <span>ETH</span>
+                </div>
+              }
+            >
+              <div onClick={() => handleCreateBid()}>create bid</div>
+            </AnimatedModal>
+          )}
+        </div>
 
-        <div onClick={() => handleSetAuctionReservePrice()}>update auction reserve price</div>
-        {<div onClick={() => handleCreateAuction()}>create auction</div>}
-        {<div onClick={() => handleSettleAuction()}>settle auction</div>}
+        {/*<div onClick={() => handleSetAuctionReservePrice()}>update auction reserve price</div>*/}
+        {/*<div onClick={() => handleCreateAuction()}>create auction</div>*/}
+        {/*<div onClick={() => handleSettleAuction()}>settle auction</div>*/}
+        {/*<div onClick={() => handleCancelAuction()}>cancel auction</div>*/}
 
-        <div className={"relative flex items-center gap-3 rounded-2xl bg-rose-300 px-3 py-1 text-sm"}>
+        <div className={"relative flex items-center gap-3 py-1 text-sm"}>
           <div className={"relative h-2 w-2 rounded-full"}>
             <span className="absolute inline-flex h-full w-full animate-pulse rounded-full bg-rose-800 opacity-75"></span>
           </div>

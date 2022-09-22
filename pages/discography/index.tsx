@@ -13,6 +13,7 @@ const Discography: React.FC<any> = ({ discography }) => {
   React.useMemo(async () => {
     if (!signer) return
 
+
     try {
       const contract: any = new ethers.Contract(process.env.HAUS_CATALOGUE_PROXY || "", HAUS_ABI.abi, signer)
       const reserveAuction = new ethers.Contract(

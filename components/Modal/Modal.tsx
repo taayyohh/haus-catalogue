@@ -57,7 +57,6 @@ const AnimatedModal: React.FC<AnimatedModalProps> = ({ children, open, close, si
           onClick: () => {
             setIsOpen(true)
           },
-          className: animatedModalTrigger,
         })}
       <Portal>
         <AnimatePresence>

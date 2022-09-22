@@ -2,7 +2,7 @@ import React from "react"
 import { ethers } from "ethers"
 import { useLayoutStore } from "stores/useLayoutStore"
 import { MerkleTree } from "merkletreejs"
-import useContracts from "hooks/useContracts"
+import useHausCatalogue from "hooks/useHausCatalogue"
 const keccak256 = require("keccak256")
 
 const Settings: React.FC<any> = ({ allow }) => {
@@ -14,7 +14,7 @@ const Settings: React.FC<any> = ({ allow }) => {
     handleApprovalManager,
     handleApprovalTransferHelper,
     isModuleApproved,
-  } = useContracts()
+  } = useHausCatalogue()
 
   /*
   

@@ -2165,6 +2165,11 @@
   resolved "https://registry.yarnpkg.com/@web3-storage/multipart-parser/-/multipart-parser-1.0.0.tgz#6b69dc2a32a5b207ba43e556c25cc136a56659c4"
   integrity sha512-BEO6al7BYqcnfX15W2cnGR+Q566ACXAT9UQykORCWW80lmkpWsnEob6zJS1ZVBKsSJC8+7vJkHwlp+lXG1UCdw==
 
+"@zoralabs/tsconfig@^0.0.0":
+  version "0.0.0"
+  resolved "https://registry.yarnpkg.com/@zoralabs/tsconfig/-/tsconfig-0.0.0.tgz#d0ebb581ca4650b650673b7addc0b5e149c1aa19"
+  integrity sha512-tQNk7cS8t5AHwgZNhwDghvdE8cXGUpxnNSqMujBCU2Gwh5+gqJkF96OIO51nz+Ib1umIc75LBBjFQGFbNf62QA==
+
 "@zoralabs/v3@^1.0.13":
   version "1.0.13"
   resolved "https://registry.yarnpkg.com/@zoralabs/v3/-/v3-1.0.13.tgz#56a23172bb2c8bcf934bcbddbc0a72617c50f08b"
