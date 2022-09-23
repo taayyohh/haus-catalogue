@@ -36,10 +36,10 @@ const Mint: React.FC<{ allow: string[] }> = ({ allow }) => {
   }, [contract])
 
   return (
-    <div>
+    <div >
       <div>Mint</div>
       {owner && signerAddress && ethers.utils.getAddress(owner) === ethers.utils.getAddress(signerAddress) && (
-        <div className={"mx-auto mt-28 w-1/3"}>
+        <div className={"mx-auto mt-28 mb-32 w-full rounded p-4 px-8 sm:w-3/4 md:w-2/3 lg:w-2/5"}>
           <MetadataForm merkle={{ hexProof, positionalHexProof, proof, leaf, tree, leaves }} contract={contract} />
         </div>
       )}

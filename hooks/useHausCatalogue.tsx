@@ -10,9 +10,8 @@ import { HausCatalogue } from "types/ethers-contracts"
 
 const useHausCatalogue = () => {
   const { data: signer } = useSigner()
-  const provider = new ethers.providers.JsonRpcProvider(process.env.ETH_RPC_URL)
-  const hausCatalogueContract =
-    signer && HausCatalogue__factory.connect(process.env.HAUS_CATALOGUE_PROXY || "", signer ?? provider)
+  // const provider = new ethers.providers.JsonRpcProvider(process.env.ETH_RPC_URL)
+  const hausCatalogueContract = signer && HausCatalogue__factory.connect(process.env.HAUS_CATALOGUE_PROXY || "", signer)
   const { ReserveAuctionCoreEth } = useZoraV3()
 
   /*

@@ -95,6 +95,14 @@ const Album: React.FC<any> = ({ release, token }) => {
     )
   }, [zoraContracts?.ReserveAuctionCoreEth, token])
 
+
+
+
+  /*
+
+    countdown
+
+   */
   const [countDownString, setCountdownString] = React.useState("")
   React.useEffect(() => {
     if (!auctionInfo) return
@@ -107,6 +115,8 @@ const Album: React.FC<any> = ({ release, token }) => {
       // setAuctionCompleted(true)
     }
 
+    console.log('end')
+
     const interval = setInterval(() => {
       const now = dayjs.unix(Date.now() / 1000)
       const end = dayjs.unix(auctionInfo?.endTime as number)
@@ -118,9 +128,9 @@ const Album: React.FC<any> = ({ release, token }) => {
       }s`
       setCountdownString(countdownString)
     }, 1000)
-    // return () => {
-    //   clearInterval(interval)
-    // }
+    return () => {
+      clearInterval(interval)
+    }
   }, [auctionInfo])
 
   return (

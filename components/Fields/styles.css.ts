@@ -169,6 +169,7 @@ export const transactionFormButtonWithPrev = style({
 })
 
 export const defaultFormButton = style({
+
   width: "100%",
   borderRadius: "10px",
   height: 60,

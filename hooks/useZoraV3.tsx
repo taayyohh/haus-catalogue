@@ -15,24 +15,20 @@ const useZoraV3 = () => {
 
   React.useMemo(() => {
     if (!signer) return
-    const provider = new ethers.providers.JsonRpcProvider(process.env.ETH_RPC_URL)
+    // const provider = new ethers.providers.JsonRpcProvider(process.env.ETH_RPC_URL)
 
     setZoraContracts({
       ReserveAuctionCoreEth: new ethers.Contract(
         ZORA_ADDRESSES.ReserveAuctionCoreEth,
         ReserveAuctionCoreEth.abi,
-        signer ?? provider
+        signer
       ),
-      AsksV1_1: new ethers.Contract(ZORA_ADDRESSES.AsksV1_1, AsksV1_1ABI.abi, signer ?? provider),
-      ZoraModuleManager: new ethers.Contract(
-        ZORA_ADDRESSES.ZoraModuleManager,
-        ZoraModuleManager.abi,
-        signer ?? provider
-      ),
+      AsksV1_1: new ethers.Contract(ZORA_ADDRESSES.AsksV1_1, AsksV1_1ABI.abi, signer),
+      ZoraModuleManager: new ethers.Contract(ZORA_ADDRESSES.ZoraModuleManager, ZoraModuleManager.abi, signer),
       ERC721TransferHelper: new ethers.Contract(
         ZORA_ADDRESSES.ERC721TransferHelper,
         ERC721TransferHelperABI.abi,
-        signer ?? provider
+        signer
       ),
     })
   }, [

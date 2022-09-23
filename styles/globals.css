@@ -1,3 +1,6 @@
+body {
+  background-color: #fecdd3;
+}
 #connect * div,
 #connect * button {
   background: transparent;

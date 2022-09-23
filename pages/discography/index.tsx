@@ -1,36 +1,15 @@
 import React from "react"
 import { useLayoutStore } from "stores/useLayoutStore"
-import { ethers } from "ethers"
-import HAUS_ABI from "ABI/HausCatalogue.json"
 import { discographyQuery } from "query/discography"
-import reserveAuctionABI from "@zoralabs/v3/dist/artifacts/ReserveAuctionCoreEth.sol/ReserveAuctionCoreEth.json"
 import Album from "./Album"
+import useHausCatalogue from "../../hooks/useHausCatalogue"
 
 const Discography: React.FC<any> = ({ discography }) => {
   const { signer } = useLayoutStore()
-  const [contract, setContract] = React.useState<any>()
-
-  React.useMemo(async () => {
-    if (!signer) return
-
-
-    try {
-      const contract: any = new ethers.Contract(process.env.HAUS_CATALOGUE_PROXY || "", HAUS_ABI.abi, signer)
-      const reserveAuction = new ethers.Contract(
-        "0x2506d9f5a2b0e1a2619bcce01cd3e7c289a13163",
-        reserveAuctionABI.abi,
-        signer
-      )
-      // console.log("r", reserveAuction)
-
-      setContract(contract)
-    } catch (err) {
-      console.log("err", err)
-    }
-  }, [signer, HAUS_ABI])
+  const { hausCatalogueContract } = useHausCatalogue()
 
   const tokenMetadata = React.useMemo(() => {
-    if (!contract || !discography) return
+    if (!hausCatalogueContract || !discography) return
 
     const tokens = discography.tokens.nodes
 
@@ -38,12 +17,12 @@ const Discography: React.FC<any> = ({ discography }) => {
       const accumulator = await acc
 
       const id = Number(cv.token.tokenId)
-      const uri = await contract.tokenURI(id)
+      const uri = await hausCatalogueContract.tokenURI(id)
 
       accumulator.push({ uri: uri.replace("ipfs://", "https://ipfs.io/ipfs/"), token: cv.token })
       return accumulator
     }, [])
-  }, [contract, discography])
+  }, [hausCatalogueContract, discography])
 
   const _catalogue = React.useMemo(async () => {
     if (!tokenMetadata) return
@@ -65,8 +44,6 @@ const Discography: React.FC<any> = ({ discography }) => {
   const [catalogue, setCatalogue] = React.useState<any[]>([])
   React.useMemo(async () => {
     const catalogue = await _catalogue
-
-    console.log(catalogue)
 
     setCatalogue(catalogue)
   }, [_catalogue])

@@ -3,18 +3,13 @@ import { ethers } from "ethers"
 import { useLayoutStore } from "stores/useLayoutStore"
 import { MerkleTree } from "merkletreejs"
 import useHausCatalogue from "hooks/useHausCatalogue"
+import useZoraV3 from "hooks/useZoraV3"
 const keccak256 = require("keccak256")
 
 const Settings: React.FC<any> = ({ allow }) => {
   const { signerAddress } = useLayoutStore()
-  const {
-    hausCatalogueContract,
-    owner,
-    isApprovedForAll,
-    handleApprovalManager,
-    handleApprovalTransferHelper,
-    isModuleApproved,
-  } = useHausCatalogue()
+  const { hausCatalogueContract, owner, isApprovedForAll, handleApprovalTransferHelper } = useHausCatalogue()
+  const { handleApprovalManager, isModuleApproved } = useZoraV3()
 
   /*
   
