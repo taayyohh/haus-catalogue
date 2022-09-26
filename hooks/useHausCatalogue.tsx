@@ -1,17 +1,21 @@
 import { HausCatalogue__factory } from "types/ethers-contracts/factories/HausCatalogue__factory"
 import ZORA_ADDRESSES from "@zoralabs/v3/dist/addresses/5.json"
-import { useSigner } from "wagmi"
 import React from "react"
 import useSWR from "swr"
 import useZoraV3 from "./useZoraV3"
 import { PromiseOrValue } from "@typechain/ethers-v5/static/common"
 import { BigNumberish, BytesLike, ethers } from "ethers"
 import { HausCatalogue } from "types/ethers-contracts"
+import { useLayoutStore } from "stores/useLayoutStore"
 
 const useHausCatalogue = () => {
-  const { data: signer } = useSigner()
-  // const provider = new ethers.providers.JsonRpcProvider(process.env.ETH_RPC_URL)
-  const hausCatalogueContract = signer && HausCatalogue__factory.connect(process.env.HAUS_CATALOGUE_PROXY || "", signer)
+  const { signer, provider } = useLayoutStore()
+
+  const hausCatalogueContract = HausCatalogue__factory.connect(
+    process.env.HAUS_CATALOGUE_PROXY || "",
+    // @ts-ignore
+    signer ?? provider
+  )
   const { ReserveAuctionCoreEth } = useZoraV3()
 
   /*
@@ -27,11 +31,18 @@ const useHausCatalogue = () => {
     { revalidateOnFocus: false }
   )
 
+  const isOwner = React.useMemo(() => {
+    if (!owner || !signer) return
+
+    //@ts-ignore
+    return ethers.utils.getAddress(owner) === ethers.utils.getAddress(signer?._address)
+  }, [owner || signer])
+
   /*
 
-    Mint
+     Mint
 
- */
+  */
   const mint = React.useCallback(
     async (
       _data: HausCatalogue.TokenDataStruct,
@@ -49,9 +60,9 @@ const useHausCatalogue = () => {
 
   /*
 
-    Burn
+     Burn
 
- */
+  */
   const burn = React.useCallback(
     async (_tokenId: PromiseOrValue<BigNumberish>) => {
       await hausCatalogueContract?.burn(_tokenId)
@@ -61,9 +72,9 @@ const useHausCatalogue = () => {
 
   /*
 
-   Update Content URI
+    Update Content URI
 
-  */
+   */
   const updateContentURI = React.useCallback(
     async (_tokenId: PromiseOrValue<BigNumberish>, _content: HausCatalogue.ContentDataStruct) => {
       await hausCatalogueContract?.updateContentURI(_tokenId, _content)
@@ -77,9 +88,9 @@ const useHausCatalogue = () => {
 
   /*
 
-       Update Creator
+        Update Creator
 
- */
+  */
   const updateCreator = React.useCallback(
     async (_tokenId: PromiseOrValue<BigNumberish>, _creator: PromiseOrValue<string>) => {
       await hausCatalogueContract?.updateCreator(_tokenId, _creator)
@@ -93,9 +104,9 @@ const useHausCatalogue = () => {
 
   /*
 
-      Update Merkle Root
+       Update Merkle Root
 
-    */
+     */
   const updateRoot = React.useCallback(
     async (_newRoot: PromiseOrValue<BytesLike>) => {
       await hausCatalogueContract?.updateRoot(_newRoot)
@@ -109,9 +120,9 @@ const useHausCatalogue = () => {
 
   /*
 
-      Update Metadata
+       Update Metadata
 
-    */
+     */
   const updateMetadataURI = React.useCallback(
     async (_tokenId: PromiseOrValue<BigNumberish>, _metadataURI: PromiseOrValue<string>) => {
       await hausCatalogueContract?.updateMetadataURI(_tokenId, _metadataURI)
@@ -125,9 +136,9 @@ const useHausCatalogue = () => {
 
   /*
 
-      Update Royalty Info
+       Update Royalty Info
 
-    */
+     */
   const updateRoyaltyInfo = React.useCallback(
     async (_tokenId: PromiseOrValue<BigNumberish>, _royaltyPayoutAddress: PromiseOrValue<string>) => {
       await hausCatalogueContract?.updateMetadataURI(_tokenId, _royaltyPayoutAddress)
@@ -141,9 +152,9 @@ const useHausCatalogue = () => {
 
   /*
 
-     Creator
+      Creator
 
-   */
+    */
   const creator = React.useCallback(
     async (_tokenId: PromiseOrValue<BigNumberish>) => {
       await hausCatalogueContract?.creator(_tokenId)
@@ -153,9 +164,9 @@ const useHausCatalogue = () => {
 
   /*
 
-    Royalty Payout Address
+     Royalty Payout Address
 
-  */
+   */
   const royaltyPayoutAddress = React.useCallback(
     async (_tokenId: PromiseOrValue<BigNumberish>) => {
       await hausCatalogueContract?.royaltyPayoutAddress(_tokenId)
@@ -165,9 +176,9 @@ const useHausCatalogue = () => {
 
   /*
 
-   Royalty Payout Address
+    Royalty Payout Address
 
- */
+  */
   const royaltyInfo = React.useCallback(
     async (_tokenId: PromiseOrValue<BigNumberish>, _salePrice: PromiseOrValue<BigNumberish>) => {
       await hausCatalogueContract?.royaltyInfo(_tokenId, _salePrice)
@@ -177,9 +188,9 @@ const useHausCatalogue = () => {
 
   /*
 
-        TokenURI
+         TokenURI
 
-    */
+     */
   const tokenURI = React.useCallback(
     async (_tokenId: PromiseOrValue<BigNumberish>) => {
       await hausCatalogueContract?.tokenURI(_tokenId)
@@ -189,9 +200,9 @@ const useHausCatalogue = () => {
 
   /*
 
-      isApprovedForAll
+       isApprovedForAll
 
-   */
+    */
   const { data: isApprovedForAll } = useSWR(
     hausCatalogueContract ? `has-approved-zora-transfer-helper` : null,
     async () => {
@@ -213,6 +224,7 @@ const useHausCatalogue = () => {
     mint,
     burn,
     owner,
+    isOwner,
     isApprovedForAll,
     handleApprovalTransferHelper,
     updateContentURI,

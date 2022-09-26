@@ -3,14 +3,15 @@ import ReserveAuctionCoreEth from "@zoralabs/v3/dist/artifacts/ReserveAuctionCor
 import ZoraModuleManager from "@zoralabs/v3/dist/artifacts/ZoraModuleManager.sol/ZoraModuleManager.json"
 import AsksV1_1ABI from "@zoralabs/v3/dist/artifacts/AsksV1_1.sol/AsksV1_1.json"
 import ERC721TransferHelperABI from "@zoralabs/v3/dist/artifacts/ERC721TransferHelper.sol/ERC721TransferHelper.json"
-import { useSigner } from "wagmi"
 import React from "react"
 import useSWR from "swr"
 import { BigNumberish, ethers } from "ethers"
 import { PromiseOrValue } from "@typechain/ethers-v5/static/common"
+import { useLayoutStore } from "stores/useLayoutStore"
 
 const useZoraV3 = () => {
-  const { data: signer } = useSigner()
+  const { signer, provider } = useLayoutStore()
+
   const [zoraContracts, setZoraContracts] = React.useState<any>()
 
   React.useMemo(() => {
@@ -21,18 +22,23 @@ const useZoraV3 = () => {
       ReserveAuctionCoreEth: new ethers.Contract(
         ZORA_ADDRESSES.ReserveAuctionCoreEth,
         ReserveAuctionCoreEth.abi,
-        signer
+        signer ?? provider
       ),
-      AsksV1_1: new ethers.Contract(ZORA_ADDRESSES.AsksV1_1, AsksV1_1ABI.abi, signer),
-      ZoraModuleManager: new ethers.Contract(ZORA_ADDRESSES.ZoraModuleManager, ZoraModuleManager.abi, signer),
+      AsksV1_1: new ethers.Contract(ZORA_ADDRESSES.AsksV1_1, AsksV1_1ABI.abi, signer ?? provider),
+      ZoraModuleManager: new ethers.Contract(
+        ZORA_ADDRESSES.ZoraModuleManager,
+        ZoraModuleManager.abi,
+        signer ?? provider
+      ),
       ERC721TransferHelper: new ethers.Contract(
         ZORA_ADDRESSES.ERC721TransferHelper,
         ERC721TransferHelperABI.abi,
-        signer
+        signer ?? provider
       ),
     })
   }, [
     signer,
+    provider,
     ZORA_ADDRESSES.ReserveAuctionCoreEth,
     ZORA_ADDRESSES.AsksV1_1,
     ZORA_ADDRESSES.ZoraModuleManager,

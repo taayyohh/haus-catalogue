@@ -1,5 +1,5 @@
 import React from "react"
-import { usePlayerStore } from "../../stores/usePlayerStore"
+import { usePlayerStore } from "stores/usePlayerStore"
 import { BsFillPauseFill, BsFillPlayFill } from "react-icons/bs"
 import { BiSkipNext, BiSkipPrevious } from "react-icons/bi"
 
@@ -23,9 +23,7 @@ const Player = () => {
     title: string
   }
 
-  const { queue, setQueue, currentPosition, setCurrentPosition } = usePlayerStore(
-      (state: any) => state
-  )
+  const { queue, setQueue, currentPosition, setCurrentPosition } = usePlayerStore((state: any) => state)
 
   interface Media {
     readyState: number
@@ -48,7 +46,7 @@ const Player = () => {
     pause: () => void
   }
 
-  /* handle add to queue */
+  // /* handle add to queue */
   const handleAddToQueue = React.useMemo(() => {
     return queuedMusic.reduce((acc = [], cv: any) => {
       const artist = cv.artist
@@ -69,11 +67,9 @@ const Player = () => {
     } else {
       setQueue([...handleAddToQueue])
     }
-
-    // @ts-ignore
   }, [handleAddToQueue])
-
-  const loadMedia = React.useCallback(async () => {
+  //
+  const loadMedia = React.useCallback(() => {
     const media: Media = audioRef.current || {
       readyState: 0,
       duration: 0,
@@ -96,13 +92,12 @@ const Player = () => {
     }
     setCurrentMedia(media)
   }, [])
-
-
-
-  React.useMemo(async () => {
-    await loadMedia()
+  //
+  //
+  //
+  React.useEffect(() => {
+    loadMedia()
   }, [queue, currentPosition])
-
 
   const toHHMMSS = function (secs: string) {
     let sec_num = parseInt(secs, 10) // don't forget the second param
@@ -180,7 +175,7 @@ const Player = () => {
   }, [media])
 
   const handlePlay = async () => {
-    console.log('m', media)
+    console.log("m", media)
     media.play()
   }
 
@@ -204,7 +199,6 @@ const Player = () => {
     // setIsPlaying(true)
   }
 
-  // @ts-ignore
   return (
     <div className="fixed bottom-2 flex flex w-full items-center justify-between px-4">
       <div className="flex items-center gap-4 ">
@@ -228,7 +222,6 @@ const Player = () => {
             </button>
           </div>
           <audio crossOrigin="anonymous" preload={"auto"} src={queue[currentPosition]?.audio} ref={audioRef} />
-
         </div>
         {media.currentSrc.length > 0 ? (
           <div className="inline-flex h-10 items-center gap-2 self-start rounded border border-rose-300 bg-rose-200 p-2 shadow">
