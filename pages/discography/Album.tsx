@@ -9,17 +9,27 @@ import dayjs from "dayjs"
 import useZoraV3 from "hooks/useZoraV3"
 import useSWR from "swr"
 import { useAuctionInfo } from "hooks/useAuctionInfo"
-import { useCountdown } from "../../hooks/useCountdown"
+import { useCountdown } from "hooks/useCountdown"
 import Countdown from "./Countdown"
 
 const Album: React.FC<any> = ({ release }) => {
   const { addToQueue, queuedMusic } = usePlayerStore((state: any) => state)
   const { signer, signerAddress } = useLayoutStore()
   const [contract, setContract] = React.useState<any>()
-  const { hausCatalogueContract, isOwner } = useHausCatalogue()
+  const { hausCatalogueContract } = useHausCatalogue()
   const { zoraContracts, createAuction, cancelAuction, settleAuction } = useZoraV3()
   const { auctionInfo } = useAuctionInfo({ collectionAddress: release?.collectionAddress, tokenId: release?.tokenId })
   const { countdownString } = useCountdown(auctionInfo)
+
+  React.useEffect(() => {
+    if (!release.metadata) {
+      console.log("get from contract")
+    }
+  }, [release.metadata])
+
+  const isOwner = React.useMemo(() => {
+    return ethers.utils.getAddress(release?.owner) === signerAddress
+  }, [release])
 
   /*
   
@@ -124,13 +134,17 @@ const Album: React.FC<any> = ({ release }) => {
             </AnimatedModal>
           )}
         </div>
+        {isOwner && (
+          <div>
+            admin tools
+            <div onClick={() => handleSetAuctionReservePrice()}>update auction reserve price</div>
+            <div onClick={() => handleCreateAuction()}>create auction</div>
+            <div onClick={() => handleSettleAuction()}>settle auction</div>
+            <div onClick={() => handleCancelAuction()}>cancel auction</div>
+          </div>
+        )}
 
         {/*{console.log('is', isOwner)}*/}
-
-        {/*<div onClick={() => handleSetAuctionReservePrice()}>update auction reserve price</div>*/}
-        {/*<div onClick={() => handleCreateAuction()}>create auction</div>*/}
-        {/*<div onClick={() => handleSettleAuction()}>settle auction</div>*/}
-        {/*<div onClick={() => handleCancelAuction()}>cancel auction</div>*/}
 
         <Countdown countdownString={countdownString} />
       </div>

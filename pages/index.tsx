@@ -43,8 +43,6 @@ const Catalogue = () => {
   React.useMemo(async () => {
     const catalogue = await _catalogue
 
-    console.log("c", catalogue.length)
-
     setCatalogue(catalogue)
   }, [_catalogue])
 

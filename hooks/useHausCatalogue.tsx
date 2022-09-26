@@ -31,13 +31,6 @@ const useHausCatalogue = () => {
     { revalidateOnFocus: false }
   )
 
-  const isOwner = React.useMemo(() => {
-    if (!owner || !signer) return
-
-    //@ts-ignore
-    return ethers.utils.getAddress(owner) === ethers.utils.getAddress(signer?._address)
-  }, [owner || signer])
-
   /*
 
      Mint
@@ -224,7 +217,6 @@ const useHausCatalogue = () => {
     mint,
     burn,
     owner,
-    isOwner,
     isApprovedForAll,
     handleApprovalTransferHelper,
     updateContentURI,
