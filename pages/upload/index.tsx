@@ -24,9 +24,6 @@ const Upload = () => {
   const [localUrl, setLocalUrl] = React.useState(null)
 
   const getBalance = React.useMemo(async () => {
-    console.log("i", instance)
-    console.log("b", instance)
-
     if (!instance) return
     // @ts-ignore
     const balance = await instance.getLoadedBalance()
@@ -111,145 +108,144 @@ const Upload = () => {
   const infoSectionHeading = "text-lg font-bold"
 
   return (
-      <div className="flex min-h-screen h-full justify-center">
-          <div className="mx-auto self-center flex max-w-xl flex-col rounded-xl bg-rose-200 p-8 w-1/2">
-              <div className="center mb-4 flex items-center justify-center text-2xl">
-                  <div className="ml-2 flex">
-                      <div className="mr-2 flex h-8 w-8 overflow-hidden rounded-full">
-                          <img src="https://docs.bundlr.network/img/logo.svg" alt="bundlr logo" />
-                      </div>
-                      <a className="text-xl" href={"https://bundlr.network/"}>
-                          Bundlr Uploader
-                      </a>
-                  </div>
-              </div>
-              {(!!instance && (
-                  <>
-                      <div>
-                          <div className={infoSection}>
-                              <div className={infoSectionHeading}>Bundlr Wallet Balance</div>
-                              <div>{walletBalance} MATIC</div>
-                          </div>
-                          <div className={infoSection}>
-                              <div className={infoSectionHeading}>Price of Upload</div>
-                              <div>{priceOfUpload} MATIC</div>
-                          </div>
-                          {priceOfUpload - walletBalance > 0 ? (
-                              <div className={`${infoSection} border border-rose-300`}>
-                                  <div className={infoSectionHeading}>Funding Needed</div>
-                                  <div className="font-bold">{priceOfUpload - walletBalance}</div>
-                              </div>
-                          ) : null}
-                      </div>
-                      {priceOfUpload - walletBalance > 0 ? (
-                          <div className="flex items-center">
-                              <button className={button} type="button" onClick={() => handleFund(priceOfUpload)}>
-                                  Fund
-                              </button>
-                          </div>
-                      ) : null}
-                      <div className="flex flex-col">
-                          <Formik initialValues={{ file: {} }} onSubmit={values => handleSubmit(values)}>
-                              {props => (
-                                  <form onSubmit={props.handleSubmit} className="flex flex-col">
-                                      <>
-                                          {priceOfUpload && walletBalance && priceOfUpload - walletBalance <= 0 ? (
-                                              <button type="submit" className={`${button} bg-rose-600 hover:bg-rose-700`}>
-                                                  Submit
-                                              </button>
-                                          ) : null}
-
-                                          <label htmlFor="file-upload" className={`${button} bg-rose-400 hover:bg-rose-500`}>
-                                              Select File
-                                          </label>
-                                          <input
-                                              className="hidden"
-                                              id="file-upload"
-                                              name="file"
-                                              type="file"
-                                              onChange={event => {
-                                                  // @ts-ignore
-                                                  props.setFieldValue("file", event.currentTarget.files[0])
-                                                  // @ts-ignore
-                                                  setFile(event.currentTarget.files[0])
-                                                  // @ts-ignore
-                                                  setLocalUrl(URL?.createObjectURL(event.currentTarget.files[0]))
-                                                  // @ts-ignore
-                                                  getPrice(event.currentTarget.files)
-                                                  // @ts-ignore
-                                                  getBuffer(event.currentTarget.files[0])
-                                              }}
-                                          />
-                                      </>
-                                  </form>
-                              )}
-                          </Formik>
-                      </div>
-                  </>
-              )) || (
-                  <div className="flex justify-center">
-                      <button
-                          type="button"
-                          className={button}
-                          onClick={async () => {
-                              const instance = await bundlr
-                              if (!!instance) {
-                                  await instance.ready()
-                                  // @ts-ignore
-                                  setInstance(instance)
-                              }
-                          }}
-                      >
-                          Connect to Bundlr
-                      </button>
-                  </div>
-              )}
-              {file.name.length > 0 ? (
-                  <div className={infoSection}>
-                      <div className={infoSectionHeading}>File to Upload:</div>
-                      <div className="flex w-full flex-col items-center justify-center pt-2 pb-4">
-                          <div>
-                              <span className="font-bold">name:</span> {file.name}
-                          </div>
-                          <div>
-                              <span className="font-bold">type:</span> {file.type}
-                          </div>
-                      </div>
-                      {localUrl && file.type.includes("image") && (
-                          <div className="flex h-32 w-32 overflow-hidden">
-                              <img src={localUrl} alt="uploaded image thumbnail" />
-                          </div>
-                      )}
-                      {localUrl && file.type.includes("audio") && (
-                          <audio controls>
-                              <source src={localUrl} type={file.type} />
-                          </audio>
-                      )}
-                      {localUrl && file.type.includes("video") && (
-                          <video controls>
-                              <source src={localUrl} type={file.type} />
-                          </video>
-                      )}
-                  </div>
-              ) : null}
-
-              {!!txId && (
-                  <div className={infoSection}>
-                      <div className={infoSectionHeading}>Uploaded File URL:</div>
-                      <a className="text-sm" href={`https://arweave.net/${txId}`} target="_blank">
-                          {`https://arweave.net/${txId}`}
-                      </a>
-                  </div>
-              )}
-              <div className="mt-4 flex justify-end text-xs">
-                  built by{" "}
-                  <a href={"https://github.com/taayyohh"} className="ml-1">
-                      taayohh
-                  </a>
-              </div>
+    <div className="flex h-full min-h-screen justify-center">
+      <div className="mx-auto flex w-1/2 max-w-xl flex-col self-center rounded-xl bg-rose-200 p-8">
+        <div className="center mb-4 flex items-center justify-center text-2xl">
+          <div className="ml-2 flex">
+            <div className="mr-2 flex h-8 w-8 overflow-hidden rounded-full">
+              <img src="https://docs.bundlr.network/img/logo.svg" alt="bundlr logo" />
+            </div>
+            <a className="text-xl" href={"https://bundlr.network/"}>
+              Bundlr Uploader
+            </a>
           </div>
+        </div>
+        {(!!instance && (
+          <>
+            <div>
+              <div className={infoSection}>
+                <div className={infoSectionHeading}>Bundlr Wallet Balance</div>
+                <div>{walletBalance} MATIC</div>
+              </div>
+              <div className={infoSection}>
+                <div className={infoSectionHeading}>Price of Upload</div>
+                <div>{priceOfUpload} MATIC</div>
+              </div>
+              {priceOfUpload - walletBalance > 0 ? (
+                <div className={`${infoSection} border border-rose-300`}>
+                  <div className={infoSectionHeading}>Funding Needed</div>
+                  <div className="font-bold">{priceOfUpload - walletBalance}</div>
+                </div>
+              ) : null}
+            </div>
+            {priceOfUpload - walletBalance > 0 ? (
+              <div className="flex items-center">
+                <button className={button} type="button" onClick={() => handleFund(priceOfUpload)}>
+                  Fund
+                </button>
+              </div>
+            ) : null}
+            <div className="flex flex-col">
+              <Formik initialValues={{ file: {} }} onSubmit={values => handleSubmit(values)}>
+                {props => (
+                  <form onSubmit={props.handleSubmit} className="flex flex-col">
+                    <>
+                      {priceOfUpload && walletBalance && priceOfUpload - walletBalance <= 0 ? (
+                        <button type="submit" className={`${button} bg-rose-600 hover:bg-rose-700`}>
+                          Submit
+                        </button>
+                      ) : null}
 
+                      <label htmlFor="file-upload" className={`${button} bg-rose-400 hover:bg-rose-500`}>
+                        Select File
+                      </label>
+                      <input
+                        className="hidden"
+                        id="file-upload"
+                        name="file"
+                        type="file"
+                        onChange={event => {
+                          // @ts-ignore
+                          props.setFieldValue("file", event.currentTarget.files[0])
+                          // @ts-ignore
+                          setFile(event.currentTarget.files[0])
+                          // @ts-ignore
+                          setLocalUrl(URL?.createObjectURL(event.currentTarget.files[0]))
+                          // @ts-ignore
+                          getPrice(event.currentTarget.files)
+                          // @ts-ignore
+                          getBuffer(event.currentTarget.files[0])
+                        }}
+                      />
+                    </>
+                  </form>
+                )}
+              </Formik>
+            </div>
+          </>
+        )) || (
+          <div className="flex justify-center">
+            <button
+              type="button"
+              className={button}
+              onClick={async () => {
+                const instance = await bundlr
+                if (!!instance) {
+                  await instance.ready()
+                  // @ts-ignore
+                  setInstance(instance)
+                }
+              }}
+            >
+              Connect to Bundlr
+            </button>
+          </div>
+        )}
+        {file.name.length > 0 ? (
+          <div className={infoSection}>
+            <div className={infoSectionHeading}>File to Upload:</div>
+            <div className="flex w-full flex-col items-center justify-center pt-2 pb-4">
+              <div>
+                <span className="font-bold">name:</span> {file.name}
+              </div>
+              <div>
+                <span className="font-bold">type:</span> {file.type}
+              </div>
+            </div>
+            {localUrl && file.type.includes("image") && (
+              <div className="flex h-32 w-32 overflow-hidden">
+                <img src={localUrl} alt="uploaded image thumbnail" />
+              </div>
+            )}
+            {localUrl && file.type.includes("audio") && (
+              <audio controls>
+                <source src={localUrl} type={file.type} />
+              </audio>
+            )}
+            {localUrl && file.type.includes("video") && (
+              <video controls>
+                <source src={localUrl} type={file.type} />
+              </video>
+            )}
+          </div>
+        ) : null}
+
+        {!!txId && (
+          <div className={infoSection}>
+            <div className={infoSectionHeading}>Uploaded File URL:</div>
+            <a className="text-sm" href={`https://arweave.net/${txId}`} target="_blank">
+              {`https://arweave.net/${txId}`}
+            </a>
+          </div>
+        )}
+        <div className="mt-4 flex justify-end text-xs">
+          built by{" "}
+          <a href={"https://github.com/taayyohh"} className="ml-1">
+            taayohh
+          </a>
+        </div>
       </div>
+    </div>
   )
 }
 

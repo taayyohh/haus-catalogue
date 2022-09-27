@@ -73,7 +73,7 @@ const MetadataForm: React.FC<{ merkle: any; contract: Contract }> = ({ merkle, c
   )
 
   return (
-    <div>
+    <div className={"bg-gray-200 px-12 px-8 py-8 shadow-xl"}>
       <div className={"mb-8 text-3xl"}>Mint to LucidHaus Catalogue</div>
       <div className={"mb-24"}>
         <Form fields={metadataFields} initialValues={metadataInitialValues} submitCallback={submitCallBack} />

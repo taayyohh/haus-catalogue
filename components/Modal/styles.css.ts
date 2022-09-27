@@ -59,7 +59,7 @@ export const largeAnimatedContent = style({
   top: 120,
   gap: 24,
   padding: 32,
-  borderRadius: 12,
+  borderRadius: 0,
   "@media": {
     "screen and (max-width: 1000px)": {
       width: "calc(100% - 50px)",

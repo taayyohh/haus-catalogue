@@ -10,7 +10,10 @@ import useZoraV3 from "hooks/useZoraV3"
 import useSWR from "swr"
 import { useAuctionInfo } from "hooks/useAuctionInfo"
 import { useCountdown } from "hooks/useCountdown"
-import Countdown from "./Countdown"
+import Countdown from "../Countdown"
+import { motion } from "framer-motion"
+import { BsFillPlayFill, BsThreeDotsVertical } from "react-icons/bs"
+import Controls from "./Controls"
 
 const Album: React.FC<any> = ({ release }) => {
   const { addToQueue, queuedMusic } = usePlayerStore((state: any) => state)
@@ -22,32 +25,15 @@ const Album: React.FC<any> = ({ release }) => {
   const { countdownString } = useCountdown(auctionInfo)
 
   React.useEffect(() => {
-    if (!release.metadata) {
+    if (!release?.metadata) {
       console.log("get from contract")
     }
-  }, [release.metadata])
+  }, [release?.metadata])
 
   const isOwner = React.useMemo(() => {
+    if (!release?.owner) return
     return ethers.utils.getAddress(release?.owner) === signerAddress
-  }, [release])
-
-  /*
-  
-    handle create auction
-  
-   */
-  const handleCreateAuction = React.useCallback(async () => {
-    if (!createAuction) return
-
-    await createAuction(
-      release?.collectionAddress,
-      Number(release?.tokenId),
-      toSeconds({ days: 1 }),
-      ethers.utils.parseEther(".05"),
-      release.owner,
-      Math.floor(Date.now() / 1000)
-    )
-  }, [createAuction, release])
+  }, [release?.owner])
 
   /*
   
@@ -65,11 +51,6 @@ const Album: React.FC<any> = ({ release }) => {
    handle settle auction
 
   */
-  const handleCancelAuction = React.useCallback(async () => {
-    if (!cancelAuction) return
-
-    await settleAuction(release?.collectionAddress, Number(release?.tokenId))
-  }, [cancelAuction])
 
   const handleCreateBid = React.useCallback(() => {
     if (!zoraContracts?.ReserveAuctionCoreEth || !release) return
@@ -79,38 +60,63 @@ const Album: React.FC<any> = ({ release }) => {
     })
   }, [zoraContracts?.ReserveAuctionCoreEth])
 
-  const handleSetAuctionReservePrice = React.useCallback(() => {
-    if (!zoraContracts?.ReserveAuctionCoreEth || !release) return
-
-    zoraContracts?.ReserveAuctionCoreEth.setAuctionReservePrice(
-      release?.collectionAddress,
-      release?.tokenId,
-      ethers.utils.parseEther(".01")
-    )
-  }, [zoraContracts?.ReserveAuctionCoreEth])
+  const [isHover, setIsHover] = React.useState<boolean>(false)
+  const albumVariants = {
+    initial: {
+      y: 0,
+    },
+    hover: {
+      y: -2,
+    },
+    hidden: {
+      y: "100%",
+    },
+    visible: {
+      y: 0,
+    },
+  }
 
   return (
-    <div
+    <motion.div
+      initial={"initial"}
+      animate={isHover ? "hover" : "initial"}
+      variants={albumVariants}
       key={release?.image}
-      className="flex w-full flex-col items-center"
-      // onClick={() =>
-      //   addToQueue([
-      //     ...queuedMusic,
-      //     {
-      //       artist: release?.artist,
-      //       image: release?.project.artwork.uri.replace("ipfs://", "https://ipfs.io/ipfs/"),
-      //       songs: [
-      //         {
-      //           audio: [release?.losslessAudio.replace("ipfs://", "https://ipfs.io/ipfs/")],
-      //           title: release?.title,
-      //           trackNumber: release?.trackNumber,
-      //         },
-      //       ],
-      //     },
-      //   ])
-      // }
+      onMouseOver={() => setIsHover(true)}
+      onMouseLeave={() => setIsHover(false)}
+      className="relative flex w-full flex-col items-center overflow-hidden hover:cursor-pointer"
     >
-      <img src={release?.metadata?.project?.artwork.uri.replace("ipfs://", "https://ipfs.io/ipfs/")} />
+      <div className={"relative overflow-hidden"}>
+        <img src={release?.metadata?.project?.artwork.uri.replace("ipfs://", "https://ipfs.io/ipfs/")} />
+
+        <motion.div
+          variants={albumVariants}
+          initial={"hidden"}
+          animate={isHover ? "visible" : "hidden"}
+          className={"absolute bottom-0 w-full bg-zinc-800"}
+        >
+          <div
+            onClick={() =>
+              addToQueue([
+                ...queuedMusic,
+                {
+                  artist: release?.metadata?.artist,
+                  image: release?.metadata?.project.artwork.uri.replace("ipfs://", "https://ipfs.io/ipfs/"),
+                  songs: [
+                    {
+                      audio: [release?.metadata?.losslessAudio.replace("ipfs://", "https://ipfs.io/ipfs/")],
+                      title: release?.metadata?.title,
+                      trackNumber: release?.metadata?.trackNumber,
+                    },
+                  ],
+                },
+              ])
+            }
+          >
+            <BsFillPlayFill size={50} color={"white"} />
+          </div>
+        </motion.div>
+      </div>
       <div className="flex w-full flex-col items-start py-2">
         <div className={"flex w-full flex-row items-start justify-between"}>
           <div className={"flex flex-col"}>
@@ -134,21 +140,13 @@ const Album: React.FC<any> = ({ release }) => {
             </AnimatedModal>
           )}
         </div>
-        {isOwner && (
-          <div>
-            admin tools
-            <div onClick={() => handleSetAuctionReservePrice()}>update auction reserve price</div>
-            <div onClick={() => handleCreateAuction()}>create auction</div>
-            <div onClick={() => handleSettleAuction()}>settle auction</div>
-            <div onClick={() => handleCancelAuction()}>cancel auction</div>
-          </div>
-        )}
-
-        {/*{console.log('is', isOwner)}*/}
-
+        {isOwner && <Controls release={release} />}
+        <div className={"hover:underline"} onClick={() => handleSettleAuction()}>
+          settle auction
+        </div>
         <Countdown countdownString={countdownString} />
       </div>
-    </div>
+    </motion.div>
   )
 }
 
