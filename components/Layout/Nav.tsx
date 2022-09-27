@@ -1,10 +1,10 @@
 import { ConnectButton } from "@rainbow-me/rainbowkit"
 import React from "react"
 import Link from "next/link"
-import useHausCatalogue from "hooks/useHausCatalogue"
+import { useLayoutStore } from "stores/useLayoutStore"
 
 const Nav = () => {
-  const { isOwner, hausCatalogueContract } = useHausCatalogue()
+  const { isCatalogueArtist } = useLayoutStore()
 
   return (
     <div className="fixed z-10 flex w-full items-center justify-between bg-rose-200 p-4">
@@ -19,7 +19,7 @@ const Nav = () => {
         </Link>
       </div>
 
-      {isOwner && (
+      {isCatalogueArtist && (
         <div className={"absolute right-[220px]"}>
           <Link href={"/mint"}>Mint</Link>
         </div>

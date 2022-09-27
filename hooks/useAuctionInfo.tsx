@@ -2,9 +2,11 @@ import useSWR from "swr"
 import { ethers } from "ethers"
 import { fromSeconds } from "../utils/helpers"
 import useZoraV3 from "./useZoraV3"
+import { useLayoutStore } from "stores/useLayoutStore"
 
-export function useAuctionInfo(token: { collectionAddress: string; tokenId: string }) {
+export function useAuctionInfo(token: any) {
   const { zoraContracts } = useZoraV3()
+  const { signerAddress } = useLayoutStore()
 
   const { data: auctionInfo } = useSWR(
     `${token?.collectionAddress}+${token?.tokenId}`,
@@ -24,6 +26,9 @@ export function useAuctionInfo(token: { collectionAddress: string; tokenId: stri
         firstBidTime: parseInt(auction?.firstBidTime),
         startTime: parseInt(auction?.startTime),
         endTime: parseInt(auction?.firstBidTime + auction?.duration),
+        notForAuction: parseInt(auction?.seller) === 0,
+        auctionHasStarted: parseInt(auction?.firstBidTime) > 0,
+        isSeller: ethers.utils.getAddress(auction?.seller) === signerAddress,
       }
     },
     { revalidateOnFocus: true }

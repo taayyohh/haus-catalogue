@@ -54,6 +54,7 @@
     "url-join": "^5.0.0",
     "wagmi": "^0.4.11",
     "yarn": "^1.22.19",
+    "yup": "^0.32.11",
     "zustand": "^4.0.0-rc.1"
   },
   "devDependencies": {

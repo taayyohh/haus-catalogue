@@ -4,9 +4,13 @@ import { ethers } from "ethers"
 import { toSeconds } from "utils/helpers"
 import useZoraV3 from "hooks/useZoraV3"
 import { motion } from "framer-motion"
+import { useAuctionInfo } from "hooks/useAuctionInfo"
 
-const Controls: React.FC<any> = ({ release }) => {
+const Admin: React.FC<any> = ({ release }) => {
   const { zoraContracts, createAuction, cancelAuction, settleAuction } = useZoraV3()
+  const { auctionInfo } = useAuctionInfo(release)
+
+  // console.log('a', auctionInfo?.seller)
 
   /*
 
@@ -19,7 +23,7 @@ const Controls: React.FC<any> = ({ release }) => {
     await createAuction(
       release?.collectionAddress,
       Number(release?.tokenId),
-      toSeconds({ days: 1 }),
+      toSeconds({ minutes: 2 }),
       ethers.utils.parseEther(".05"),
       release.owner,
       Math.floor(Date.now() / 1000)
@@ -39,7 +43,7 @@ const Controls: React.FC<any> = ({ release }) => {
   const handleCancelAuction = React.useCallback(async () => {
     if (!cancelAuction) return
 
-    await settleAuction(release?.collectionAddress, Number(release?.tokenId))
+    await cancelAuction(release?.collectionAddress, Number(release?.tokenId))
   }, [cancelAuction])
 
   const [isOpen, setIsOpen] = React.useState<boolean>(false)
@@ -49,6 +53,10 @@ const Controls: React.FC<any> = ({ release }) => {
     },
     animate: {
       height: "auto",
+      padding: 10,
+      transition: {
+        duration: 0.2,
+      },
     },
   }
 
@@ -64,20 +72,30 @@ const Controls: React.FC<any> = ({ release }) => {
         initial={"initial"}
         variants={variants}
         animate={isOpen ? "animate" : "initial"}
-        className={" absolute top-1 left-5 top-9 box-border h-0 w-10/12 overflow-hidden rounded bg-white p-4"}
+        className={"absolute top-1 left-5 top-9 box-border h-0 w-10/12 overflow-hidden rounded bg-white"}
       >
-        <div className={"hover:underline"} onClick={() => handleSetAuctionReservePrice()}>
-          update auction reserve price
-        </div>
-        <div className={"hover:underline"} onClick={() => handleCreateAuction()}>
-          create auction
-        </div>
-        <div className={"hover:underline"} onClick={() => handleCancelAuction()}>
-          cancel auction
-        </div>
+        {!auctionInfo?.auctionHasStarted && (
+          <>
+            {(!auctionInfo?.notForAuction && (
+              <div className={"hover:underline"} onClick={() => handleSetAuctionReservePrice()}>
+                update auction reserve price
+              </div>
+            )) || (
+              <div className={"hover:underline"} onClick={() => handleCreateAuction()}>
+                create auction
+              </div>
+            )}
+          </>
+        )}
+
+        {!auctionInfo?.notForAuction && !auctionInfo?.auctionHasStarted && (
+          <div className={"hover:underline"} onClick={() => handleCancelAuction()}>
+            cancel auction
+          </div>
+        )}
       </motion.div>
     </div>
   )
 }
 
-export default Controls
+export default Admin

@@ -696,3 +696,73 @@ export const radioStyles = styleVariants({
   default: [pointer],
   active: [pointer, { border: "2px solid #000" }],
 })
+
+
+export const numberInputStyle = style({
+  height: 64,
+  width: '100%',
+  backgroundColor: '#F2F2F2',
+  borderRadius: '15px',
+  fontSize: 16,
+  paddingLeft: 24,
+  paddingRight: 25,
+  boxSizing: 'border-box',
+  border: '2px solid #fff',
+  overflow: 'hidden',
+  selectors: {
+    '&:focus': {
+      outline: 'none',
+      backgroundColor: '#FFF',
+      borderColor: '#E6E6E6',
+    },
+    '&::-webkit-input-placeholder': {
+      textAlign: 'right',
+    },
+    '&::placeholder': {
+      color: '#B3B3B3',
+    },
+  },
+})
+
+export const errorMessageStyle = style({
+  color: '#ff0015',
+  fontSize: '10px',
+})
+
+export const numberInputErrorStyle = style({
+  height: 64,
+  width: '100%',
+  backgroundColor: '#F2F2F2',
+  borderRadius: '15px',
+  fontSize: 16,
+  paddingLeft: 24,
+  paddingRight: 25,
+  boxSizing: 'border-box',
+  border: '2px solid #ff0015',
+  selectors: {
+    '&:focus': {
+      outline: 'none',
+      backgroundColor: '#FFF',
+      borderColor: '#E6E6E6',
+    },
+    '&::-webkit-input-placeholder': {
+      textAlign: 'right',
+    },
+  },
+})
+
+export const placeholderStyle = style({
+  top: '50%',
+  right: '7%',
+  height: '26px',
+  marginTop: '-23px',
+  background: 'inherit',
+  fontSize: 10,
+  '@media': {
+    'screen and (max-width: 768px)': {
+      right: '27px',
+      marginTop: '-22px',
+      fontSize: 16,
+    },
+  },
+})

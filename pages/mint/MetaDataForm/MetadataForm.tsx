@@ -3,19 +3,21 @@ import Form from "components/Fields/Form"
 import { metadataFields, metadataInitialValues } from "components/Fields/fields/metadataFields"
 import { NFTStorage } from "nft.storage"
 import { useLayoutStore } from "stores/useLayoutStore"
-import { ethers, Contract } from "ethers"
+import { ethers } from "ethers"
 import CID from "cids"
 import { FormikValues } from "formik"
+import useHausCatalogue from "hooks/useHausCatalogue"
 
-const MetadataForm: React.FC<{ merkle: any; contract: Contract }> = ({ merkle, contract }) => {
+const MetadataForm: React.FC<{ merkle: any }> = ({ merkle }) => {
   const client = new NFTStorage({ token: process.env.NFT_STORAGE_TOKEN ? process.env.NFT_STORAGE_TOKEN : "" })
   const { signerAddress } = useLayoutStore()
+  const { hausCatalogueContract: contract } = useHausCatalogue()
 
   /*
-    
-      handle form submission
-     
-  */
+      
+        handle form submission
+       
+    */
   const submitCallBack = React.useCallback(
     async (values: any, formik: FormikValues) => {
       if (!signerAddress || !contract) return

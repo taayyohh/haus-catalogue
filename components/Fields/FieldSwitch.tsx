@@ -135,7 +135,7 @@ const FieldSwitch: React.FC<FieldSwitchProps> = ({
       }
     }
 
-    formik.setFieldValue(field.name, field.type === NUMBER ? Number(value) : value)
+    formik.setFieldValue(field.name, field.type === NUMBER ? parseFloat(isNaN(value) ? undefined : value) : value)
   }
 
   switch (field.type) {

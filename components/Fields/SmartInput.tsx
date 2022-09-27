@@ -108,7 +108,7 @@ const SmartInput: React.FC<SmartInputProps> = ({
         onChange={onChange}
         onBlur={handleBlur}
         onFocus={handleFocus}
-        value={ensIsValid ? walletSnippet(value) : value || ""}
+        value={ensIsValid ? walletSnippet(value) : typeof value === "number" && isNaN(value) ? "" : value}
         className={!!errorMessage ? defaultInputErrorStyle : defaultInputStyle}
         min={0}
         max={max}

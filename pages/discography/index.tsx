@@ -3,6 +3,7 @@ import { discographyQuery } from "query/discography"
 import Album from "./Album/Album"
 
 const Discography: React.FC<any> = ({ discography }) => {
+  console.log('d', discography)
   return (
     <div>
       <div className="relative mx-auto flex w-full flex-col bg-rose-200 py-24">

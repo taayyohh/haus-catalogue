@@ -23,6 +23,19 @@ const useHausCatalogue = () => {
     owner
 
    */
+  const { data: merkleRoot } = useSWR(
+    hausCatalogueContract ? `merkle-root` : null,
+    async () => {
+      return await hausCatalogueContract?.merkleRoot()
+    },
+    { revalidateOnFocus: false }
+  )
+
+  /*
+
+    owner
+
+   */
   const { data: owner } = useSWR(
     hausCatalogueContract ? `haus-catalogue-contract` : null,
     async () => {
@@ -222,6 +235,7 @@ const useHausCatalogue = () => {
   return {
     hausCatalogueContract,
     mint,
+    merkleRoot,
     burn,
     owner,
     isOwner,
