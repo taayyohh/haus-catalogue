@@ -23,7 +23,7 @@ const Discography: React.FC<any> = ({ discography }) => {
 
 export default Discography
 
-export async function getStaticProps() {
+export async function getServerSideProps() {
   try {
     // zora api queries
     const discography = await discographyQuery()
