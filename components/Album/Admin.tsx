@@ -60,14 +60,23 @@ const Admin: React.FC<any> = ({ release }) => {
     },
   }
 
+  const toggleVariants = {
+    initial: { rotate: 0 },
+    animate: {
+      rotate: 90,
+    },
+  }
+
   return (
     <div>
-      <div
-        className={"absolute top-1 right-1 rounded-full bg-white p-2 shadow-2xl shadow-rose-300"}
+      <motion.div
+        variants={toggleVariants}
+        animate={isOpen ? "animate" : "initial"}
+        className={"absolute top-1 right-1 cursor-pointer rounded-full bg-white p-2 shadow-2xl shadow-rose-300"}
         onClick={() => setIsOpen(bool => !bool)}
       >
         <BsThreeDotsVertical size={16} />
-      </div>
+      </motion.div>
       <motion.div
         initial={"initial"}
         variants={variants}

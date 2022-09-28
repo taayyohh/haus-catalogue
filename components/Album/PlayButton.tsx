@@ -21,7 +21,10 @@ const PlayButton: React.FC<any> = ({ release, isHover }) => {
       animate={isHover ? "visible" : "hidden"}
       className={"absolute bottom-0 w-full bg-zinc-800"}
     >
-      <div
+      <BsFillPlayFill
+        size={50}
+        color={"white"}
+        className={"cursor-pointer"}
         onClick={() =>
           addToQueue([
             ...queuedMusic,
@@ -38,9 +41,7 @@ const PlayButton: React.FC<any> = ({ release, isHover }) => {
             },
           ])
         }
-      >
-        <BsFillPlayFill size={50} color={"white"} />
-      </div>
+      />
     </motion.div>
   )
 }

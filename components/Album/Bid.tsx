@@ -10,7 +10,6 @@ const Bid: React.FC<any> = ({ release }) => {
   const { zoraContracts } = useZoraV3()
   const { auctionInfo } = useAuctionInfo(release)
 
-
   /*
 
   handle settle auction
@@ -54,17 +53,8 @@ const Bid: React.FC<any> = ({ release }) => {
             "relative flex cursor-pointer items-center gap-1 rounded-2xl bg-rose-300 px-3 py-1 text-sm hover:bg-rose-700 hover:text-white"
           }
         >
-          {(auctionInfo?.notForAuction && (
-              <>
-              Not for Auction
-              </>
-          )) || (
-              <>
-                <span className={"text-xs"}>Bid:</span> {auctionInfo?.highestBid || auctionInfo?.reservePrice}
-                <span>ETH</span>
-              </>
-          )}
-
+          <span className={"text-xs"}>Bid:</span> {auctionInfo?.highestBid || auctionInfo?.reservePrice}
+          <span>ETH</span>
         </div>
       }
       size={"auto"}

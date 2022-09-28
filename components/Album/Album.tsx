@@ -9,6 +9,7 @@ import Admin from "./Admin"
 import Bid from "./Bid"
 import PlayButton from "./PlayButton"
 import SellerAdmin from "./SellerAdmin"
+import { walletSnippet } from "utils/helpers"
 
 const Album: React.FC<any> = ({ release }) => {
   const { signerAddress } = useLayoutStore()
@@ -44,7 +45,7 @@ const Album: React.FC<any> = ({ release }) => {
       key={release?.image}
       onMouseOver={() => setIsHover(true)}
       onMouseLeave={() => setIsHover(false)}
-      className="relative flex w-full flex-col items-center overflow-hidden hover:cursor-pointer"
+      className="relative flex w-full flex-col items-center overflow-hidden"
     >
       <div className={"relative overflow-hidden"}>
         <img src={release?.metadata?.project?.artwork.uri.replace("ipfs://", "https://ipfs.io/ipfs/")} />
@@ -56,7 +57,16 @@ const Album: React.FC<any> = ({ release }) => {
             <div className="text-xl font-bold">{release?.name}</div>
             <div>{release?.metadata?.artist}</div>
           </div>
-          <Bid release={release} />
+          {auctionInfo?.notForAuction && (
+            <div
+              className={"cursor-defaultitems-center relative flex gap-1 rounded-2xl bg-slate-300 px-3 py-1 text-sm"}
+            >
+              Owned: By: {walletSnippet(release.owner)}
+            </div>
+          )}
+          {(!!auctionInfo?.highestBid || !!auctionInfo?.reservePrice) && !auctionInfo?.notForAuction && (
+            <Bid release={release} />
+          )}
         </div>
         {auctionInfo?.isSeller && !auctionInfo?.auctionHasStarted && <SellerAdmin release={release} />}
         {isTokenOwner && <Admin release={release} />}

@@ -1,89 +1,36 @@
 import React from "react"
-import { ethers } from "ethers"
-import { useLayoutStore } from "stores/useLayoutStore"
 import { usePlayerStore } from "stores/usePlayerStore"
 import { BsArrowDown, BsFillPlayCircleFill, BsPauseCircleFill, BsPlayCircle } from "react-icons/bs"
 import { AnimatePresence, motion } from "framer-motion"
-import HAUS_ABI from "ABI/HausCatalogue.json"
+import Album from "components/Album/Album"
+import { discographyQuery } from "query/discography"
+import { useAuctionInfo } from "../hooks/useAuctionInfo"
+import { useCountdown } from "../hooks/useCountdown"
+import Countdown from "../components/Album/Countdown"
 
-const Catalogue = () => {
-  const { signer } = useLayoutStore()
+const Catalogue: React.FC<any> = ({ discography }) => {
   const { addToQueue, queuedMusic, queue, currentPosition, media, isPlaying, currentTime, duration, setIsPlaying } =
     usePlayerStore((state: any) => state)
+  const _random = (max: []) => Math.floor(Math.random() * max.length)
+  const release = discography[_random(discography)]
 
-  /* Initialize Catalogue from Arweave */
-  const [catalogue, setCatalogue] = React.useState<any[]>([])
-  const _catalogue = React.useMemo(async () => {
-    const jsonArray = [
-      "https://arweave.net/h6Sz9VUsEIvsAPpzi3BHAG8AfgiNnq9wUkI4gOCU1CY",
-      "https://arweave.net/DttB642UC40s8c3Y7tY97KExyokVnaszx0TDmnDdcgo",
-      "https://arweave.net/r-egbnh3oS0j-LGwfEE5HoOYRJ0IJjf3RSdXwwcmZq0",
-      "https://arweave.net/h8YMlG1YPcN7MnknPx9KMq-nu9V0l5cGx1rrC3S3U7o",
-      "https://arweave.net/nblCy6exIeGsw4tdrYiYHP8zal0GPRuw_vyK36rIXhU",
-      "https://arweave.net/BDKy7iOnuYFJBcSajsKMzJhq9_H_pL5SAeFyo8xZG64",
-      "https://arweave.net/bi5wFC9NU-yZd_aukD57ltTWkLJY9V6jh1-STot5jsc",
-      "https://arweave.net/ZfUibWCOa4wyHM5sNlzmWyZZM-bDyMZfNfhkUxw9Bt8",
-      "https://arweave.net/0Gu4YdlNxNPOsKii24YsRyocyM8XX1pO0u-uF8Pvr4g",
-      "https://arweave.net/Bt0aFSeYr0LNyaCws_lIvzgB_7WXlV3TrwMmE2i7uM4",
-      "https://arweave.net/MvtqmvvB4OF6FMkDkiwo54MHKhtzn3d0R5phjRdf2hI",
-      "https://arweave.net/YqPfBAxZFWQkQHhalOESQS-7ICtJhKHJo44JI4a0pKE",
-      "https://arweave.net/OuGT8Xc40aAyw75ZZasL5SD5pcRnFPu2zzMfqR8yLBI",
-      "https://arweave.net/gPKYXXKMgL6WMcP4RPbzRUqu34fUdQcVn8IzkYBHEew",
-      "https://arweave.net/3CVfOif9dy22Z9_d3lbIOv-LBcrq8YVfaUYMjjYk7wo",
-      "https://arweave.net/oRgswUy6xs-W_TilmT58aLFoCSKsePSMmsMBW9-juo4",
-      "https://arweave.net/2SuYfZ5Jve3LezNtz2MOYJ45YVBekS-JzmhLYyDG70E",
-      "https://arweave.net/3fQ9vmRoQ357FOabl07_lW7xQj-cjng-Gm54SE6SkA8",
-      "https://arweave.net/JVG3U2JkZzLQ65PyOKgD-yqFFBFQhIxgTkAFn3plfOY",
-    ]
-
-    return await Promise.all(jsonArray.map(url => fetch(url))).then(async res => {
-      return Promise.all(res.map(async data => await data.json()))
-    })
-  }, [])
-  React.useMemo(async () => {
-    const catalogue = await _catalogue
-
-    setCatalogue(catalogue)
-  }, [_catalogue])
 
   /*  generate random song  */
   const random = React.useMemo(() => {
-    const releases = catalogue.reduce((acc = [], cv) => {
-      acc.push({ artist: cv.primaryArtist, songs: cv.songs, image: cv.image })
-
-      return acc
-    }, [])
-
     const random = (max: []) => Math.floor(Math.random() * max.length)
-    const randomRelease = releases[random(releases)]
-    const randomSong = randomRelease?.songs[random(randomRelease?.songs)]
-    return { artist: randomRelease?.artist, image: randomRelease?.image, songs: [randomSong] }
-  }, [catalogue])
-
-  const catalogueContract = React.useMemo(async () => {
-    if (!signer) return
-
-    try {
-      return new ethers.Contract("0xb12e12c36414c5512B07239F0EdACc70facF5B9D" || "", HAUS_ABI.abi, signer)
-    } catch (err) {
-      console.log("err", err)
+    const release = discography[random(discography)]
+    return {
+      artist: release?.metadata?.artist,
+      image: release?.metadata?.project?.artwork.uri.replace("ipfs://", "https://ipfs.io/ipfs/"),
+      songs: [
+        {
+          audio: [release?.metadata?.losslessAudio.replace("ipfs://", "https://ipfs.io/ipfs/")],
+          title: release?.metadata?.title,
+          trackNumber: release?.metadata?.trackNumber,
+        },
+      ],
     }
-  }, [signer, HAUS_ABI])
-
-  //
-  React.useMemo(async () => {
-    const contract = await catalogueContract
-    if (!contract) return
-
-    const name = await contract.name
-  }, [catalogueContract])
-
-  interface Release {
-    image: string
-    songs: [{ title: string }]
-    name: string
-    primaryArtist: string
-  }
+  }, [discography])
 
   React.useEffect(() => {
     if (!random) return
@@ -140,6 +87,7 @@ const Catalogue = () => {
                         {currentTime} / {duration}
                       </div>
                     )}
+                    {/*<Countdown countdownString={countdownString} />*/}
                   </div>
                 </motion.div>
               </AnimatePresence>
@@ -149,27 +97,12 @@ const Catalogue = () => {
             <BsArrowDown size={24} />
           </div>
         </div>
-        <div className="relative mx-auto flex w-full flex-col bg-rose-200 pb-24">
-          {catalogue.length > 0 ? (
+        <div className="relative mx-auto flex w-full flex-col bg-rose-200">
+          {discography?.length > 0 ? (
             <div className="mx-auto w-11/12">
               <div className="grid grid-cols-2 gap-8 py-8 md:grid-cols-3 lg:grid-cols-4">
-                {catalogue.map((release: Release) => (
-                  <div
-                    key={release.image}
-                    className="flex w-full flex-col items-center"
-                    onClick={() =>
-                      addToQueue([
-                        ...queuedMusic,
-                        { artist: release.primaryArtist, image: release.image, songs: release.songs },
-                      ])
-                    }
-                  >
-                    <img src={release.image} />
-                    <div className="flex w-full flex-col items-start py-2">
-                      <div className="text-xl font-bold">{release.name}</div>
-                      <div>{release.primaryArtist}</div>
-                    </div>
-                  </div>
+                {discography?.map((release: any, i: any) => (
+                  <Album key={i} release={release} />
                 ))}
               </div>
             </div>
@@ -181,3 +114,20 @@ const Catalogue = () => {
 }
 
 export default Catalogue
+
+export async function getServerSideProps() {
+  try {
+    // zora api queries
+    const discography = await discographyQuery()
+    return {
+      props: {
+        discography,
+      },
+    }
+  } catch (error: any) {
+    console.log("err", error)
+    return {
+      notFound: true,
+    }
+  }
+}
