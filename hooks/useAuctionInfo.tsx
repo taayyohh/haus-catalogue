@@ -13,6 +13,7 @@ export function useAuctionInfo(token: any) {
     async () => {
       const auction = await zoraContracts?.ReserveAuctionCoreEth.auctionForNFT(token?.collectionAddress, token?.tokenId)
 
+      console.log('a', auction)
       return {
         reservePrice: parseFloat(ethers.utils.formatEther(auction?.reservePrice)),
         highestBid: parseFloat(ethers.utils.formatEther(auction?.highestBid)),

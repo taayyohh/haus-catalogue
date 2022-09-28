@@ -15,9 +15,6 @@ const useZoraV3 = () => {
   const [zoraContracts, setZoraContracts] = React.useState<any>()
 
   React.useMemo(() => {
-    if (!signer) return
-    // const provider = new ethers.providers.JsonRpcProvider(process.env.ETH_RPC_URL)
-
     setZoraContracts({
       ReserveAuctionCoreEth: new ethers.Contract(
         ZORA_ADDRESSES.ReserveAuctionCoreEth,

@@ -5,10 +5,13 @@ import useZoraV3 from "hooks/useZoraV3"
 import { useAuctionInfo } from "hooks/useAuctionInfo"
 import Form from "components/Fields/Form"
 import { createBidFields, createBidInitialValues, validateCreateBid } from "components/Fields/fields/createBidFields"
+import { useLayoutStore } from "stores/useLayoutStore"
+import { ConnectButton } from "@rainbow-me/rainbowkit"
 
 const Bid: React.FC<any> = ({ release }) => {
   const { zoraContracts } = useZoraV3()
   const { auctionInfo } = useAuctionInfo(release)
+  const { signer } = useLayoutStore()
 
   /*
 
@@ -44,7 +47,6 @@ const Bid: React.FC<any> = ({ release }) => {
     return auctionInfo?.highestBid + auctionInfo?.highestBid * 0.1
   }, [auctionInfo])
 
-  // console.log("a", auctionInfo)
   return (
     <AnimatedModal
       trigger={
@@ -69,13 +71,15 @@ const Bid: React.FC<any> = ({ release }) => {
             <div>{release?.metadata?.artist}</div>
           </div>
         </div>
-        <Form
-          fields={createBidFields({ helperText: minBidEth })}
-          initialValues={createBidInitialValues}
-          validationSchema={validateCreateBid(minBidEth)}
-          submitCallback={handleCreateBid}
-          buttonText={"Place Bid"}
-        />
+        {(!!signer && (
+          <Form
+            fields={createBidFields({ helperText: minBidEth })}
+            initialValues={createBidInitialValues}
+            validationSchema={validateCreateBid(minBidEth)}
+            submitCallback={handleCreateBid}
+            buttonText={"Place Bid"}
+          />
+        )) || <ConnectButton showBalance={true} label={"CONNECT"} chainStatus={"none"} accountStatus={"address"} />}
       </div>
     </AnimatedModal>
   )

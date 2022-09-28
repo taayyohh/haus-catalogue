@@ -8,7 +8,7 @@ interface LayoutStoreProps {
   setSigner: (signer: FetchSignerResult | undefined) => void
   signerAddress: string | null
   setSignerAddress: (address: string) => void
-  provider: Provider | null
+  provider: Provider | undefined
   setProvider: (provider: Provider) => void
   setIsCatalogueArtist: (isCatalogueArtist: boolean | undefined) => void
   isCatalogueArtist: boolean | undefined
@@ -20,7 +20,7 @@ export const useLayoutStore = create<LayoutStoreProps>(set => ({
   setSigner: (signer: FetchSignerResult | undefined) => set({ signer }),
   signerAddress: null,
   setSignerAddress: (signerAddress: string) => set({ signerAddress }),
-  provider: null,
+  provider: undefined,
   setProvider: (provider: Provider) => set({ provider }),
   setIsCatalogueArtist: (isCatalogueArtist: boolean | undefined) => set({ isCatalogueArtist }),
   isCatalogueArtist: undefined,

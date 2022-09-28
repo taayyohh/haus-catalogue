@@ -33,7 +33,8 @@ const Layout = ({ children }: Props) => {
 
   React.useEffect(() => {
     if (status === "success") {
-      const provider = new ethers.providers.JsonRpcProvider(process.env.ETH_RPC_URL)
+      // const provider = new ethers.providers.JsonRpcProvider(process.env.ETH_RPC_URL)
+      const provider = new ethers.providers.InfuraProvider(5, process.env.INFURA_API_KEY)
       setProvider(signer?.provider ?? provider)
       setSigner(signer)
       //@ts-ignore
