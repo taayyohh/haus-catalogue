@@ -6,7 +6,7 @@ const nextConfig = {
     MERKLE: process.env.MERKLE,
     HAUS_CATALOGUE_PROXY: process.env.HAUS_CATALOGUE_PROXY,
     ETH_RPC_URL: process.env.ETH_RPC_URL,
-    INFURA_API_KEY: process.env.INFURA_APY_KEY
+    INFURA_API_KEY: process.env.INFURA_API_KEY
   },
 }
 
