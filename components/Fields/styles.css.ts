@@ -42,6 +42,17 @@ export const defaultFieldsetStyle = style({
   overflow: "hidden",
 })
 
+export const defaultFieldsetInnerStyle = style({
+  display: "grid",
+  width: "100%",
+  gridTemplateColumns: "1fr 1fr 1fr 1fr",
+  "@media": {
+    "(max-width: 768px)": {
+      gridTemplateColumns: "1fr 1fr",
+    },
+  },
+})
+
 export const defaultTextAreaStyle = style({
   minHeight: 250,
   resize: "none",
@@ -169,7 +180,6 @@ export const transactionFormButtonWithPrev = style({
 })
 
 export const defaultFormButton = style({
-
   width: "100%",
   borderRadius: "10px",
   height: 60,
@@ -402,9 +412,8 @@ export const permaPlaceHolderStyle = style({
 })
 
 export const permaInputPlaceHolderStyle = style({
-  right: "27px",
-  height: "26px",
-  top: "49px",
+  right: 10,
+  top: 5,
   background: "inherit",
 })
 
@@ -553,7 +562,7 @@ export const dismissButton = style([
     borderRadius: "12px",
     background: "#FFF",
     color: "#000",
-  }
+  },
 ])
 
 export const successCircle = style({
@@ -593,14 +602,12 @@ export const singleImagePreview = style({
   width: "100%",
 })
 
-export const founderAllocationInner = style(
-  [
-    {
-      display: "grid",
-      gridTemplateColumns: "2fr 1fr 1fr",
-    },
-  ]
-)
+export const founderAllocationInner = style([
+  {
+    display: "grid",
+    gridTemplateColumns: "2fr 1fr 1fr",
+  },
+])
 
 export const founderAllocationMaxTokens = style({
   fontSize: "14px",
@@ -697,71 +704,70 @@ export const radioStyles = styleVariants({
   active: [pointer, { border: "2px solid #000" }],
 })
 
-
 export const numberInputStyle = style({
   height: 64,
-  width: '100%',
-  backgroundColor: '#F2F2F2',
-  borderRadius: '15px',
+  width: "100%",
+  backgroundColor: "#F2F2F2",
+  borderRadius: "15px",
   fontSize: 16,
   paddingLeft: 24,
   paddingRight: 25,
-  boxSizing: 'border-box',
-  border: '2px solid #fff',
-  overflow: 'hidden',
+  boxSizing: "border-box",
+  border: "2px solid #fff",
+  overflow: "hidden",
   selectors: {
-    '&:focus': {
-      outline: 'none',
-      backgroundColor: '#FFF',
-      borderColor: '#E6E6E6',
+    "&:focus": {
+      outline: "none",
+      backgroundColor: "#FFF",
+      borderColor: "#E6E6E6",
     },
-    '&::-webkit-input-placeholder': {
-      textAlign: 'right',
+    "&::-webkit-input-placeholder": {
+      textAlign: "right",
     },
-    '&::placeholder': {
-      color: '#B3B3B3',
+    "&::placeholder": {
+      color: "#B3B3B3",
     },
   },
 })
 
 export const errorMessageStyle = style({
-  color: '#ff0015',
-  fontSize: '10px',
+  color: "#ff0015",
+  fontSize: "10px",
 })
 
 export const numberInputErrorStyle = style({
   height: 64,
-  width: '100%',
-  backgroundColor: '#F2F2F2',
-  borderRadius: '15px',
+  width: "100%",
+  backgroundColor: "#F2F2F2",
+  borderRadius: "15px",
   fontSize: 16,
   paddingLeft: 24,
   paddingRight: 25,
-  boxSizing: 'border-box',
-  border: '2px solid #ff0015',
+  boxSizing: "border-box",
+  border: "2px solid #ff0015",
   selectors: {
-    '&:focus': {
-      outline: 'none',
-      backgroundColor: '#FFF',
-      borderColor: '#E6E6E6',
+    "&:focus": {
+      outline: "none",
+      backgroundColor: "#FFF",
+      borderColor: "#E6E6E6",
     },
-    '&::-webkit-input-placeholder': {
-      textAlign: 'right',
+    "&::-webkit-input-placeholder": {
+      textAlign: "right",
     },
   },
 })
 
 export const placeholderStyle = style({
-  top: '50%',
-  right: '7%',
-  height: '26px',
-  marginTop: '-23px',
-  background: 'inherit',
+  top: "50%",
+  right: "7%",
+  height: "26px",
+  marginTop: "-23px",
+  background: "inherit",
   fontSize: 10,
-  '@media': {
-    'screen and (max-width: 768px)': {
-      right: '27px',
-      marginTop: '-22px',
+  "@media": {
+    "screen and (max-width: 768px)": {
+      right: "27px",
+      marginTop: "-22px",
       fontSize: 16,
     },
   },

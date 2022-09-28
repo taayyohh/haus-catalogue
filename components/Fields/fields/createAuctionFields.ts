@@ -19,6 +19,7 @@ export const createAuctionFields = () => {
       name: "sellerFundsRecipient",
       type: TEXT,
       inputLabel: "Seller Funds Recipient",
+      placeholder: "0x...",
     },
   ]
 }
@@ -26,7 +27,7 @@ export const createAuctionFields = () => {
 export const createAuctionInitialValues = {
   duration: "",
   reservePrice: "",
-    sellerFundsRecipient: ""
+  sellerFundsRecipient: "",
 }
 
 export const validateCreateAuction = (min: number) =>

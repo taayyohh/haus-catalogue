@@ -1,46 +1,22 @@
-import React from "react"
+import React, { useRef } from "react"
 import { BsThreeDotsVertical } from "react-icons/bs"
 import { ethers } from "ethers"
-import { toSeconds } from "utils/helpers"
 import useZoraV3 from "hooks/useZoraV3"
 import { motion } from "framer-motion"
 import { useAuction } from "hooks/useAuction"
-import AnimatedModal from "components/Modal/Modal"
-import Form from "components/Fields/Form"
-import { createAuctionFields, createAuctionInitialValues } from "components/Fields/fields/createAuctionFields"
-import { createBidInitialValues } from "components/Fields/fields/createBidFields"
-import CreateAuction from "./CreateAuction";
+import CreateAuction from "./CreateAuction"
+import { useClickOutside } from "hooks/useClickOutside"
 
 const AuctionControls: React.FC<any> = ({ release }) => {
-  const { zoraContracts, createAuction, cancelAuction } = useZoraV3()
+  const { zoraContracts, cancelAuction } = useZoraV3()
   const { auction } = useAuction(release)
+  const ref = useRef(null)
 
   /*
 
-  handle create auction
+    handle set auction reserve price
 
  */
-  const handleCreateAuction = React.useCallback(
-    async (values: any) => {
-      if (!createAuction) return
-
-      console.log("v", values)
-
-      //duration
-      //reservePrice
-      //sellerFundsRecipient
-
-      // await createAuction(
-      //   release?.collectionAddress,
-      //   Number(release?.tokenId),
-      //   toSeconds({ minutes: 2 }),
-      //   ethers.utils.parseEther(".05"),
-      //   release.owner,
-      //   Math.floor(Date.now() / 1000)
-      // )
-    },
-    [createAuction, release]
-  )
 
   const handleSetAuctionReservePrice = React.useCallback(() => {
     if (!zoraContracts?.ReserveAuctionCoreEth || !release) return
@@ -52,6 +28,11 @@ const AuctionControls: React.FC<any> = ({ release }) => {
     )
   }, [zoraContracts?.ReserveAuctionCoreEth])
 
+  /*
+
+    handle cancel auction
+
+ */
   const handleCancelAuction = React.useCallback(async () => {
     if (!cancelAuction) return
 
@@ -59,7 +40,8 @@ const AuctionControls: React.FC<any> = ({ release }) => {
   }, [cancelAuction])
 
   const [isOpen, setIsOpen] = React.useState<boolean>(false)
-  const variants = {
+  useClickOutside(ref, () => setIsOpen(false))
+  const dropdownVariants = {
     initial: {
       height: "0",
     },
@@ -72,7 +54,6 @@ const AuctionControls: React.FC<any> = ({ release }) => {
       },
     },
   }
-
   const toggleVariants = {
     initial: { rotate: 0 },
     animate: {
@@ -81,7 +62,7 @@ const AuctionControls: React.FC<any> = ({ release }) => {
   }
 
   return (
-    <div>
+    <div ref={ref}>
       <motion.div
         variants={toggleVariants}
         animate={isOpen ? "animate" : "initial"}
@@ -92,7 +73,7 @@ const AuctionControls: React.FC<any> = ({ release }) => {
       </motion.div>
       <motion.div
         initial={"initial"}
-        variants={variants}
+        variants={dropdownVariants}
         animate={isOpen ? "animate" : "initial"}
         className={"absolute top-1 left-5 top-9 box-border h-0 w-10/12 overflow-hidden rounded bg-white shadow-2xl"}
       >
@@ -112,9 +93,7 @@ const AuctionControls: React.FC<any> = ({ release }) => {
               cancel auction
             </div>
           </>
-        )) || (
-            <CreateAuction release={release} />
-        )}
+        )) || <CreateAuction release={release} />}
       </motion.div>
     </div>
   )

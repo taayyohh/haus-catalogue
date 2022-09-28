@@ -1,6 +1,6 @@
 import React from "react"
 import useZoraV3 from "hooks/useZoraV3"
-import { defaultFormButton } from "../Fields/styles.css"
+import { defaultFormButton } from "components/Fields/styles.css"
 
 const SettleAuction: React.FC<any> = ({ release }) => {
   const { settleAuction } = useZoraV3()
@@ -27,9 +27,7 @@ const SettleAuction: React.FC<any> = ({ release }) => {
           <div>{release?.metadata?.artist}</div>
         </div>
       </div>
-      <div className={'mb-20'}>
-        Congrats! You have won! Settle the auction to claim your NFT.
-      </div>
+      <div className={"mb-20"}>Congrats! You have won! Settle the auction to claim your NFT.</div>
       <button
         className={`bg-rose-200 text-rose-50 hover:bg-slate-800 hover:text-rose-100 ${defaultFormButton}`}
         onClick={() => handleSettleAuction()}
