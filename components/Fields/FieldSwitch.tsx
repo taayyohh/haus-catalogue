@@ -5,6 +5,7 @@ import SmartInput from "./SmartInput"
 import TextArea from "./TextArea"
 import {
   DATE,
+  DAYS_HOURS_MINS_SECS,
   NUMBER,
   RADIO,
   RICH_TEXT,
@@ -22,6 +23,7 @@ import { compareAndReturn } from "utils/helpers"
 import { useEnsAddress } from "wagmi"
 import SingleImageUpload from "./SingleImageUpload"
 import SingleAudioUpload from "./SingleAudioUpload"
+import DaysHoursMinsSecs from "./DaysHoursMinsSecs"
 
 const RichText = dynamic(() => import("./RichText"), {
   ssr: false,
@@ -139,6 +141,19 @@ const FieldSwitch: React.FC<FieldSwitchProps> = ({
   }
 
   switch (field.type) {
+    case DAYS_HOURS_MINS_SECS:
+      return (
+        <DaysHoursMinsSecs
+          {...formik.getFieldProps(field.name)}
+          inputLabel={field.inputLabel}
+          formik={formik}
+          id={field.name}
+          onChange={formik.handleChange}
+          onBlur={formik.handleBlur}
+          errorMessage={formik.touched[field.name] && formik.errors[field.name] ? formik.errors[field.name] : undefined}
+          placeholder={field.placeholder}
+        />
+      )
     case DATE:
       return (
         <Date

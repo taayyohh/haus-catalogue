@@ -82,12 +82,27 @@ const useZoraV3 = () => {
 
   /*
 
-    Settle Auction
+    Cancel Auction
 
    */
   const cancelAuction = React.useCallback(
     async (_tokenContract: PromiseOrValue<string>, _tokenId: PromiseOrValue<BigNumberish>) => {
       await zoraContracts?.ReserveAuctionCoreEth.cancelAuction(_tokenContract, _tokenId)
+    },
+    [zoraContracts?.ReserveAuctionCoreEth]
+  )
+
+  /*
+
+    Create Bid
+
+   */
+
+  const createBid = React.useCallback(
+    async (_tokenContract: PromiseOrValue<string>, _tokenId: PromiseOrValue<BigNumberish>, _value: any) => {
+      await zoraContracts?.ReserveAuctionCoreEth.createBid(_tokenContract, _tokenId, {
+        value: ethers.utils.parseEther(_value.toString()),
+      })
     },
     [zoraContracts?.ReserveAuctionCoreEth]
   )
@@ -124,6 +139,7 @@ const useZoraV3 = () => {
     createAuction,
     settleAuction,
     cancelAuction,
+    createBid,
   }
 }
 

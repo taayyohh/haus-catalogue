@@ -4,16 +4,13 @@ import { BsArrowDown, BsFillPlayCircleFill, BsPauseCircleFill, BsPlayCircle } fr
 import { AnimatePresence, motion } from "framer-motion"
 import Album from "components/Album/Album"
 import { discographyQuery } from "query/discography"
-import { useAuctionInfo } from "../hooks/useAuctionInfo"
+import { useAuction } from "../hooks/useAuction"
 import { useCountdown } from "../hooks/useCountdown"
 import Countdown from "../components/Album/Countdown"
 
 const Catalogue: React.FC<any> = ({ discography }) => {
   const { addToQueue, queuedMusic, queue, currentPosition, media, isPlaying, currentTime, duration, setIsPlaying } =
     usePlayerStore((state: any) => state)
-  const _random = (max: []) => Math.floor(Math.random() * max.length)
-  const release = discography[_random(discography)]
-
 
   /*  generate random song  */
   const random = React.useMemo(() => {
@@ -117,7 +114,6 @@ export default Catalogue
 
 export async function getServerSideProps() {
   try {
-    // zora api queries
     const discography = await discographyQuery()
     return {
       props: {

@@ -1,21 +1,27 @@
 import useSWR from "swr"
 import { ethers } from "ethers"
-import { fromSeconds } from "../utils/helpers"
+import { fromSeconds } from "utils/helpers"
 import useZoraV3 from "./useZoraV3"
 import { useLayoutStore } from "stores/useLayoutStore"
+import dayjs from "dayjs"
 
-export function useAuctionInfo(token: any) {
+export function useAuction(token: any) {
   const { zoraContracts } = useZoraV3()
   const { signerAddress } = useLayoutStore()
 
-  const { data: auctionInfo } = useSWR(
+  const { data: auction } = useSWR(
     `${token?.collectionAddress}+${token?.tokenId}`,
     async () => {
       const auction = await zoraContracts?.ReserveAuctionCoreEth.auctionForNFT(token?.collectionAddress, token?.tokenId)
+      const now = dayjs.unix(Date.now() / 1000)
+      const end = dayjs.unix(parseInt(auction?.firstBidTime + auction?.duration) as number)
 
-      console.log('a', auction)
       return {
         reservePrice: parseFloat(ethers.utils.formatEther(auction?.reservePrice)),
+        minBid:
+          parseFloat(ethers.utils.formatEther(auction?.highestBid)) +
+            parseFloat(ethers.utils.formatEther(auction?.highestBid)) * 0.1 ||
+          parseFloat(ethers.utils.formatEther(auction?.reservePrice)),
         highestBid: parseFloat(ethers.utils.formatEther(auction?.highestBid)),
         highestBidder: ethers.utils.getAddress(auction?.highestBidder),
         duration: {
@@ -29,11 +35,16 @@ export function useAuctionInfo(token: any) {
         endTime: parseInt(auction?.firstBidTime + auction?.duration),
         notForAuction: parseInt(auction?.seller) === 0,
         auctionHasStarted: parseInt(auction?.firstBidTime) > 0,
+        auctionHasEnded: end.diff(now, "second") < 0 && parseInt(auction?.firstBidTime) > 0,
         isSeller: ethers.utils.getAddress(auction?.seller) === signerAddress,
+        isWinner:
+          end.diff(now, "second") < 0 &&
+          parseInt(auction?.firstBidTime) > 0 &&
+          ethers.utils.getAddress(auction?.highestBidder) === signerAddress,
       }
     },
     { revalidateOnFocus: true }
   )
 
-  return { auctionInfo }
+  return { auction: auction }
 }

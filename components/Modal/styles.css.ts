@@ -21,11 +21,14 @@ export const animatedModalTrigger = style({
 export const defaultAnimatedModalContent = style({
   background: "#fff",
   maxWidth: "calc(100vw - 50px)",
+  maxHeight: "calc(80vh - 50px)",
+  overflowY: "scroll",
   height: "auto",
   zIndex: "11",
   "@media": {
     "screen and (max-width: 768px)": {
       width: "calc(100% - 50px)",
+      maxHeight: "calc(90vh - 50px)",
       left: 25,
       top: 25,
     },

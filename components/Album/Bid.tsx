@@ -1,86 +1,34 @@
 import React from "react"
 import AnimatedModal from "components/Modal/Modal"
-import { ethers } from "ethers"
-import useZoraV3 from "hooks/useZoraV3"
-import { useAuctionInfo } from "hooks/useAuctionInfo"
-import Form from "components/Fields/Form"
-import { createBidFields, createBidInitialValues, validateCreateBid } from "components/Fields/fields/createBidFields"
-import { useLayoutStore } from "stores/useLayoutStore"
-import { ConnectButton } from "@rainbow-me/rainbowkit"
+import { useAuction } from "hooks/useAuction"
+import CreateBid from "./CreateBid"
+import SettleAuction from "./SettleAuction"
 
 const Bid: React.FC<any> = ({ release }) => {
-  const { zoraContracts } = useZoraV3()
-  const { auctionInfo } = useAuctionInfo(release)
-  const { signer } = useLayoutStore()
-
-  /*
-
-  handle settle auction
-
- */
-  // const handleSettleAuction = React.useCallback(async () => {
-  //     if (!createAuction) return
-  //
-  //     await settleAuction(release?.collectionAddress, Number(release?.tokenId))
-  // }, [createAuction])
-
-  /*
-  
-     handle create bid
-  
-    */
-
-  const handleCreateBid = React.useCallback(
-    (values: any) => {
-      if (!zoraContracts?.ReserveAuctionCoreEth || !release) return
-
-      zoraContracts?.ReserveAuctionCoreEth.createBid(release?.collectionAddress, release?.tokenId, {
-        value: ethers.utils.parseEther(values?.amount.toString()),
-      })
-    },
-    [zoraContracts?.ReserveAuctionCoreEth]
-  )
-
-  const minBidEth = React.useMemo(() => {
-    if (!auctionInfo) return 0
-
-    return auctionInfo?.highestBid + auctionInfo?.highestBid * 0.1
-  }, [auctionInfo])
+  const { auction } = useAuction(release)
 
   return (
     <AnimatedModal
       trigger={
-        <div
-          className={
-            "relative flex cursor-pointer items-center gap-1 rounded-2xl bg-rose-300 px-3 py-1 text-sm hover:bg-rose-700 hover:text-white"
-          }
-        >
-          <span className={"text-xs"}>Bid:</span> {auctionInfo?.highestBid || auctionInfo?.reservePrice}
-          <span>ETH</span>
-        </div>
+        auction?.auctionHasEnded && !auction.isWinner ? undefined : (
+          <div
+            className={
+              "relative flex cursor-pointer items-center gap-1 rounded-2xl bg-rose-300 px-3 py-1 text-sm hover:bg-rose-700 hover:text-white"
+            }
+          >
+            {auction?.isWinner && <>Claim</>}
+            {!auction?.auctionHasEnded && (
+              <>
+                <span className={"text-xs"}>Bid:</span> {auction?.highestBid || auction?.reservePrice}
+                <span>ETH</span>
+              </>
+            )}
+          </div>
+        )
       }
       size={"auto"}
     >
-      <div className={"flex flex-col"}>
-        <div className={"mb-8 flex items-center gap-5"}>
-          <div className={"h-20 w-20"}>
-            <img src={release?.metadata?.project?.artwork.uri.replace("ipfs://", "https://ipfs.io/ipfs/")} />
-          </div>
-          <div className={"flex flex-col"}>
-            <div className="text-xl font-bold">{release?.name}</div>
-            <div>{release?.metadata?.artist}</div>
-          </div>
-        </div>
-        {(!!signer && (
-          <Form
-            fields={createBidFields({ helperText: minBidEth })}
-            initialValues={createBidInitialValues}
-            validationSchema={validateCreateBid(minBidEth)}
-            submitCallback={handleCreateBid}
-            buttonText={"Place Bid"}
-          />
-        )) || <ConnectButton showBalance={true} label={"CONNECT"} chainStatus={"none"} accountStatus={"address"} />}
-      </div>
+      {auction?.auctionHasEnded ? <SettleAuction release={release} /> : <CreateBid release={release} />}
     </AnimatedModal>
   )
 }

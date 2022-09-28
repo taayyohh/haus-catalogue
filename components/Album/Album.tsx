@@ -1,20 +1,21 @@
 import React from "react"
 import { useLayoutStore } from "stores/useLayoutStore"
 import { ethers } from "ethers"
-import { useAuctionInfo } from "hooks/useAuctionInfo"
+import { useAuction } from "hooks/useAuction"
 import { useCountdown } from "hooks/useCountdown"
 import Countdown from "./Countdown"
 import { motion } from "framer-motion"
-import Admin from "./Admin"
+import AuctionControls from "./AuctionControls"
 import Bid from "./Bid"
 import PlayButton from "./PlayButton"
-import SellerAdmin from "./SellerAdmin"
 import { walletSnippet } from "utils/helpers"
+import useHausCatalogue from "hooks/useHausCatalogue"
 
 const Album: React.FC<any> = ({ release }) => {
   const { signerAddress } = useLayoutStore()
-  const { auctionInfo } = useAuctionInfo(release)
-  const { countdownString } = useCountdown(auctionInfo)
+  const { auction } = useAuction(release)
+  const { countdownString } = useCountdown(auction)
+  const { owner } = useHausCatalogue()
   const [isHover, setIsHover] = React.useState<boolean>(false)
   const albumVariants = {
     initial: {
@@ -32,10 +33,10 @@ const Album: React.FC<any> = ({ release }) => {
   }, [release?.metadata])
 
   const isTokenOwner = React.useMemo(() => {
-    if (!release?.owner) return
+    if (!owner) return
 
     return ethers.utils.getAddress(release?.owner) === signerAddress
-  }, [release?.owner])
+  }, [owner])
 
   return (
     <motion.div
@@ -57,19 +58,18 @@ const Album: React.FC<any> = ({ release }) => {
             <div className="text-xl font-bold">{release?.name}</div>
             <div>{release?.metadata?.artist}</div>
           </div>
-          {auctionInfo?.notForAuction && (
+          {auction?.notForAuction && (
             <div
               className={"cursor-defaultitems-center relative flex gap-1 rounded-2xl bg-slate-300 px-3 py-1 text-sm"}
             >
-              Owned: By: {walletSnippet(release.owner)}
+             {isTokenOwner ? 'Owned' : ` Owned: By: ${walletSnippet(release?.owner)}`}
             </div>
           )}
-          {(!!auctionInfo?.highestBid || !!auctionInfo?.reservePrice) && !auctionInfo?.notForAuction && (
+          {(!!auction?.highestBid || !!auction?.reservePrice) && !auction?.notForAuction && (
             <Bid release={release} />
           )}
         </div>
-        {auctionInfo?.isSeller && !auctionInfo?.auctionHasStarted && <SellerAdmin release={release} />}
-        {isTokenOwner && <Admin release={release} />}
+        {isTokenOwner && !auction?.auctionHasStarted && <AuctionControls release={release} />}
         <Countdown countdownString={countdownString} />
       </div>
     </motion.div>

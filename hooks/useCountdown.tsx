@@ -1,22 +1,27 @@
 import dayjs from "dayjs"
 import React from "react"
+import { walletSnippet } from "utils/helpers"
+import { useLayoutStore } from "stores/useLayoutStore"
 
 interface countdownResponseProps {
   countdownString: string
 }
 
 export const useCountdown = (auctionInfo: any) => {
+  const { signerAddress } = useLayoutStore()
   const [countdownString, setCountdownString] = React.useState("")
   React.useEffect(() => {
     if (!auctionInfo || auctionInfo.firstBidTime === 0) return
     const endAuction = (interval: NodeJS.Timer) => {
       clearInterval(interval)
-      setCountdownString("0h 0m 0s")
+      setCountdownString(
+        auctionInfo?.highestBidder === signerAddress
+          ? "You won!"
+          : `Auction won by ${walletSnippet(auctionInfo.highestBidder)} for ${auctionInfo.highestBid} ETH`
+      )
     }
 
     const interval = setInterval(() => {
-      // console.log('a', auctionInfo)
-
       const now = dayjs.unix(Date.now() / 1000)
       const end = dayjs.unix(auctionInfo?.endTime as number)
       let countdown = end.diff(now, "second")
@@ -33,7 +38,7 @@ export const useCountdown = (auctionInfo: any) => {
     return () => {
       clearInterval(interval)
     }
-  }, [auctionInfo])
+  }, [auctionInfo, signerAddress])
 
   const response: countdownResponseProps = {
     countdownString,

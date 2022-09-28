@@ -1,4 +1,5 @@
 export const DATE = 'date'
+export const DAYS_HOURS_MINS_SECS = 'daysHoursMinsSecs'
 export const NUMBER = 'number'
 export const RADIO = 'radio'
 export const SELECT = 'select'
