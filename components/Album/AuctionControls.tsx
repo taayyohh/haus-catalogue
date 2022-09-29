@@ -100,8 +100,22 @@ const AuctionControls: React.FC<any> = ({ release }) => {
           <CreateAuction release={release} />
         ) : (
           <>
-            {!isApprovedForAll && <div onClick={() => handleApprovalTransferHelper()}>allow zora auction</div>}
-            {!isModuleApproved && <div onClick={() => handleApprovalManager()}>allow zora manager </div>}
+            {!isApprovedForAll && (
+              <div
+                className={"mb-2 flex w-full justify-center bg-rose-300 py-1 px-2 text-rose-50 hover:bg-rose-400"}
+                onClick={() => handleApprovalTransferHelper()}
+              >
+                allow zora auction
+              </div>
+            )}
+            {!isModuleApproved && (
+              <div
+                className={"mb-2 flex w-full justify-center bg-rose-300 py-1 px-2 text-rose-50 hover:bg-rose-400"}
+                onClick={() => handleApprovalManager()}
+              >
+                allow zora manager{" "}
+              </div>
+            )}
           </>
         )}
       </motion.div>
