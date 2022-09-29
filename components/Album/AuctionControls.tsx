@@ -6,9 +6,12 @@ import { motion } from "framer-motion"
 import { useAuction } from "hooks/useAuction"
 import CreateAuction from "./CreateAuction"
 import { useClickOutside } from "hooks/useClickOutside"
+import useHausCatalogue from "hooks/useHausCatalogue"
 
 const AuctionControls: React.FC<any> = ({ release }) => {
-  const { zoraContracts, cancelAuction } = useZoraV3()
+  const { zoraContracts, cancelAuction, handleApprovalManager, isModuleApproved } = useZoraV3()
+  const { isApprovedForAll, handleApprovalTransferHelper } = useHausCatalogue()
+
   const { auction } = useAuction(release)
   const ref = useRef(null)
 
@@ -78,7 +81,7 @@ const AuctionControls: React.FC<any> = ({ release }) => {
         className={"absolute top-1 left-5 top-9 box-border h-0 w-10/12 overflow-hidden rounded bg-white shadow-2xl"}
       >
         <div className={"mb-2 text-center text-sm font-extrabold uppercase"}>Auction Controls</div>
-        {(!auction?.notForAuction && (
+        {!auction?.notForAuction ? (
           <>
             <div
               className={"mb-2 flex w-full justify-center bg-rose-300 py-1 px-2 text-rose-50 hover:bg-rose-400"}
@@ -93,7 +96,14 @@ const AuctionControls: React.FC<any> = ({ release }) => {
               cancel auction
             </div>
           </>
-        )) || <CreateAuction release={release} />}
+        ) : isApprovedForAll && isModuleApproved ? (
+          <CreateAuction release={release} />
+        ) : (
+          <>
+            {!isApprovedForAll && <div onClick={() => handleApprovalTransferHelper()}>allow zora auction</div>}
+            {!isModuleApproved && <div onClick={() => handleApprovalManager()}>allow zora manager </div>}
+          </>
+        )}
       </motion.div>
     </div>
   )
