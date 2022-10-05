@@ -102,7 +102,6 @@ const Song = ({ artist, song }: any) => {
           <div className={"border-b-2 border-rose-100 pb-2 text-2xl font-bold"}>Record Details</div>
           <div className={"pt-4"}>{ReactHtmlParser(release?.metadata?.description)}</div>
           <div className={"mt-6 flex gap-10"}>
-            {console.log("release", release)}
             <div className={"flex flex-col text-xl"}>
               <div>Format</div>
               <div>{release?.metadata?.mimeType.replace("audio/", ".")}</div>
