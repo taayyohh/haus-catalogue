@@ -4,12 +4,44 @@ import { useLayoutStore } from "stores/useLayoutStore"
 import { MerkleTree } from "merkletreejs"
 import useHausCatalogue from "hooks/useHausCatalogue"
 import useZoraV3 from "hooks/useZoraV3"
+import { HausCatalogue__factory } from "../../types/ethers-contracts"
+import useSWR, { SWRConfig } from "swr"
 const keccak256 = require("keccak256")
 
+export async function getServerSideProps() {
+  const allow = process.env.MERKLE?.split(",")
+
+  try {
+    return {
+      props: {
+        allow,
+        fallback: {
+          isApprovedForAll: null,
+          owner: null,
+        },
+      },
+    }
+  } catch (error: any) {
+    return {
+      props: {
+        error: error.reason,
+      },
+    }
+  }
+}
+
 const Settings: React.FC<any> = ({ allow }) => {
-  const { signerAddress } = useLayoutStore()
-  const { hausCatalogueContract, owner, isApprovedForAll, handleApprovalTransferHelper } = useHausCatalogue()
+  const { handleApprovalTransferHelper } = useHausCatalogue()
   const { handleApprovalManager, isModuleApproved } = useZoraV3()
+  const { signer, provider, signerAddress } = useLayoutStore()
+  const { data: isApprovedForAll } = useSWR("isApprovedForAll")
+  const { data: owner } = useSWR("owner")
+
+  const hausCatalogueContract = HausCatalogue__factory.connect(
+    process.env.HAUS_CATALOGUE_PROXY || "",
+    // @ts-ignore
+    signer ?? provider
+  )
 
   /*
   
@@ -42,28 +74,17 @@ const Settings: React.FC<any> = ({ allow }) => {
           </div>
         </div>
       )}
-      {!isApprovedForAll && <div onClick={() => handleApprovalTransferHelper()}>allow zora auction</div>}
-      {!isModuleApproved && <div onClick={() => handleApprovalManager()}>allow zora manager </div>}
+      {isApprovedForAll === false && <div onClick={() => handleApprovalTransferHelper()}>allow zora auction</div>}
+      {isModuleApproved === false && <div onClick={() => handleApprovalManager()}>allow zora manager </div>}
     </div>
   )
 }
 
-export default Settings
-
-export async function getStaticProps() {
-  const allow = process.env.MERKLE?.split(",")
-
-  try {
-    return {
-      props: {
-        allow,
-      },
-    }
-  } catch (error: any) {
-    return {
-      props: {
-        error: error.reason,
-      },
-    }
-  }
+export default function SettingsPage({ fallback, allow }: any) {
+  // SWR hooks inside the `SWRConfig` boundary will use those values.
+  return (
+    <SWRConfig value={{ fallback }}>
+      <Settings allow={allow} />
+    </SWRConfig>
+  )
 }

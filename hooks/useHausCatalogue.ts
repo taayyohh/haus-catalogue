@@ -1,7 +1,6 @@
 import { HausCatalogue__factory } from "types/ethers-contracts/factories/HausCatalogue__factory"
 import ZORA_ADDRESSES from "@zoralabs/v3/dist/addresses/5.json"
 import React from "react"
-import useSWR from "swr"
 import useZoraV3 from "./useZoraV3"
 import { PromiseOrValue } from "@typechain/ethers-v5/static/common"
 import { BigNumberish, BytesLike, ethers } from "ethers"
@@ -10,46 +9,13 @@ import { useLayoutStore } from "stores/useLayoutStore"
 
 const useHausCatalogue = () => {
   const { signer, provider } = useLayoutStore()
+  const { ReserveAuctionCoreEth } = useZoraV3()
 
   const hausCatalogueContract = HausCatalogue__factory.connect(
     process.env.HAUS_CATALOGUE_PROXY || "",
     // @ts-ignore
     signer ?? provider
   )
-  const { ReserveAuctionCoreEth } = useZoraV3()
-
-  /*
-
-    owner
-
-   */
-  const { data: merkleRoot } = useSWR(
-    hausCatalogueContract ? `merkle-root` : null,
-    async () => {
-      return await hausCatalogueContract?.merkleRoot()
-    },
-    { revalidateOnFocus: false }
-  )
-
-  /*
-
-    owner
-
-   */
-  const { data: owner } = useSWR(
-    hausCatalogueContract ? `haus-catalogue-contract` : null,
-    async () => {
-      return hausCatalogueContract?.owner()
-    },
-    { revalidateOnFocus: false }
-  )
-
-  const isOwner = React.useMemo(() => {
-    if (!owner || !signer) return
-
-    //@ts-ignore
-    return ethers.utils.getAddress(owner) === ethers.utils.getAddress(signer?._address)
-  }, [owner, signer])
 
   /*
 
@@ -211,23 +177,6 @@ const useHausCatalogue = () => {
     [hausCatalogueContract]
   )
 
-  /*
-
-       isApprovedForAll
-
-    */
-  const { data: isApprovedForAll } = useSWR(
-    hausCatalogueContract ? `has-approved-zora-transfer-helper` : null,
-    async () => {
-      return hausCatalogueContract?.isApprovedForAll(
-        // @ts-ignore
-        signer._address, // NFT owner address
-        ZORA_ADDRESSES.ERC721TransferHelper
-      )
-    },
-    { revalidateOnFocus: true }
-  )
-
   const handleApprovalTransferHelper = React.useCallback(async () => {
     await hausCatalogueContract?.setApprovalForAll(ZORA_ADDRESSES.ERC721TransferHelper, true)
   }, [ReserveAuctionCoreEth, hausCatalogueContract])
@@ -235,11 +184,7 @@ const useHausCatalogue = () => {
   return {
     hausCatalogueContract,
     mint,
-    merkleRoot,
     burn,
-    owner,
-    isOwner,
-    isApprovedForAll,
     handleApprovalTransferHelper,
     updateContentURI,
     updateCreator,

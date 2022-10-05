@@ -7,6 +7,8 @@ import { ethers } from "ethers"
 import keccak256 from "keccak256"
 import { MerkleTree } from "merkletreejs"
 import useHausCatalogue from "hooks/useHausCatalogue"
+import { init } from "../../fetchers/hausCatalogue"
+import useSWR from "swr"
 
 type Props = {
   children: JSX.Element
@@ -20,8 +22,8 @@ const Layout = ({ children }: Props) => {
   const tree = new MerkleTree(leaves, keccak256, { sort: true })
   const leaf = (address: string) => keccak256(address)
   const hexProof = (leaf: any) => tree.getHexProof(leaf)
-  const { merkleRoot } = useHausCatalogue()
   const { signerAddress } = useLayoutStore()
+  const { data: merkleRoot } = useSWR("merkleRoot")
 
   const isCatalogueArtist = React.useMemo(() => {
     if (!signerAddress || !merkleRoot) return
@@ -33,7 +35,6 @@ const Layout = ({ children }: Props) => {
 
   React.useEffect(() => {
     if (status === "success") {
-      // const provider = new ethers.providers.JsonRpcProvider(process.env.ETH_RPC_URL)
       const provider = new ethers.providers.InfuraProvider(5, process.env.INFURA_API_KEY)
       setProvider(signer?.provider ?? provider)
       setSigner(signer)
@@ -43,8 +44,9 @@ const Layout = ({ children }: Props) => {
     }
   }, [status, signer, setProvider, setProvider, isCatalogueArtist])
 
+  init()
   return (
-    <div className="min-h-screen bg-rose-50">
+    <div className="min-h-screen">
       <Nav />
       {children}
       <Player />

@@ -7,10 +7,12 @@ import { useAuction } from "hooks/useAuction"
 import CreateAuction from "./CreateAuction"
 import { useClickOutside } from "hooks/useClickOutside"
 import useHausCatalogue from "hooks/useHausCatalogue"
+import useSWR from "swr"
 
 const AuctionControls: React.FC<any> = ({ release }) => {
   const { zoraContracts, cancelAuction, handleApprovalManager, isModuleApproved } = useZoraV3()
-  const { isApprovedForAll, handleApprovalTransferHelper } = useHausCatalogue()
+  const { handleApprovalTransferHelper, burn } = useHausCatalogue()
+  const { data: isApprovedForAll } = useSWR("isApprovedForAll")
 
   const { auction } = useAuction(release)
   const ref = useRef(null)
@@ -41,6 +43,17 @@ const AuctionControls: React.FC<any> = ({ release }) => {
 
     await cancelAuction(release?.collectionAddress, Number(release?.tokenId))
   }, [cancelAuction])
+
+  /*
+
+  handle burn token
+
+*/
+  const handleBurn = React.useCallback(async () => {
+    if (!burn) return
+
+    await burn(Number(release?.tokenId))
+  }, [burn])
 
   const [isOpen, setIsOpen] = React.useState<boolean>(false)
   useClickOutside(ref, () => setIsOpen(false))
@@ -97,24 +110,33 @@ const AuctionControls: React.FC<any> = ({ release }) => {
             </div>
           </>
         ) : isApprovedForAll && isModuleApproved ? (
-          <CreateAuction release={release} />
+          <>
+            <CreateAuction release={release} />
+
+            <div
+              className={"mb-2 flex w-full justify-center bg-rose-300 py-1 px-2 text-rose-50 hover:bg-rose-400"}
+              onClick={() => handleBurn()}
+            >
+              burn token
+            </div>
+          </>
         ) : (
           <>
             {!isApprovedForAll && (
-              <div
+              <button
                 className={"mb-2 flex w-full justify-center bg-rose-300 py-1 px-2 text-rose-50 hover:bg-rose-400"}
                 onClick={() => handleApprovalTransferHelper()}
               >
                 allow zora auction
-              </div>
+              </button>
             )}
             {!isModuleApproved && (
-              <div
+              <button
                 className={"mb-2 flex w-full justify-center bg-rose-300 py-1 px-2 text-rose-50 hover:bg-rose-400"}
                 onClick={() => handleApprovalManager()}
               >
                 allow zora manager{" "}
-              </div>
+              </button>
             )}
           </>
         )}

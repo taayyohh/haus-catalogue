@@ -7,11 +7,17 @@ import { ethers } from "ethers"
 import CID from "cids"
 import { FormikValues } from "formik"
 import useHausCatalogue from "hooks/useHausCatalogue"
+import { HausCatalogue__factory } from "../../../types/ethers-contracts"
 
 const MetadataForm: React.FC<{ merkle: any }> = ({ merkle }) => {
   const client = new NFTStorage({ token: process.env.NFT_STORAGE_TOKEN ? process.env.NFT_STORAGE_TOKEN : "" })
-  const { signerAddress } = useLayoutStore()
-  const { hausCatalogueContract: contract } = useHausCatalogue()
+  const { signer, provider, signerAddress } = useLayoutStore()
+
+  const contract = HausCatalogue__factory.connect(
+    process.env.HAUS_CATALOGUE_PROXY || "",
+    // @ts-ignore
+    signer ?? provider
+  )
 
   /*
       

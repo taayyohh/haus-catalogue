@@ -4,9 +4,32 @@ import { BsArrowDown, BsFillPlayCircleFill, BsPauseCircleFill, BsPlayCircle } fr
 import { AnimatePresence, motion } from "framer-motion"
 import Album from "components/Album/Album"
 import { discographyQuery } from "query/discography"
-import { useAuction } from "../hooks/useAuction"
-import { useCountdown } from "../hooks/useCountdown"
-import Countdown from "../components/Album/Countdown"
+import { slugify } from "utils/helpers"
+import { SWRConfig } from "swr"
+import Link from "next/link"
+
+export async function getServerSideProps() {
+  try {
+    const discography = await discographyQuery()
+    const fallback = discography?.reduce((acc: any, cv: { name: string; metadata: { artist: string } }) => {
+      acc = { ...acc, [`${slugify(cv.metadata.artist)}/${slugify(cv.name)}`]: cv }
+
+      return acc
+    }, {})
+
+    return {
+      props: {
+        fallback,
+        discography,
+      },
+    }
+  } catch (error: any) {
+    console.log("err", error)
+    return {
+      notFound: true,
+    }
+  }
+}
 
 const Catalogue: React.FC<any> = ({ discography }) => {
   const { addToQueue, queuedMusic, queue, currentPosition, media, isPlaying, currentTime, duration, setIsPlaying } =
@@ -75,10 +98,22 @@ const Catalogue: React.FC<any> = ({ discography }) => {
                     </div>
                   </button>
                   <div className="mt-4 flex max-w-[320px] flex-col gap-2 sm:max-w-[400px] md:ml-8 md:mt-0 md:gap-4 md:pl-8">
-                    <div className="text-3xl font-bold sm:text-4xl md:text-5xl">{queue[currentPosition]?.title}</div>
-                    <div className="text-3xl text-rose-700 sm:text-4xl md:text-5xl">
-                      {queue[currentPosition]?.artist}
+                    <div className="text-3xl font-bold sm:text-4xl md:text-5xl">
+                      {!!queue[currentPosition]?.artist && !!queue[currentPosition]?.title && (
+                        <Link
+                          href={`${slugify(queue[currentPosition]?.artist)}/${slugify(queue[currentPosition]?.title)}`}
+                        >
+                          {queue[currentPosition]?.title}
+                        </Link>
+                      )}
                     </div>
+                    {!!queue[currentPosition]?.artist && (
+                      <div className="text-3xl text-rose-700 sm:text-4xl md:text-5xl">
+                        <Link href={`${slugify(queue[currentPosition]?.artist)}`}>
+                          {queue[currentPosition]?.artist}
+                        </Link>
+                      </div>
+                    )}
                     {currentTime.length > 0 && duration.length > 0 && (
                       <div className="text-xl">
                         {currentTime} / {duration}
@@ -110,20 +145,11 @@ const Catalogue: React.FC<any> = ({ discography }) => {
   )
 }
 
-export default Catalogue
-
-export async function getServerSideProps() {
-  try {
-    const discography = await discographyQuery()
-    return {
-      props: {
-        discography,
-      },
-    }
-  } catch (error: any) {
-    console.log("err", error)
-    return {
-      notFound: true,
-    }
-  }
+export default function CataloguePage({ fallback, discography }: any) {
+  // SWR hooks inside the `SWRConfig` boundary will use those values.
+  return (
+    <SWRConfig value={{ fallback }}>
+      <Catalogue discography={discography} />
+    </SWRConfig>
+  )
 }

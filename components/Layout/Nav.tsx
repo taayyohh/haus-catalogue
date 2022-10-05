@@ -7,7 +7,7 @@ const Nav = () => {
   const { isCatalogueArtist } = useLayoutStore()
 
   return (
-    <div className="fixed z-10 flex w-full items-center justify-between bg-rose-200 p-4">
+    <div className="h-16 fixed z-10 flex w-full items-center justify-between bg-rose-200 p-4">
       <input
         className="focus:shadow-outline h-8 w-36 rounded bg-rose-200 px-4 placeholder:text-rose-500 focus:outline-none"
         placeholder="Search"
