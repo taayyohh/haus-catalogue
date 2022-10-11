@@ -5,11 +5,17 @@ import { ConnectButton } from "@rainbow-me/rainbowkit"
 import useZoraV3 from "hooks/useZoraV3"
 import { useLayoutStore } from "stores/useLayoutStore"
 import { useAuction } from "hooks/useAuction"
+import { useBalance } from 'wagmi'
+
 
 const CreateBid: React.FC<any> = ({ release }) => {
   const { zoraContracts, createBid } = useZoraV3()
-  const { signer } = useLayoutStore()
+  const { signer, signerAddress } = useLayoutStore()
   const { auction } = useAuction(release)
+  const { data: balance, isError, isLoading } = useBalance({
+    addressOrName: signerAddress as string,
+  })
+  const _balance = parseFloat(balance?.formatted as string).toFixed(4)
 
   /*
 
@@ -37,7 +43,7 @@ const CreateBid: React.FC<any> = ({ release }) => {
       </div>
       {(!!signer && (
         <Form
-          fields={createBidFields({ helperText: auction?.minBid })}
+          fields={createBidFields({ helperText: auction?.minBid, balance: _balance })}
           initialValues={createBidInitialValues}
           validationSchema={validateCreateBid(auction?.minBid || 0)}
           submitCallback={handeCreateBid}

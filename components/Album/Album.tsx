@@ -5,21 +5,16 @@ import Countdown from "./Countdown"
 import { motion } from "framer-motion"
 import AuctionControls from "./AuctionControls"
 import Bid from "./Bid"
-import PlayButton from "./PlayButton"
 import { slugify, walletSnippet } from "utils/helpers"
-import useHausCatalogue from "hooks/useHausCatalogue"
 import Link from "next/link"
-import useSWR from "swr"
 import AlbumInner from "./AlbumInner"
-import { HausCatalogue__factory } from "../../types/ethers-contracts"
-import { useLayoutStore } from "../../stores/useLayoutStore"
+import { useLayoutStore } from "stores/useLayoutStore"
 import { ethers } from "ethers"
 
 const Album: React.FC<any> = memo(({ release }) => {
-  const { signer, provider, signerAddress } = useLayoutStore()
+  const { signerAddress } = useLayoutStore()
   const { auction } = useAuction(release)
   const { countdownString } = useCountdown(auction)
-  // const { hausCatalogueContract } = useHausCatalogue()
   const [isHover, setIsHover] = React.useState<boolean>(false)
   const albumVariants = {
     initial: {
@@ -29,12 +24,6 @@ const Album: React.FC<any> = memo(({ release }) => {
       y: -2,
     },
   }
-
-  const hausCatalogueContract = HausCatalogue__factory.connect(
-    process.env.HAUS_CATALOGUE_PROXY || "",
-    // @ts-ignore
-    signer ?? provider
-  )
 
   const isTokenOwner = React.useMemo(() => {
     if (!signerAddress || !release?.owner) return
@@ -58,12 +47,15 @@ const Album: React.FC<any> = memo(({ release }) => {
           <div className={"flex w-full flex-row items-start justify-between"}>
             <div className={"flex flex-col"}>
               <div className="text-xl font-bold">
-                <Link href={`${slugify(release?.metadata?.artist)}/${slugify(release?.name)}`}>{release?.name}</Link>
+                {release?.metadata?.artist && (
+                  <Link href={`${slugify(release?.metadata?.artist)}/${slugify(release?.name)}`}>{release?.name}</Link>
+                )}
               </div>
 
               <div>
-                {" "}
-                <Link href={`${slugify(release?.metadata?.artist)}`}>{release?.metadata?.artist}</Link>
+                {release?.metadata?.artist && (
+                  <Link href={`${slugify(release?.metadata?.artist)}`}>{release?.metadata?.artist}</Link>
+                )}
               </div>
             </div>
             {auction?.notForAuction && !!release?.owner && (

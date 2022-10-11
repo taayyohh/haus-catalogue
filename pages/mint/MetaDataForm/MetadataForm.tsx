@@ -6,8 +6,7 @@ import { useLayoutStore } from "stores/useLayoutStore"
 import { ethers } from "ethers"
 import CID from "cids"
 import { FormikValues } from "formik"
-import useHausCatalogue from "hooks/useHausCatalogue"
-import { HausCatalogue__factory } from "../../../types/ethers-contracts"
+import { HausCatalogue__factory } from "types/ethers-contracts"
 
 const MetadataForm: React.FC<{ merkle: any }> = ({ merkle }) => {
   const client = new NFTStorage({ token: process.env.NFT_STORAGE_TOKEN ? process.env.NFT_STORAGE_TOKEN : "" })
@@ -37,7 +36,13 @@ const MetadataForm: React.FC<{ merkle: any }> = ({ merkle }) => {
       values.project.title = values.title
       values.project.description = values.description
       values.attributes.artist = values.artist
+      values.attributes.artist_bio = values.artistBio
+      values.attributes.artist_twitter = values.artistTwitter
+      values.attributes.artist_wallet = values.artistWalletAddress
+      values.attributes.artist_avatar = values.artist
       const metadata = await client.store(values)
+      console.log("meta", metadata)
+      console.log("valu", values)
       /*
     
          construct TokenData Struct
@@ -81,7 +86,7 @@ const MetadataForm: React.FC<{ merkle: any }> = ({ merkle }) => {
   )
 
   return (
-    <div className={"bg-gray-200 px-12 px-8 py-8 shadow-xl"}>
+    <div className={" px-12 px-8 py-8"}>
       <div className={"mb-8 text-3xl"}>Mint to LucidHaus Catalogue</div>
       <div className={"mb-24"}>
         <Form fields={metadataFields} initialValues={metadataInitialValues} submitCallback={submitCallBack} />

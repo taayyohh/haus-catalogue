@@ -1,12 +1,11 @@
 pragma solidity ^0.8.4;
 
-import {ERC721Upgradeable} from "@openzeppelin/contracts-upgradeable/token/ERC721/ERC721Upgradeable.sol";
 import {IERC2981Upgradeable, IERC165Upgradeable} from "@openzeppelin/contracts-upgradeable/interfaces/IERC2981Upgradeable.sol";
 import {CountersUpgradeable} from "@openzeppelin/contracts-upgradeable/utils/CountersUpgradeable.sol";
 import {MerkleProofUpgradeable} from "@openzeppelin/contracts-upgradeable/utils/cryptography/MerkleProofUpgradeable.sol";
-import {Ownable} from "lib//utils/Ownable.sol";
-import {UUPS} from "lib/proxy/UUPS.sol";
-import {ERC721} from "lib/token/ERC721.sol";
+import {Ownable} from "./lib/utils/Ownable.sol";
+import {UUPS} from "./lib/proxy/UUPS.sol";
+import {ERC721} from "./lib/token/ERC721.sol";
 
 /**
 --------------------------------------------------------------------------------------------------------------------

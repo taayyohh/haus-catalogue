@@ -8,6 +8,8 @@ export const discographyQuery = async () => {
       tokens(
         networks: { chain: GOERLI, network: ETHEREUM }
         where: { collectionAddresses: "0x3da452152183140f1eb94b55a86f1671d51d63f4" }
+        pagination: {limit: 20}
+        sort: {sortKey: TOKEN_ID, sortDirection: DESC}
       ) {
         nodes {
           token {

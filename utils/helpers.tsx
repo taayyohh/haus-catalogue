@@ -7,6 +7,8 @@
 import _ from "lodash"
 import { isAddress } from "ethers/lib/utils"
 
+export const ZERO_ADDRESS = '0x0000000000000000000000000000000000000000'
+
 export const flatten = (object: object) => {
   return Object.assign(
     {},

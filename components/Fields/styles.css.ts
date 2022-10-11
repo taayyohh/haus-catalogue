@@ -92,6 +92,7 @@ export const defaultTextAreaErrorStyle = style({
 })
 
 export const defaultInputStyle = style({
+  position: "relative",
   height: 64,
   width: "100%",
   backgroundColor: "#F2F2F2",

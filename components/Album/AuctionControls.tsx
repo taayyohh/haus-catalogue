@@ -8,6 +8,9 @@ import CreateAuction from "./CreateAuction"
 import { useClickOutside } from "hooks/useClickOutside"
 import useHausCatalogue from "hooks/useHausCatalogue"
 import useSWR from "swr"
+import AnimatedModal from "../Modal/Modal"
+import Form from "../Fields/Form"
+import { updateReservePriceFields } from "../Fields/fields/updateReservePrice"
 
 const AuctionControls: React.FC<any> = ({ release }) => {
   const { zoraContracts, cancelAuction, handleApprovalManager, isModuleApproved } = useZoraV3()
@@ -23,15 +26,18 @@ const AuctionControls: React.FC<any> = ({ release }) => {
 
  */
 
-  const handleSetAuctionReservePrice = React.useCallback(() => {
-    if (!zoraContracts?.ReserveAuctionCoreEth || !release) return
+  const handleSetAuctionReservePrice = React.useCallback(
+    (values: { reservePrice: string }) => {
+      if (!zoraContracts?.ReserveAuctionCoreEth || !release) return
 
-    zoraContracts?.ReserveAuctionCoreEth.setAuctionReservePrice(
-      release?.collectionAddress,
-      release?.tokenId,
-      ethers.utils.parseEther(".01")
-    )
-  }, [zoraContracts?.ReserveAuctionCoreEth])
+      zoraContracts?.ReserveAuctionCoreEth.setAuctionReservePrice(
+        release?.collectionAddress,
+        release?.tokenId,
+        ethers.utils.parseEther(values.reservePrice.toString())
+      )
+    },
+    [zoraContracts?.ReserveAuctionCoreEth]
+  )
 
   /*
 
@@ -96,35 +102,46 @@ const AuctionControls: React.FC<any> = ({ release }) => {
         <div className={"mb-2 text-center text-sm font-extrabold uppercase"}>Auction Controls</div>
         {!auction?.notForAuction ? (
           <>
-            <div
-              className={"mb-2 flex w-full justify-center bg-rose-300 py-1 px-2 text-rose-50 hover:bg-rose-400"}
-              onClick={() => handleSetAuctionReservePrice()}
+            <AnimatedModal
+              trigger={
+                <button
+                  className={"mb-2 flex w-full justify-center bg-rose-400 py-1 px-2 text-rose-50 hover:bg-rose-500"}
+                >
+                  update auction reserve price
+                </button>
+              }
+              size={"auto"}
             >
-              update auction reserve price
-            </div>
-            <div
-              className={"mb-2 flex w-full justify-center bg-rose-300 py-1 px-2 text-rose-50 hover:bg-rose-400"}
+              <Form
+                fields={updateReservePriceFields}
+                initialValues={{ reservePrice: auction?.reservePrice }}
+                submitCallback={handleSetAuctionReservePrice}
+                buttonText={"Update"}
+              />
+            </AnimatedModal>
+            <button
+              className={"mb-2 flex w-full justify-center bg-rose-400 py-1 px-2 text-rose-50 hover:bg-rose-500"}
               onClick={() => handleCancelAuction()}
             >
               cancel auction
-            </div>
+            </button>
           </>
         ) : isApprovedForAll && isModuleApproved ? (
           <>
             <CreateAuction release={release} />
 
-            <div
-              className={"mb-2 flex w-full justify-center bg-rose-300 py-1 px-2 text-rose-50 hover:bg-rose-400"}
+            <button
+              className={"mb-2 flex w-full justify-center bg-rose-400 py-1 px-2 text-rose-50 hover:bg-rose-500"}
               onClick={() => handleBurn()}
             >
               burn token
-            </div>
+            </button>
           </>
         ) : (
           <>
             {!isApprovedForAll && (
               <button
-                className={"mb-2 flex w-full justify-center bg-rose-300 py-1 px-2 text-rose-50 hover:bg-rose-400"}
+                className={"mb-2 flex w-full justify-center bg-rose-400 py-1 px-2 text-rose-50 hover:bg-rose-500"}
                 onClick={() => handleApprovalTransferHelper()}
               >
                 allow zora auction
@@ -132,7 +149,7 @@ const AuctionControls: React.FC<any> = ({ release }) => {
             )}
             {!isModuleApproved && (
               <button
-                className={"mb-2 flex w-full justify-center bg-rose-300 py-1 px-2 text-rose-50 hover:bg-rose-400"}
+                className={"mb-2 flex w-full justify-center bg-rose-400 py-1 px-2 text-rose-50 hover:bg-rose-500"}
                 onClick={() => handleApprovalManager()}
               >
                 allow zora manager{" "}

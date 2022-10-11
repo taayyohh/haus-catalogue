@@ -4,15 +4,20 @@ import { BsArrowDown, BsFillPlayCircleFill, BsPauseCircleFill, BsPlayCircle } fr
 import { AnimatePresence, motion } from "framer-motion"
 import Album from "components/Album/Album"
 import { discographyQuery } from "query/discography"
-import { slugify } from "utils/helpers"
+import { slugify, ZERO_ADDRESS } from "utils/helpers"
 import { SWRConfig } from "swr"
 import Link from "next/link"
 
 export async function getServerSideProps() {
   try {
-    const discography = await discographyQuery()
+    const _discography = await discographyQuery()
+    const discography = _discography.filter((album: { owner: string; metadata: {} }) => {
+      return album.owner !== ZERO_ADDRESS && !!album.metadata
+    })
     const fallback = discography?.reduce((acc: any, cv: { name: string; metadata: { artist: string } }) => {
-      acc = { ...acc, [`${slugify(cv.metadata.artist)}/${slugify(cv.name)}`]: cv }
+      if (!!cv.metadata.artist && !!cv.name) {
+        acc = { ...acc, [`${slugify(cv.metadata.artist)}/${slugify(cv.name)}`]: cv }
+      }
 
       return acc
     }, {})

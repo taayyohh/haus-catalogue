@@ -84,7 +84,7 @@ const SingleAudioUpload: React.FC<SingleImageUploadProps> = ({ id, formik, input
     <div className={"mb-8 flex flex-col"}>
       <div className={"flex w-full flex-col items-center"}>
         <label className={`flex flex-col items-center justify-center`} htmlFor="file-upload">
-          {(isUploading && <div className={"m-0 flex items-center"} />) || (
+          {(isUploading && <div className={"m-0 flex items-center"}>uploading...</div>) || (
             <>
               {(value && (
                 <audio controls>

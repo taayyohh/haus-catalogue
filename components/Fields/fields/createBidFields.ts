@@ -1,7 +1,7 @@
 import { NUMBER } from "components/Fields/types"
 import * as Yup from "yup"
 
-export const createBidFields = ({ helperText }: any) => {
+export const createBidFields = ({ helperText, balance }: any) => {
   return [
     {
       name: "amount",
@@ -16,7 +16,7 @@ export const createBidFields = ({ helperText }: any) => {
       type: NUMBER,
       inputLabel: "Your Balance",
       disabled: true,
-      perma: "ETH",
+      perma: `${balance} ETH`,
       step: 0.00000001,
     },
   ]

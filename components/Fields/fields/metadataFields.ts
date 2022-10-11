@@ -1,4 +1,4 @@
-import { NUMBER, RICH_TEXT, SINGLE_AUDIO_UPLOAD, SINGLE_IMAGE_UPLOAD, TEXT } from "components/Fields/types"
+import {NUMBER, RICH_TEXT, SINGLE_AUDIO_UPLOAD, SINGLE_IMAGE_UPLOAD, TEXT, TEXTAREA} from "components/Fields/types"
 
 export const metadataFields = [
   {
@@ -10,11 +10,6 @@ export const metadataFields = [
     name: "losslessAudio",
     type: SINGLE_AUDIO_UPLOAD,
     inputLabel: "Song Audio",
-  },
-  {
-    name: "artist",
-    type: TEXT,
-    inputLabel: "Artist Name",
   },
   {
     name: "name",
@@ -53,7 +48,46 @@ export const metadataFields = [
     type: TEXT,
     inputLabel: "Animation URL",
   },
+  {
+    name: "artist",
+    type: TEXT,
+    inputLabel: "Artist Name",
+  },
+  {
+    name: "artistAvatar",
+    type: SINGLE_IMAGE_UPLOAD,
+    inputLabel: "Artist Avatar Image",
+  },
+  {
+    name: "artistHero",
+    type: SINGLE_IMAGE_UPLOAD,
+    inputLabel: "Artist Hero Image",
+  },
+  {
+    name: "artistWalletAddress",
+    type: TEXT,
+    inputLabel: "Artist Wallet Address",
+  },
+  {
+    name: "artistBio",
+    type: TEXTAREA,
+    inputLabel: "Artist Biography",
+  },
+  {
+    name: "artistTwitter",
+    type: TEXT,
+    inputLabel: "Artist Twitter Handle",
+  },
 ]
+
+// Avatar
+// Hero
+// Name
+// Ens
+// Address
+// Bio
+// Twitter handle
+
 
 export const metadataInitialValues = {
   animation_url: "",

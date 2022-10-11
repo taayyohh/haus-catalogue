@@ -28,41 +28,39 @@ const SingleImageUpload: React.FC<SingleImageUploadProps> = ({ id, formik, input
   const [uploadArtworkError, setUploadArtworkError] = React.useState<any>()
   const [preview, setPreview] = React.useState<string>("")
   const [isUploading, setIsUploading] = React.useState<boolean>(false)
-  const handleFileUpload = React.useCallback(
-    async (_input: FileList | null) => {
-      if (!_input) return
-      const input = _input[0]
+  const handleFileUpload = async (_input: FileList | null) => {
+    if (!_input) return
+    const input = _input[0]
 
-      if (input?.type?.length && !acceptableMIME.includes(input.type)) {
-        setUploadArtworkError({
-          mime: `${input.type} is an unsupported file type`,
-        })
-        return
-      }
+    if (input?.type?.length && !acceptableMIME.includes(input.type)) {
+      setUploadArtworkError({
+        mime: `${input.type} is an unsupported file type`,
+      })
+      return
+    }
 
-      try {
-        setIsUploading(true)
-        const car = await packToBlob({
-          input: [{ content: input, path: input.name }],
-          blockstore: new MemoryBlockStore(),
-        })
-        const cid = await client.storeCar(car.car)
-        const uri = encodeURI(urlJoin("ipfs://", cid, input.name))
-        const url = encodeURI(urlJoin("https://ipfs.io/ipfs/", cid, input.name))
-        setPreview(url)
-        formik.setFieldValue(id, car.car)
-        formik.setFieldValue('project.artwork.uri', uri)
-        formik.setFieldValue('project.artwork.mimeType', input.type)
+    try {
+      setIsUploading(true)
+      const car = await packToBlob({
+        input: [{ content: input, path: input.name }],
+        blockstore: new MemoryBlockStore(),
+      })
+      const cid = await client.storeCar(car.car)
+      const uri = encodeURI(urlJoin("ipfs://", cid, input.name))
+      const url = encodeURI(urlJoin("https://ipfs.io/ipfs/", cid, input.name))
+      setPreview(url)
+      formik.setFieldValue(id, car.car)
+      formik.setFieldValue(`${id}PreviewUrl`, url)
+      formik.setFieldValue("project.artwork.uri", uri)
+      formik.setFieldValue("project.artwork.mimeType", input.type)
 
-        setIsUploading(false)
-        setUploadArtworkError(null)
-      } catch (err) {
-        setIsUploading(false)
-        setUploadArtworkError(err)
-      }
-    },
-    [formik, client]
-  )
+      setIsUploading(false)
+      setUploadArtworkError(null)
+    } catch (err) {
+      setIsUploading(false)
+      setUploadArtworkError(err)
+    }
+  }
 
   return (
     <div className={"mb-8 flex flex-col"}>
@@ -73,19 +71,14 @@ const SingleImageUpload: React.FC<SingleImageUploadProps> = ({ id, formik, input
         >
           {(isUploading && <div className={"m-0 flex items-center"} />) || (
             <>
-              {(value && (
-                  <></>
-                // <img src={value.replace("ipfs://", "https://ipfs.io/ipfs/")} className={singleImagePreview} />
-              )) || (
-                <>
-                  {(preview && <img src={preview} className={singleImagePreview} />) || (
-                    <>
-                      <div className={`flex ${singleImageUploadInputLabel}`}>{inputLabel}</div>
-                      <div className={`flex ${singleImageUploadHelperText}`}>{helperText}</div>
-                    </>
-                  )}
-                </>
-              )}
+              <>
+                {(preview && <img src={preview} className={singleImagePreview} />) || (
+                  <>
+                    <div className={`flex ${singleImageUploadInputLabel}`}>{inputLabel}</div>
+                    <div className={`flex ${singleImageUploadHelperText}`}>{helperText}</div>
+                  </>
+                )}
+              </>
             </>
           )}
           <input
