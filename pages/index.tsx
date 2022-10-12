@@ -3,24 +3,14 @@ import { usePlayerStore } from "stores/usePlayerStore"
 import { BsArrowDown, BsFillPlayCircleFill, BsPauseCircleFill, BsPlayCircle } from "react-icons/bs"
 import { AnimatePresence, motion } from "framer-motion"
 import Album from "components/Album/Album"
-import { discographyQuery } from "query/discography"
-import { slugify, ZERO_ADDRESS } from "utils/helpers"
+import { slugify } from "utils/helpers"
 import { SWRConfig } from "swr"
 import Link from "next/link"
+import { getDiscography } from "utils/getDiscographyNullMetadata"
 
 export async function getServerSideProps() {
   try {
-    const _discography = await discographyQuery()
-    const discography = _discography.filter((album: { owner: string; metadata: {} }) => {
-      return album.owner !== ZERO_ADDRESS && !!album.metadata
-    })
-    const fallback = discography?.reduce((acc: any, cv: { name: string; metadata: { artist: string } }) => {
-      if (!!cv.metadata.artist && !!cv.name) {
-        acc = { ...acc, [`${slugify(cv.metadata.artist)}/${slugify(cv.name)}`]: cv }
-      }
-
-      return acc
-    }, {})
+    const { fallback, discography } = await getDiscography()
 
     return {
       props: {

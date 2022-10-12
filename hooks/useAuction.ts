@@ -5,14 +5,14 @@ import useZoraV3 from "./useZoraV3"
 import { useLayoutStore } from "stores/useLayoutStore"
 import dayjs from "dayjs"
 
-export function useAuction(token: any) {
+export function useAuction(release: any) {
   const { zoraContracts } = useZoraV3()
   const { signerAddress } = useLayoutStore()
 
   const { data: auction } = useSWR(
-    `${token?.collectionAddress}+${token?.tokenId}`,
+    `${release?.collectionAddress}+${release?.tokenId}`,
     async () => {
-      const auction = await zoraContracts?.ReserveAuctionCoreEth.auctionForNFT(token?.collectionAddress, token?.tokenId)
+      const auction = await zoraContracts?.ReserveAuctionCoreEth.auctionForNFT(release?.collectionAddress, release?.tokenId)
       const now = dayjs.unix(Date.now() / 1000)
       const end = dayjs.unix(parseInt(auction?.firstBidTime + auction?.duration) as number)
 

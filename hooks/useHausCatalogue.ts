@@ -148,7 +148,7 @@ const useHausCatalogue = () => {
    */
   const royaltyPayoutAddress = React.useCallback(
     async (_tokenId: PromiseOrValue<BigNumberish>) => {
-      await hausCatalogueContract?.royaltyPayoutAddress(_tokenId)
+      return hausCatalogueContract?.royaltyPayoutAddress(_tokenId)
     },
     [hausCatalogueContract]
   )
@@ -160,7 +160,7 @@ const useHausCatalogue = () => {
   */
   const royaltyInfo = React.useCallback(
     async (_tokenId: PromiseOrValue<BigNumberish>, _salePrice: PromiseOrValue<BigNumberish>) => {
-      await hausCatalogueContract?.royaltyInfo(_tokenId, _salePrice)
+      return hausCatalogueContract?.royaltyInfo(_tokenId, _salePrice);
     },
     [hausCatalogueContract]
   )

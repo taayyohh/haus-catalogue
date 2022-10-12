@@ -1,28 +1,23 @@
 import React from "react"
 import { GetServerSideProps } from "next"
-import { discographyQuery } from "query/discography"
 import { slugify } from "utils/helpers"
 import useSWR, { SWRConfig } from "swr"
 import { AnimatePresence, motion } from "framer-motion"
 import Album from "components/Album/Album"
 import { ChevronLeftIcon } from "@radix-ui/react-icons"
 import { useRouter } from "next/router"
+import { getDiscography } from "utils/getDiscographyNullMetadata"
 
 export const getServerSideProps: GetServerSideProps = async context => {
   const artist = context?.params?.artist as string
 
   try {
-    const discography = await discographyQuery()
+    const { fallback, discography } = await getDiscography()
     const artistDiscography = discography?.reduce((acc: any[] = [], cv: any) => {
       if (slugify(cv.metadata.artist) === artist) acc.push(cv)
 
       return acc
     }, [])
-    const fallback = discography?.reduce((acc: any, cv: { name: string; metadata: { artist: string } }) => {
-      acc = { ...acc, [`${slugify(cv.metadata.artist)}/${slugify(cv.name)}`]: cv }
-
-      return acc
-    }, {})
 
     return {
       props: {

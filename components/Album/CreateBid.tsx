@@ -5,14 +5,17 @@ import { ConnectButton } from "@rainbow-me/rainbowkit"
 import useZoraV3 from "hooks/useZoraV3"
 import { useLayoutStore } from "stores/useLayoutStore"
 import { useAuction } from "hooks/useAuction"
-import { useBalance } from 'wagmi'
+import { useBalance } from "wagmi"
 
-
-const CreateBid: React.FC<any> = ({ release }) => {
+const CreateBid: React.FC<{ release: any }> = ({ release }) => {
   const { zoraContracts, createBid } = useZoraV3()
   const { signer, signerAddress } = useLayoutStore()
   const { auction } = useAuction(release)
-  const { data: balance, isError, isLoading } = useBalance({
+  const {
+    data: balance,
+    isError,
+    isLoading,
+  } = useBalance({
     addressOrName: signerAddress as string,
   })
   const _balance = parseFloat(balance?.formatted as string).toFixed(4)
