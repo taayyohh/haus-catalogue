@@ -7,6 +7,7 @@ import { slugify } from "utils/helpers"
 import { SWRConfig } from "swr"
 import Link from "next/link"
 import { getDiscography } from "utils/getDiscographyNullMetadata"
+import Meta from "../components/Layout/Meta"
 
 export async function getServerSideProps() {
   try {
@@ -55,6 +56,15 @@ const Catalogue: React.FC<any> = ({ discography }) => {
 
   return (
     <div className="absolute top-0 left-0 m-0 mx-auto box-border h-full w-screen min-w-0">
+      <Meta
+        title={random?.songs[0]?.title}
+        type={"music.song"}
+        image={random?.image}
+        slug={"/"}
+        track={random?.songs[0].trackNumber}
+        musician={random?.artist}
+        description={"LucidHaus Catalogue <3"}
+      />
       <div className="m-0 mx-auto box-border w-screen min-w-0">
         <div className="sticky top-0 z-0 grid h-screen w-screen place-items-center bg-rose-200">
           <div className="absolute -z-10 flex w-full max-w-screen-xl justify-center">

@@ -37,7 +37,6 @@ export const activeAuctionQuery = async () => {
     `
 
     const tokens = await request(endpoint, req)
-    console.log('to', tokens.events.nodes)
     return tokens.events.nodes
     // return tokens.tokens.nodes?.reduce((acc: any[], cv: any) => {
     //     acc.push(cv.token)

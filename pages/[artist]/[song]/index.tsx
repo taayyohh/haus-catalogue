@@ -101,10 +101,10 @@ const Song = ({ artist, song, slug }: any) => {
           type={"music.song"}
           image={release?.image}
           slug={slug}
-          duration={release?.duration}
-          album={release?.album}
-          track={release?.trackNumber}
-          musician={release?.artist}
+          album={release?.metadata?.albumTitle}
+          track={release?.metadata?.trackNumber}
+          musician={release?.metadata?.artist}
+          description={release?.metadata.artist}
         />
         <div
           className={`fixed relative top-16 flex hidden h-12 w-full items-center ${

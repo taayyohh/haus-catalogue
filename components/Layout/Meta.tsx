@@ -16,10 +16,10 @@ interface MetaProps {
 const Meta: React.FC<MetaProps> = ({ title, type, slug, image, description, duration, album, track, musician }) => {
   return (
     <Head>
-      <title>Nouns Builder | {title}</title>
+      <title>LucidHaus | {title}</title>
       <meta property="og:title" content={title} />
       <meta property="og:type" content={type} />
-      <meta property="og:url" content={`https://nouns.build${slug}`} />
+      <meta property="og:url" content={`https://lucid.haus${slug}`} />
       <meta property="og:image" content={image} />
       <meta property="og:description" content={description} />
       {type === "music.song" && (
