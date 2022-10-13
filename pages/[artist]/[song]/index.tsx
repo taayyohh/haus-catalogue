@@ -98,7 +98,7 @@ const Song = ({ artist, song, slug }: any) => {
         <Meta
           title={release?.name}
           type={"music.song"}
-          image={release?.image?.replace("ipfs://", "https://ipfs.io/ipfs/")}
+          image={release?.image?.url?.replace("ipfs://", "https://ipfs.io/ipfs/")}
           slug={slug}
           album={release?.metadata?.albumTitle}
           track={release?.metadata?.trackNumber}
