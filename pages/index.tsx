@@ -59,7 +59,7 @@ const Catalogue: React.FC<any> = ({ discography }) => {
       <Meta
         title={random?.songs[0]?.title}
         type={"music.song"}
-        image={random?.image}
+        image={random?.image.replace("ipfs://", "https://ipfs.io/ipfs/")}
         slug={"/"}
         track={random?.songs[0].trackNumber}
         musician={random?.artist}
