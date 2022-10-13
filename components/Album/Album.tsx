@@ -44,8 +44,8 @@ const Album: React.FC<any> = memo(({ release }) => {
       >
         <AlbumInner release={release} />
         <div className="flex w-full flex-col items-start py-2">
-          <div className={"flex w-full flex-row items-start justify-between"}>
-            <div className={"flex flex-col"}>
+          <div className={"flex w-full flex-col sm:flex-row items-start justify-between"}>
+            <div className={"flex flex-col my-1 sm:my-0"}>
               <div className="text-xl font-bold">
                 {release?.metadata?.artist && (
                   <Link href={`${slugify(release?.metadata?.artist)}/${slugify(release?.name)}`}>{release?.name}</Link>
@@ -58,13 +58,6 @@ const Album: React.FC<any> = memo(({ release }) => {
                 )}
               </div>
             </div>
-            {auction?.notForAuction && !!release?.owner && (
-              <div
-                className={"relative flex cursor-default items-center gap-1 rounded-2xl bg-slate-300 px-3 py-1 text-sm"}
-              >
-                {isTokenOwner ? "Owner" : ` Owned: By: ${walletSnippet(release?.owner)}`}
-              </div>
-            )}
             {(!!auction?.highestBid || !!auction?.reservePrice) && !auction?.notForAuction && <Bid release={release} />}
           </div>
           {isTokenOwner && !auction?.auctionHasStarted && <AuctionControls release={release} />}

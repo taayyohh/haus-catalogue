@@ -26,9 +26,18 @@ const CreateBid: React.FC<{ release: any }> = ({ release }) => {
 
   */
 
+  const [isSubmitting, setIsSubmitting] = React.useState<undefined | boolean>(undefined)
   const handeCreateBid = React.useCallback(
-    (values: any) => {
-      createBid(release?.collectionAddress, release?.tokenId, values?.amount)
+    async (values: any) => {
+      await createBid(release?.collectionAddress, release?.tokenId, values?.amount)
+      setIsSubmitting(true)
+      zoraContracts.ReserveAuctionCoreEth.on(
+        "AuctionBid",
+        (tokenContract: any, tokenId: any, firstBid: any, auction: any) => {
+          console.log("t", tokenContract, tokenId, firstBid, auction)
+          setIsSubmitting(false)
+        }
+      )
     },
     [zoraContracts?.ReserveAuctionCoreEth]
   )
@@ -45,13 +54,19 @@ const CreateBid: React.FC<{ release: any }> = ({ release }) => {
         </div>
       </div>
       {(!!signer && (
-        <Form
-          fields={createBidFields({ helperText: auction?.minBid, balance: _balance })}
-          initialValues={createBidInitialValues}
-          validationSchema={validateCreateBid(auction?.minBid || 0)}
-          submitCallback={handeCreateBid}
-          buttonText={"Place Bid"}
-        />
+        <>
+          {isSubmitting === false && <div>Bid Placed!</div>}
+          {isSubmitting === true && <div>Is Submitting</div>}
+          {isSubmitting === undefined && (
+            <Form
+              fields={createBidFields({ helperText: auction?.minBid, balance: _balance })}
+              initialValues={createBidInitialValues}
+              validationSchema={validateCreateBid(auction?.minBid || 0)}
+              submitCallback={handeCreateBid}
+              buttonText={"Place Bid"}
+            />
+          )}
+        </>
       )) || <ConnectButton showBalance={true} label={"CONNECT"} chainStatus={"none"} accountStatus={"address"} />}
     </div>
   )

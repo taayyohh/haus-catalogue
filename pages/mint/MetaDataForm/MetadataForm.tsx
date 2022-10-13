@@ -40,33 +40,33 @@ const MetadataForm: React.FC<{ merkle: any }> = ({ merkle }) => {
       values.attributes.artist_twitter = values.artistTwitter
       values.attributes.artist_wallet = values.artistWalletAddress
       values.attributes.artist_avatar = values.artist
-      const metadata = await client.store(values)
-      console.log("meta", metadata)
+      // const metadata = await client.store(values)
+      // console.log("meta", metadata)
       console.log("valu", values)
       /*
     
          construct TokenData Struct
      
      */
-      const tokenData = {
-        metadataURI: metadata.url,
-        creator: ethers.utils.getAddress(signerAddress),
-        royaltyPayout: ethers.utils.getAddress(signerAddress),
-        royaltyBPS: 1000,
-      }
+      // const tokenData = {
+      //   metadataURI: metadata.url,
+      //   creator: ethers.utils.getAddress(signerAddress),
+      //   royaltyPayout: ethers.utils.getAddress(signerAddress),
+      //   royaltyBPS: 1000,
+      // }
 
       /*
       
            construct ContentData Struct
        
        */
-      const cid = new CID(values.cid).toV0()
-      const hash = cid.toString(cid.multibaseName)
-      const contentHash = ethers.utils.base58.decode(hash).slice(2)
-      const contentData = {
-        contentURI: values.losslessAudio,
-        contentHash,
-      }
+      // const cid = new CID(values.cid).toV0()
+      // const hash = cid.toString(cid.multibaseName)
+      // const contentHash = ethers.utils.base58.decode(hash).slice(2)
+      // const contentData = {
+      //   contentURI: values.losslessAudio,
+      //   contentHash,
+      // }
 
       /*
       
@@ -76,18 +76,22 @@ const MetadataForm: React.FC<{ merkle: any }> = ({ merkle }) => {
       const leaf = merkle.leaf(signerAddress)
       const proof = merkle.hexProof(leaf)
 
-      contract.mint(tokenData, contentData, proof)
-      contract.on("ContentUpdated", (tokenId, contentHash, contentURI) => {
-        formik.resetForm()
-        console.log("ContentUpdated", tokenId, contentHash, contentURI)
-      })
+      // contract.mint(tokenData, contentData, proof)
+      // contract.on("ContentUpdated", (tokenId, contentHash, contentURI) => {
+      //   formik.resetForm()
+      //   console.log("ContentUpdated", tokenId, contentHash, contentURI)
+      // })
     },
     [signerAddress, merkle, contract]
   )
 
   return (
-    <div className={" px-12 px-8 py-8"}>
-      <div className={"mb-8 text-3xl"}>Mint to LucidHaus Catalogue</div>
+    <div
+      className={
+        "max-h-[75vh] overflow-hidden overflow-y-scroll rounded border border-rose-100 px-12 px-8 py-8 shadow-inner"
+      }
+    >
+      <div className={"mb-12 text-4xl font-bold"}>Mint</div>
       <div className={"mb-24"}>
         <Form fields={metadataFields} initialValues={metadataInitialValues} submitCallback={submitCallBack} />
       </div>

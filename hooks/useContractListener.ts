@@ -53,6 +53,7 @@ export function useContractListener() {
     "AuctionBid",
     (tokenContract: any, tokenId: any, firstBid: any, auction: any) => {
       console.log("t", tokenContract, tokenId, firstBid, auction)
+
     }
   )
 

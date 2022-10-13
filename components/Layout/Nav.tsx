@@ -2,33 +2,72 @@ import { ConnectButton } from "@rainbow-me/rainbowkit"
 import React from "react"
 import Link from "next/link"
 import { useLayoutStore } from "stores/useLayoutStore"
+import { motion } from "framer-motion"
+import { HamburgerMenuIcon } from "@radix-ui/react-icons"
 
 const Nav = () => {
   const { isCatalogueArtist } = useLayoutStore()
+  const [isOpen, setIsOpen] = React.useState<boolean>(false)
+  const variants = {
+    initial: {
+      height: 0,
+    },
+    animate: {
+      height: "auto",
+    },
+  }
 
   return (
-    <div className="h-16 fixed z-10 flex w-full items-center justify-between bg-rose-200 p-4">
-      <input
-        className="focus:shadow-outline h-8 w-36 rounded bg-rose-200 px-4 placeholder:text-rose-500 focus:outline-none"
-        placeholder="Search"
-      />
+    <>
+      <div className="fixed z-10 hidden h-16 w-full items-center justify-between bg-rose-200 p-4 sm:flex">
+        <input
+          className="focus:shadow-outline h-8 w-36 rounded bg-rose-200 px-4 placeholder:text-rose-500 focus:outline-none"
+          placeholder="Search"
+        />
 
-      <div className="w-24">
-        <Link href={"/"}>
-          <img src="/lucidhaus.png" />
-        </Link>
-      </div>
+        <button className="w-24">
+          <Link href={"/"}>
+            <img src="/lucidhaus.png" />
+          </Link>
+        </button>
 
-      {isCatalogueArtist && (
-        <div className={"absolute right-[220px]"}>
-          <Link href={"/mint"}>Mint</Link>
+        {isCatalogueArtist && (
+          <div className={"absolute right-[220px]"}>
+            <Link href={"/mint"}>Mint</Link>
+          </div>
+        )}
+
+        <div id="connect">
+          <ConnectButton showBalance={true} label={"Connect"} chainStatus={"none"} accountStatus={"address"} />
         </div>
-      )}
-
-      <div id="connect">
-        <ConnectButton showBalance={true} label={"Connect"} chainStatus={"none"} accountStatus={"address"} />
       </div>
-    </div>
+      <div className="fixed z-10 flex h-16 w-full items-center justify-between bg-rose-200 p-4 sm:hidden">
+        <button className="w-24">
+          <Link href={"/"}>
+            <img src="/lucidhaus.png" />
+          </Link>
+        </button>
+        <div className={"ml-4"}>
+          <HamburgerMenuIcon width={"24px"} height={"24px"} onClick={() => setIsOpen(flag => !flag)} />
+        </div>
+
+        <motion.div
+          variants={variants}
+          className={"absolute left-0 top-16 flex flex w-full w-full flex-col items-center overflow-hidden bg-rose-200 border-t-rose-900"}
+          initial={"initial"}
+          animate={isOpen ? "animate" : "initial"}
+        >
+          {isCatalogueArtist && (
+            <div className={""}>
+              <Link href={"/mint"}>Mint</Link>
+            </div>
+          )}
+          <div id="connect">
+            <ConnectButton showBalance={true} label={"Connect"} chainStatus={"none"} accountStatus={"address"} />
+          </div>
+        </motion.div>
+      </div>
+    </>
   )
 }
 

@@ -70,7 +70,7 @@ export const metadataFields = [
   },
   {
     name: "artistBio",
-    type: TEXTAREA,
+    type: RICH_TEXT,
     inputLabel: "Artist Biography",
   },
   {
