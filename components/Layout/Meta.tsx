@@ -20,7 +20,7 @@ const Meta: React.FC<MetaProps> = ({ title, type, slug, image, description, dura
       <meta property="og:title" content={title} />
       <meta property="og:type" content={type} />
       <meta property="og:url" content={`https://lucid.haus${slug}`} />
-      <meta property="og:image" content={image.replace("ipfs://", "https://ipfs.io/ipfs/")} />
+      <meta property="og:image" content={image} />
       <meta property="og:description" content={description} />
       {type === "music.song" && (
         <>

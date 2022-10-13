@@ -28,7 +28,6 @@ export const getServerSideProps: GetServerSideProps = async context => {
   try {
     const { fallback, discography } = await getDiscography()
     const tokens = activeAuctionQuery()
-    console.log("t", tokens)
 
     return {
       props: {
@@ -99,7 +98,7 @@ const Song = ({ artist, song, slug }: any) => {
         <Meta
           title={release?.name}
           type={"music.song"}
-          image={release?.image}
+          image={release?.image?.replace("ipfs://", "https://ipfs.io/ipfs/")}
           slug={slug}
           album={release?.metadata?.albumTitle}
           track={release?.metadata?.trackNumber}
