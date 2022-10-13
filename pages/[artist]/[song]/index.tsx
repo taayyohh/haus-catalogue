@@ -17,11 +17,13 @@ import { ethers } from "ethers"
 import { activeAuctionQuery } from "query/activeAuction"
 import { BsFillPlayFill } from "react-icons/bs"
 import { usePlayerStore } from "stores/usePlayerStore"
+import Meta from "../../../components/Layout/Meta"
 const ReactHtmlParser = require("react-html-parser").default
 
 export const getServerSideProps: GetServerSideProps = async context => {
   const artist = context?.params?.artist as string
   const song = context?.params?.song as string
+  const slug = context?.resolvedUrl
 
   try {
     const { fallback, discography } = await getDiscography()
@@ -32,6 +34,7 @@ export const getServerSideProps: GetServerSideProps = async context => {
       props: {
         artist,
         song,
+        slug,
         fallback,
         discography,
       },
@@ -44,11 +47,11 @@ export const getServerSideProps: GetServerSideProps = async context => {
   }
 }
 
-const Song = ({ artist, song }: any) => {
+const Song = ({ artist, song, slug }: any) => {
   const { data: release } = useSWR(`${artist}/${song}`)
   const router = useRouter()
   const { auction } = useAuction(release)
-  const { royaltyInfo, royaltyPayoutAddress, hausCatalogueContract } = useHausCatalogue()
+  const { royaltyInfo, royaltyPayoutAddress } = useHausCatalogue()
   const { data: _royaltyPayoutAddress } = useSWR(
     release?.tokenId ? ["royaltyPayoutAddress", release.tokenId] : null,
     async () => {
@@ -93,6 +96,16 @@ const Song = ({ artist, song }: any) => {
         animate="open"
         exit="closed"
       >
+        <Meta
+          title={release?.name}
+          type={"music.song"}
+          image={release?.image}
+          slug={slug}
+          duration={release?.duration}
+          album={release?.album}
+          track={release?.trackNumber}
+          musician={release?.artist}
+        />
         <div
           className={`fixed relative top-16 flex hidden h-12 w-full items-center ${
             auction?.auctionHasStarted && !auction?.auctionHasEnded ? "border-y-2" : "border-t-2"
@@ -112,8 +125,7 @@ const Song = ({ artist, song }: any) => {
                 </div>
               )}
               {auction?.auctionHasEnded && auction?.auctionHasStarted && <div>{countdownString}</div>}
-              {console.log('a', auction?.notForAuction)}
-              {(!auction?.notForAuction && !auction?.auctionHasStarted) && (
+              {!auction?.notForAuction && !auction?.auctionHasStarted && (
                 <div>Place a bid to kick off the auction!</div>
               )}
 
@@ -252,11 +264,11 @@ const Song = ({ artist, song }: any) => {
   )
 }
 
-export default function SongPage({ fallback, artist, song }: any) {
+export default function SongPage({ fallback, artist, song, slug }: any) {
   // SWR hooks inside the `SWRConfig` boundary will use those values.
   return (
     <SWRConfig value={{ fallback }}>
-      <Song artist={artist} song={song} />
+      <Song artist={artist} song={song} sluh={slug} />
     </SWRConfig>
   )
 }
