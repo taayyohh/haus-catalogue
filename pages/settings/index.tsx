@@ -4,8 +4,9 @@ import { useLayoutStore } from "stores/useLayoutStore"
 import { MerkleTree } from "merkletreejs"
 import useHausCatalogue from "hooks/useHausCatalogue"
 import useZoraV3 from "hooks/useZoraV3"
-import { HausCatalogue__factory } from "../../types/ethers-contracts"
+import { HausCatalogue__factory } from "types/ethers-contracts"
 import useSWR, { SWRConfig } from "swr"
+import { HAUS_CATALOGUE_PROXY } from "constants/addresses"
 const keccak256 = require("keccak256")
 
 export async function getServerSideProps() {
@@ -38,7 +39,7 @@ const Settings: React.FC<any> = ({ allow }) => {
   const { data: owner } = useSWR("owner")
 
   const hausCatalogueContract = HausCatalogue__factory.connect(
-    process.env.HAUS_CATALOGUE_PROXY || "",
+    HAUS_CATALOGUE_PROXY || "",
     // @ts-ignore
     signer ?? provider
   )

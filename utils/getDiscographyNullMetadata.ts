@@ -17,8 +17,6 @@ export async function getDiscographyNullMetadata(
       album.description = metadata[0]?.description
       album.image = metadata[0]?.imagePreviewUrl
 
-        console.log('ALLL', album)
-
       return album
     }
   )

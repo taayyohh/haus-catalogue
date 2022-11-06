@@ -1,21 +1,22 @@
 import { HausCatalogue__factory } from "types/ethers-contracts/factories/HausCatalogue__factory"
 import ZORA_ADDRESSES from "@zoralabs/v3/dist/addresses/5.json"
 import React from "react"
-import useZoraV3 from "./useZoraV3"
 import { PromiseOrValue } from "@typechain/ethers-v5/static/common"
-import { BigNumberish, BytesLike, ethers } from "ethers"
+import { BigNumberish, BytesLike, ethers, Signer } from "ethers"
 import { HausCatalogue } from "types/ethers-contracts"
 import { useLayoutStore } from "stores/useLayoutStore"
+import useSWR from "swr"
+import {HAUS_CATALOGUE_PROXY} from "constants/addresses";
 
 const useHausCatalogue = () => {
   const { signer, provider } = useLayoutStore()
-  const { ReserveAuctionCoreEth } = useZoraV3()
+  const { data: ReserveAuctionCoreEth } = useSWR("ReserveAuctionCoreEth")
 
-  const hausCatalogueContract = HausCatalogue__factory.connect(
-    process.env.HAUS_CATALOGUE_PROXY || "",
-    // @ts-ignore
-    signer ?? provider
-  )
+  const hausCatalogueContract = React.useMemo(() => {
+    if (!provider) return
+
+    return HausCatalogue__factory.connect(HAUS_CATALOGUE_PROXY as string, (signer as Signer) ?? provider)
+  }, [provider])
 
   /*
 
@@ -160,7 +161,7 @@ const useHausCatalogue = () => {
   */
   const royaltyInfo = React.useCallback(
     async (_tokenId: PromiseOrValue<BigNumberish>, _salePrice: PromiseOrValue<BigNumberish>) => {
-      return hausCatalogueContract?.royaltyInfo(_tokenId, _salePrice);
+      return hausCatalogueContract?.royaltyInfo(_tokenId, _salePrice)
     },
     [hausCatalogueContract]
   )

@@ -1,4 +1,4 @@
-import {NUMBER, RICH_TEXT, SINGLE_AUDIO_UPLOAD, SINGLE_IMAGE_UPLOAD, TEXT, TEXTAREA} from "components/Fields/types"
+import { NUMBER, RICH_TEXT, SINGLE_AUDIO_UPLOAD, SINGLE_IMAGE_UPLOAD, TEXT, TEXTAREA } from "components/Fields/types"
 
 export const metadataFields = [
   {
@@ -73,11 +73,6 @@ export const metadataFields = [
     type: RICH_TEXT,
     inputLabel: "Artist Biography",
   },
-  {
-    name: "artistTwitter",
-    type: TEXT,
-    inputLabel: "Artist Twitter Handle",
-  },
 ]
 
 // Avatar
@@ -87,7 +82,6 @@ export const metadataFields = [
 // Address
 // Bio
 // Twitter handle
-
 
 export const metadataInitialValues = {
   animation_url: "",

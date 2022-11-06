@@ -4,9 +4,12 @@ import Link from "next/link"
 import { useLayoutStore } from "stores/useLayoutStore"
 import { motion } from "framer-motion"
 import { HamburgerMenuIcon } from "@radix-ui/react-icons"
+import { isCatalogueArtist } from "utils/isCatalogueArtist"
+import useSWR from "swr"
 
 const Nav = () => {
-  const { isCatalogueArtist } = useLayoutStore()
+  const { signerAddress, signer } = useLayoutStore()
+  const { data: root } = useSWR("merkleRoot")
   const [isOpen, setIsOpen] = React.useState<boolean>(false)
   const variants = {
     initial: {
@@ -30,8 +33,7 @@ const Nav = () => {
             <img src="/lucidhaus.png" />
           </Link>
         </button>
-
-        {isCatalogueArtist && (
+        {isCatalogueArtist(signerAddress, root) && (
           <div className={"absolute right-[220px]"}>
             <Link href={"/mint"}>Mint</Link>
           </div>
@@ -53,11 +55,13 @@ const Nav = () => {
 
         <motion.div
           variants={variants}
-          className={"absolute left-0 top-16 flex flex w-full w-full flex-col items-center overflow-hidden bg-rose-200 border-t-rose-900"}
+          className={
+            "absolute left-0 top-16 flex flex w-full w-full flex-col items-center overflow-hidden border-t-rose-900 bg-rose-200"
+          }
           initial={"initial"}
           animate={isOpen ? "animate" : "initial"}
         >
-          {isCatalogueArtist && (
+          {isCatalogueArtist(signerAddress, root) && (
             <div className={""}>
               <Link href={"/mint"}>Mint</Link>
             </div>

@@ -6,9 +6,10 @@ import useZoraV3 from "hooks/useZoraV3"
 import { useLayoutStore } from "stores/useLayoutStore"
 import { useAuction } from "hooks/useAuction"
 import { useBalance } from "wagmi"
+import useSWR from "swr"
 
 const CreateBid: React.FC<{ release: any }> = ({ release }) => {
-  const { zoraContracts, createBid } = useZoraV3()
+  const { createBid } = useZoraV3()
   const { signer, signerAddress } = useLayoutStore()
   const { auction } = useAuction(release)
   const {
@@ -19,6 +20,7 @@ const CreateBid: React.FC<{ release: any }> = ({ release }) => {
     addressOrName: signerAddress as string,
   })
   const _balance = parseFloat(balance?.formatted as string).toFixed(4)
+  const { data: ReserveAuctionCoreEth } = useSWR("ReserveAuctionCoreEth")
 
   /*
 
@@ -31,15 +33,12 @@ const CreateBid: React.FC<{ release: any }> = ({ release }) => {
     async (values: any) => {
       await createBid(release?.collectionAddress, release?.tokenId, values?.amount)
       setIsSubmitting(true)
-      zoraContracts.ReserveAuctionCoreEth.on(
-        "AuctionBid",
-        (tokenContract: any, tokenId: any, firstBid: any, auction: any) => {
-          console.log("t", tokenContract, tokenId, firstBid, auction)
-          setIsSubmitting(false)
-        }
-      )
+      ReserveAuctionCoreEth.on("AuctionBid", (tokenContract: any, tokenId: any, firstBid: any, auction: any) => {
+        console.log("t", tokenContract, tokenId, firstBid, auction)
+        setIsSubmitting(false)
+      })
     },
-    [zoraContracts?.ReserveAuctionCoreEth]
+    [ReserveAuctionCoreEth]
   )
 
   return (

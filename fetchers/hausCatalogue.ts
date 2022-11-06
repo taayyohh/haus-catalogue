@@ -3,13 +3,15 @@ import { ethers } from "ethers"
 import { HausCatalogue__factory } from "../types/ethers-contracts"
 import ZORA_ADDRESSES from "@zoralabs/v3/dist/addresses/5.json"
 import { useLayoutStore } from "../stores/useLayoutStore"
+import { Provider } from "@ethersproject/providers"
+import { FetchSignerResult } from "@wagmi/core"
+import {HAUS_CATALOGUE_PROXY} from "constants/addresses";
 
 export async function init() {
   const { signer, provider } = useLayoutStore()
   const hausCatalogueContract = HausCatalogue__factory.connect(
-    process.env.HAUS_CATALOGUE_PROXY || "",
-    // @ts-ignore
-    signer ?? provider
+      HAUS_CATALOGUE_PROXY as string,
+    (signer as FetchSignerResult) ?? (provider as Provider)
   )
 
   /*
@@ -38,14 +40,13 @@ export async function init() {
     { revalidateOnFocus: false }
   )
 
-    // const { data: ownerOf } = useSWR(
-    //     release?.tokenId && hausCatalogueContract ? ["ownerOf", release?.tokenId] : null,
-    //     async () => await hausCatalogueContract?.ownerOf(release?.tokenId as string),
-    //     { revalidateOnFocus: false }
-    // )
+  // const { data: ownerOf } = useSWR(
+  //     release?.tokenId && hausCatalogueContract ? ["ownerOf", release?.tokenId] : null,
+  //     async () => await hausCatalogueContract?.ownerOf(release?.tokenId as string),
+  //     { revalidateOnFocus: false }
+  // )
 
-
-    /*
+  /*
 
         isOwner
 

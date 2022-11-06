@@ -1,18 +1,17 @@
 import useSWR from "swr"
 import { ethers } from "ethers"
 import { fromSeconds } from "utils/helpers"
-import useZoraV3 from "./useZoraV3"
 import { useLayoutStore } from "stores/useLayoutStore"
 import dayjs from "dayjs"
 
 export function useAuction(release: any) {
-  const { zoraContracts } = useZoraV3()
   const { signerAddress } = useLayoutStore()
+  const { data: ReserveAuctionCoreEth } = useSWR("ReserveAuctionCoreEth")
 
   const { data: auction } = useSWR(
     `${release?.collectionAddress}+${release?.tokenId}`,
     async () => {
-      const auction = await zoraContracts?.ReserveAuctionCoreEth.auctionForNFT(release?.collectionAddress, release?.tokenId)
+      const auction = await ReserveAuctionCoreEth.auctionForNFT(release?.collectionAddress, release?.tokenId)
       const now = dayjs.unix(Date.now() / 1000)
       const end = dayjs.unix(parseInt(auction?.firstBidTime + auction?.duration) as number)
 
@@ -46,5 +45,5 @@ export function useAuction(release: any) {
     { revalidateOnFocus: true }
   )
 
-  return { auction: auction }
+  return { auction }
 }

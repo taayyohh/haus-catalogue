@@ -13,9 +13,10 @@ import Form from "../Fields/Form"
 import { updateReservePriceFields } from "../Fields/fields/updateReservePrice"
 
 const AuctionControls: React.FC<any> = ({ release }) => {
-  const { zoraContracts, cancelAuction, handleApprovalManager, isModuleApproved } = useZoraV3()
+  const { cancelAuction, handleApprovalManager, isModuleApproved } = useZoraV3()
   const { handleApprovalTransferHelper, burn } = useHausCatalogue()
   const { data: isApprovedForAll } = useSWR("isApprovedForAll")
+  const { data: ReserveAuctionCoreEth } = useSWR('ReserveAuctionCoreEth')
 
   const { auction } = useAuction(release)
   const ref = useRef(null)
@@ -28,15 +29,15 @@ const AuctionControls: React.FC<any> = ({ release }) => {
 
   const handleSetAuctionReservePrice = React.useCallback(
     (values: { reservePrice: string }) => {
-      if (!zoraContracts?.ReserveAuctionCoreEth || !release) return
+      if (!ReserveAuctionCoreEth || !release) return
 
-      zoraContracts?.ReserveAuctionCoreEth.setAuctionReservePrice(
+      ReserveAuctionCoreEth.setAuctionReservePrice(
         release?.collectionAddress,
         release?.tokenId,
         ethers.utils.parseEther(values.reservePrice.toString())
       )
     },
-    [zoraContracts?.ReserveAuctionCoreEth]
+    [ReserveAuctionCoreEth]
   )
 
   /*
