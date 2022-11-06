@@ -8,14 +8,9 @@ import Layout from "components/Layout/Layout"
 
 function MyApp({ Component, pageProps }: AppProps) {
   const { chains, provider } = configureChains(
-    [
-      defaultChains.find(
-        chain => chain.id.toString() === "5" //process.env.NEXT_PUBLIC_CHAIN_ID
-      )!,
-    ],
+    [defaultChains.find(chain => chain.id.toString() === process.env.NEXT_PUBLIC_CHAIN_ID)!],
     [alchemyProvider({ apiKey: process.env.NEXT_PUBLIC_ALCHEMY_ID })]
   )
-
 
   const { connectors } = getDefaultWallets({
     appName: "Haus Catalogue",
