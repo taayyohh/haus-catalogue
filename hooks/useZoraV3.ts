@@ -1,7 +1,7 @@
 import ZORA_ADDRESSES from "@zoralabs/v3/dist/addresses/5.json"
 import React from "react"
 import useSWR from "swr"
-import { BigNumberish, ethers, Signer } from "ethers"
+import { BigNumberish, ContractTransaction, ethers, Signer } from "ethers"
 import { PromiseOrValue } from "@typechain/ethers-v5/static/common"
 import { useLayoutStore } from "stores/useLayoutStore"
 
@@ -23,8 +23,8 @@ const useZoraV3 = () => {
       _reservePrice: PromiseOrValue<BigNumberish>,
       _sellerFundsRecipient: PromiseOrValue<string>,
       _startTime: PromiseOrValue<BigNumberish>
-    ) => {
-      await ReserveAuctionCoreEth?.createAuction(
+    ): Promise<ContractTransaction> => {
+      return ReserveAuctionCoreEth?.createAuction(
         _tokenContract,
         _tokenId,
         _duration,

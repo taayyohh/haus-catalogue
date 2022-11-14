@@ -62,7 +62,7 @@ export const defaultTextAreaStyle = style({
   paddingLeft: 24,
   paddingTop: 25,
   boxSizing: "border-box",
-  border: "2px solid #fff",
+  border: "2px solid #e5e7eb",
   selectors: {
     "&:focus": {
       outline: "none",
@@ -100,7 +100,7 @@ export const defaultInputStyle = style({
   fontSize: 16,
   paddingLeft: 24,
   boxSizing: "border-box",
-  border: "2px solid #fff",
+  border: "2px solid #e5e7eb",
   selectors: {
     "&:focus": {
       outline: "none",
@@ -181,6 +181,7 @@ export const transactionFormButtonWithPrev = style({
 })
 
 export const defaultFormButton = style({
+  background: '#000',
   width: "100%",
   borderRadius: "10px",
   height: 60,
@@ -578,7 +579,6 @@ export const successCheck = style({
 export const singleImageUploadWrapper = style({
   height: 160,
   width: 160,
-  borderRadius: 80,
   background: "#F2F2F2",
   overflow: "hidden",
   selectors: {

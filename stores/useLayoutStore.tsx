@@ -7,7 +7,7 @@ interface LayoutStoreProps {
   setSigner: (signer: FetchSignerResult | undefined) => void
   signerAddress: string
   setSignerAddress: (address: string) => void
-  provider: Provider | null
+  provider: Provider | undefined
   setProvider: (provider: Provider) => void
 }
 
@@ -17,6 +17,6 @@ export const useLayoutStore = create<LayoutStoreProps>(set => ({
   setSigner: (signer: FetchSignerResult | undefined) => set({ signer }),
   signerAddress: "",
   setSignerAddress: (signerAddress: string) => set({ signerAddress }),
-  provider: null,
+  provider: undefined,
   setProvider: (provider: Provider) => set({ provider }),
 }))

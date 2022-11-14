@@ -8,6 +8,7 @@ import { SWRConfig } from "swr"
 import Link from "next/link"
 import { getDiscography } from "utils/getDiscographyNullMetadata"
 import Meta from "../components/Layout/Meta"
+import Image from "next/image"
 
 export async function getServerSideProps() {
   try {
@@ -66,7 +67,7 @@ const Catalogue: React.FC<any> = ({ discography }) => {
         description={"LucidHaus Catalogue <3"}
       />
       <div className="m-0 mx-auto box-border w-screen min-w-0">
-        <div className="sticky top-0 z-0 grid h-screen w-screen place-items-center bg-rose-200">
+        <div className="sticky top-0 z-0 grid h-screen w-screen place-items-center ">
           <div className="absolute -z-10 flex w-full max-w-screen-xl justify-center">
             {queue && (
               <AnimatePresence exitBeforeEnter={true}>
@@ -94,10 +95,15 @@ const Catalogue: React.FC<any> = ({ discography }) => {
                       isPlaying ? media.pause() : media.play()
                     }}
                   >
-                    <img
-                      className={`h-full w-full ${isPlaying ? "animate-spin-slow" : ""}`}
-                      src={queue[currentPosition]?.image}
-                    />
+                    {queue[currentPosition]?.image && (
+                      <Image
+                        className={`h-full w-full ${isPlaying ? "animate-spin-slow" : ""}`}
+                        src={queue[currentPosition]?.image}
+                        layout='fill'
+                        // layout={'fill'}
+                      />
+                    )}
+
                     <div className="absolute top-[50%] left-[50%] -mt-[24px] -ml-[24px]">
                       {(isPlaying && <BsPauseCircleFill size={48} />) || <BsFillPlayCircleFill size={48} />}
                     </div>
@@ -113,7 +119,7 @@ const Catalogue: React.FC<any> = ({ discography }) => {
                       )}
                     </div>
                     {!!queue[currentPosition]?.artist && (
-                      <div className="text-3xl text-rose-700 sm:text-4xl md:text-5xl">
+                      <div className="text-3xl text-[#081C15] sm:text-4xl md:text-5xl">
                         <Link href={`${slugify(queue[currentPosition]?.artist)}`}>
                           {queue[currentPosition]?.artist}
                         </Link>
@@ -134,7 +140,7 @@ const Catalogue: React.FC<any> = ({ discography }) => {
             <BsArrowDown size={24} />
           </div>
         </div>
-        <div className="relative mx-auto flex w-full flex-col bg-rose-200">
+        <div className="relative mx-auto flex w-full flex-col bg-[#F9F9F9]">
           {discography?.length > 0 ? (
             <div className="mx-auto w-11/12">
               <div className="grid grid-cols-2 gap-8 py-8 md:grid-cols-3 lg:grid-cols-4">

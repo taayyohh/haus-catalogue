@@ -103,13 +103,13 @@ const Upload = () => {
 
   /* styles */
   const button =
-    "inline-flex self-start p-4 bg-rose-400 text-white font-bold shadow-xl rounded-xl hover:bg-rose-500 flex hover:cursor-pointer items-center justify-center mx-auto my-2 w-full"
-  const infoSection = "flex flex-col items-center bg-rose-100 p-4 rounded-xl shadow-inner mb-2"
+    "inline-flex self-start p-4  text-white font-bold shadow-xl rounded-xl hover: flex hover:cursor-pointer items-center justify-center mx-auto my-2 w-full"
+  const infoSection = "flex flex-col items-center  p-4 rounded-xl shadow-inner mb-2"
   const infoSectionHeading = "text-lg font-bold"
 
   return (
     <div className="flex h-full min-h-screen justify-center">
-      <div className="mx-auto flex w-1/2 max-w-xl flex-col self-center rounded-xl bg-rose-200 p-8">
+      <div className="mx-auto flex w-1/2 max-w-xl flex-col self-center rounded-xl  p-8">
         <div className="center mb-4 flex items-center justify-center text-2xl">
           <div className="ml-2 flex">
             <div className="mr-2 flex h-8 w-8 overflow-hidden rounded-full">
@@ -132,7 +132,7 @@ const Upload = () => {
                 <div>{priceOfUpload} MATIC</div>
               </div>
               {priceOfUpload - walletBalance > 0 ? (
-                <div className={`${infoSection} border border-rose-300`}>
+                <div className={`${infoSection} border `}>
                   <div className={infoSectionHeading}>Funding Needed</div>
                   <div className="font-bold">{priceOfUpload - walletBalance}</div>
                 </div>
@@ -151,12 +151,12 @@ const Upload = () => {
                   <form onSubmit={props.handleSubmit} className="flex flex-col">
                     <>
                       {priceOfUpload && walletBalance && priceOfUpload - walletBalance <= 0 ? (
-                        <button type="submit" className={`${button} bg-rose-600 hover:bg-rose-700`}>
+                        <button type="submit" className={`${button}  hover:bg-[#081C15]`}>
                           Submit
                         </button>
                       ) : null}
 
-                      <label htmlFor="file-upload" className={`${button} bg-rose-400 hover:bg-rose-500`}>
+                      <label htmlFor="file-upload" className={`${button}  hover:`}>
                         Select File
                       </label>
                       <input

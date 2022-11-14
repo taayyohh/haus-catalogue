@@ -5,6 +5,9 @@ const nextConfig = {
     NFT_STORAGE_TOKEN: process.env.NFT_STORAGE_TOKEN,
     MERKLE: process.env.MERKLE,
   },
+  images: {
+    domains: ["ipfs.io"],
+  },
 }
 
 const { createVanillaExtractPlugin } = require("@vanilla-extract/next-plugin")

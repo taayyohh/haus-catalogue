@@ -29,7 +29,7 @@ const SettleAuction: React.FC<any> = ({ release }) => {
       </div>
       <div className={"mb-20"}>Congrats! You have won! Settle the auction to claim your NFT.</div>
       <button
-        className={`bg-rose-500 text-rose-50 hover:bg-rose-600 hover:text-rose-100 ${defaultFormButton}`}
+        className={` text-rose-50 hover: hover:text-rose-100 ${defaultFormButton}`}
         onClick={() => handleSettleAuction()}
       >
         Settle Auction

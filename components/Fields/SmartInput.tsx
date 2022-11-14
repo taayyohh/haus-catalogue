@@ -8,11 +8,12 @@ import {
   defaultInputErrorStyle,
   defaultInputLabelStyle,
   defaultInputStyle,
-  inputCheckIcon,
-  permaInputPlaceHolderStyle,
 } from "./styles.css"
+import { isEmpty } from "utils/helpers"
+import useSWR from "swr"
 import { CheckIcon } from "@radix-ui/react-icons"
-import { isEmpty, walletSnippet } from "utils/helpers"
+import { useLayoutStore } from "../../stores/useLayoutStore"
+import { getEnsName } from "../../utils/ens"
 
 interface SmartInputProps {
   id: string
@@ -30,9 +31,9 @@ interface SmartInputProps {
   perma?: string
   placeholder?: string
   step?: number
-  ensIsValid?: boolean
   submitCallback?: (values: any) => void
   disabled: boolean | undefined
+  isAddress?: boolean
 }
 
 const SmartInput: React.FC<SmartInputProps> = ({
@@ -49,10 +50,18 @@ const SmartInput: React.FC<SmartInputProps> = ({
   perma,
   placeholder,
   step = 0.001,
-  ensIsValid,
   submitCallback,
   disabled = false,
+  isAddress,
 }) => {
+  const { provider } = useLayoutStore()
+
+  const { data: ensName } = useSWR(
+    isAddress ? ["ens", value] : null,
+    async () => await getEnsName(value as string, provider),
+    { revalidateOnFocus: false }
+  )
+
   /*
   
     add autocomplete to refs (autocomplete not supported ref in types)
@@ -96,6 +105,8 @@ const SmartInput: React.FC<SmartInputProps> = ({
     },
   }
 
+  console.log("E", ensName, value)
+
   return (
     <fieldset className={`mb-8 p-0 ${defaultFieldsetStyle}`}>
       {inputLabel && <label className={defaultInputLabelStyle}>{inputLabel}</label>}
@@ -108,7 +119,7 @@ const SmartInput: React.FC<SmartInputProps> = ({
         onChange={onChange}
         onBlur={handleBlur}
         onFocus={handleFocus}
-        value={ensIsValid ? walletSnippet(value) : typeof value === "number" && isNaN(value) ? "" : value}
+        value={ensName ? ensName : typeof value === "number" && isNaN(value) ? "" : value}
         className={!!errorMessage ? defaultInputErrorStyle : defaultInputStyle}
         min={0}
         max={max}
@@ -117,8 +128,8 @@ const SmartInput: React.FC<SmartInputProps> = ({
         ref={input}
         disabled={disabled}
       />
-      {ensIsValid && (
-        <div className={`absolute flex items-center justify-center ${inputCheckIcon["default"]}`}>
+      {isAddress && !!value?.toString().length && !errorMessage && (
+        <div className={"absolute flex items-center justify-center "}>
           <CheckIcon color={"#fff"} height={"22px"} width={"22px"} />
         </div>
       )}

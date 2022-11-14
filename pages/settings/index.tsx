@@ -64,7 +64,7 @@ const Settings: React.FC<any> = ({ allow }) => {
 
             <button
               className={
-                "inline-flex self-start rounded-xl border-2 border-rose-400 py-2 px-4 text-rose-400 hover:bg-rose-400 hover:text-white"
+                "inline-flex self-start rounded-xl border-2 border-rose-400 py-2 px-4 text-rose-400 hover: hover:text-white"
               }
               onClick={() => {
                 hausCatalogueContract?.updateRoot(root)

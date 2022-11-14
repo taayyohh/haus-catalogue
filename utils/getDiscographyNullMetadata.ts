@@ -1,5 +1,6 @@
 import { discographyQuery } from "../query/discography"
 import { slugify, ZERO_ADDRESS } from "./helpers"
+import { HAUS_CATALOGUE_PROXY } from "../constants/addresses"
 
 export async function getDiscographyNullMetadata(
   _discography: { metadata: string; tokenUrl: string; name: string; description: string; image: string }[]

@@ -13,7 +13,7 @@ const Bid: React.FC<any> = ({ release }) => {
         auction?.auctionHasEnded && !auction.isWinner ? undefined : (
           <div
             className={
-              "relative flex cursor-pointer items-center gap-1 rounded-2xl bg-rose-300 px-3 py-1 text-sm hover:bg-rose-700 hover:text-white"
+              "relative flex cursor-pointer items-center gap-1 rounded-lg bg-[#000] px-3 py-1 text-sm text-white hover:bg-[#081C15] hover:text-white"
             }
           >
             {auction?.isWinner && <>Claim</>}

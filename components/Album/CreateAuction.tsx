@@ -26,7 +26,7 @@ const CreateAuction: React.FC<any> = ({ release }) => {
     async (values: any) => {
       if (!createAuction) return
 
-      await createAuction(
+      const { wait } = await createAuction(
         release?.collectionAddress,
         Number(release?.tokenId),
         toSeconds(values?.duration),
@@ -34,6 +34,9 @@ const CreateAuction: React.FC<any> = ({ release }) => {
         ethers.utils.getAddress(values?.sellerFundsRecipient),
         Math.floor(Date.now() / 1000)
       )
+
+      await wait()
+      console.log("success")
     },
     [createAuction, release]
   )
@@ -41,7 +44,7 @@ const CreateAuction: React.FC<any> = ({ release }) => {
   return (
     <AnimatedModal
       trigger={
-        <button className={"mb-2 flex w-full justify-center bg-rose-400 py-1 px-2 text-rose-50 hover:bg-rose-500"}>
+        <button className={"hover: mb-2 flex w-full justify-center bg-white py-1 px-2 text-black"}>
           create auction
         </button>
       }
@@ -62,6 +65,7 @@ const CreateAuction: React.FC<any> = ({ release }) => {
             fields={createAuctionFields()}
             initialValues={createAuctionInitialValues}
             submitCallback={handleCreateAuction}
+            buttonText={"Create Auction"}
           />
         )) || <ConnectButton showBalance={true} label={"CONNECT"} chainStatus={"none"} accountStatus={"address"} />}
       </div>

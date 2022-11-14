@@ -22,7 +22,7 @@ interface SingleImageUploadProps {
   value: string
 }
 
-const SingleImageUpload: React.FC<SingleImageUploadProps> = ({ id, formik, inputLabel, helperText, value }) => {
+const SingleImageUpload: React.FC<SingleImageUploadProps> = ({ id, formik, inputLabel, helperText }) => {
   const client = new NFTStorage({ token: process.env.NFT_STORAGE_TOKEN ? process.env.NFT_STORAGE_TOKEN : "" })
   const acceptableMIME = ["image/jpeg", "image/png", "image/svg+xml", "image/webp"]
   const [uploadArtworkError, setUploadArtworkError] = React.useState<any>()
@@ -50,9 +50,9 @@ const SingleImageUpload: React.FC<SingleImageUploadProps> = ({ id, formik, input
       const url = encodeURI(urlJoin("https://ipfs.io/ipfs/", cid, input.name))
       setPreview(url)
       formik.setFieldValue(id, car.car)
-      formik.setFieldValue(`${id}PreviewUrl`, url)
-      formik.setFieldValue("project.artwork.uri", uri)
-      formik.setFieldValue("project.artwork.mimeType", input.type)
+      formik.setFieldValue(`${id}_preview`, url)
+      formik.setFieldValue(`${id}_uri`, uri)
+      formik.setFieldValue(`${id}_mimeType`, input.type)
 
       setIsUploading(false)
       setUploadArtworkError(null)
@@ -63,16 +63,16 @@ const SingleImageUpload: React.FC<SingleImageUploadProps> = ({ id, formik, input
   }
 
   return (
-    <div className={"mb-8 flex flex-col"}>
-      <div className={"flex w-full flex-col items-center"}>
+    <div className={"relative mb-8 flex flex-col"}>
+      <div className={"relative flex w-full flex-col items-center"}>
         <label
-          className={`flex flex-col items-center justify-center ${singleImageUploadWrapper}`}
-          htmlFor="audio-file-upload"
+          className={`flex flex-col items-center justify-center round ${singleImageUploadWrapper}`}
+          htmlFor={`${id}_audio-file-upload`}
         >
           {(isUploading && <div className={"m-0 flex items-center"} />) || (
             <>
               <>
-                {(preview && <img src={preview} className={singleImagePreview} />) || (
+                {(preview && <img src={preview} className={singleImagePreview} alt={"preview"} />) || (
                   <>
                     <div className={`flex ${singleImageUploadInputLabel}`}>{inputLabel}</div>
                     <div className={`flex ${singleImageUploadHelperText}`}>{helperText}</div>
@@ -83,7 +83,7 @@ const SingleImageUpload: React.FC<SingleImageUploadProps> = ({ id, formik, input
           )}
           <input
             className={defaultUploadStyle}
-            id="audio-file-upload"
+            id={`${id}_audio-file-upload`}
             name="file"
             type="file"
             multiple={true}

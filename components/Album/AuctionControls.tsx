@@ -16,7 +16,7 @@ const AuctionControls: React.FC<any> = ({ release }) => {
   const { cancelAuction, handleApprovalManager, isModuleApproved } = useZoraV3()
   const { handleApprovalTransferHelper, burn } = useHausCatalogue()
   const { data: isApprovedForAll } = useSWR("isApprovedForAll")
-  const { data: ReserveAuctionCoreEth } = useSWR('ReserveAuctionCoreEth')
+  const { data: ReserveAuctionCoreEth } = useSWR("ReserveAuctionCoreEth")
 
   const { auction } = useAuction(release)
   const ref = useRef(null)
@@ -89,25 +89,23 @@ const AuctionControls: React.FC<any> = ({ release }) => {
       <motion.div
         variants={toggleVariants}
         animate={isOpen ? "animate" : "initial"}
-        className={"absolute top-1 right-1 cursor-pointer rounded-full bg-white p-2 shadow-2xl shadow-rose-300"}
+        className={"absolute top-1 right-1 cursor-pointer rounded bg-gray-900 p-2 shadow-2xl shadow-rose-300"}
         onClick={() => setIsOpen(bool => !bool)}
       >
-        <BsThreeDotsVertical size={16} />
+        <BsThreeDotsVertical size={20} color={"#fff"} />
       </motion.div>
       <motion.div
         initial={"initial"}
         variants={dropdownVariants}
         animate={isOpen ? "animate" : "initial"}
-        className={"absolute top-1 left-5 top-9 box-border h-0 w-10/12 overflow-hidden rounded bg-white shadow-2xl"}
+        className={"absolute top-1 left-5 top-9 box-border h-0 w-10/12 overflow-hidden rounded bg-black shadow-2xl"}
       >
-        <div className={"mb-2 text-center text-sm font-extrabold uppercase"}>Auction Controls</div>
+        <div className={"mb-2  text-sm font-bold text-white"}>Auction Controls</div>
         {!auction?.notForAuction ? (
           <>
             <AnimatedModal
               trigger={
-                <button
-                  className={"mb-2 flex w-full justify-center bg-rose-400 py-1 px-2 text-rose-50 hover:bg-rose-500"}
-                >
+                <button className={"hover: mb-2 flex w-full justify-center bg-white py-1 px-2 text-black"}>
                   update auction reserve price
                 </button>
               }
@@ -121,7 +119,7 @@ const AuctionControls: React.FC<any> = ({ release }) => {
               />
             </AnimatedModal>
             <button
-              className={"mb-2 flex w-full justify-center bg-rose-400 py-1 px-2 text-rose-50 hover:bg-rose-500"}
+              className={"hover: mb-2 flex w-full justify-center bg-white py-1 px-2 text-black"}
               onClick={() => handleCancelAuction()}
             >
               cancel auction
@@ -132,7 +130,7 @@ const AuctionControls: React.FC<any> = ({ release }) => {
             <CreateAuction release={release} />
 
             <button
-              className={"mb-2 flex w-full justify-center bg-rose-400 py-1 px-2 text-rose-50 hover:bg-rose-500"}
+              className={"hover: mb-2 flex w-full justify-center bg-white py-1 px-2 text-black"}
               onClick={() => handleBurn()}
             >
               burn token
@@ -142,7 +140,7 @@ const AuctionControls: React.FC<any> = ({ release }) => {
           <>
             {!isApprovedForAll && (
               <button
-                className={"mb-2 flex w-full justify-center bg-rose-400 py-1 px-2 text-rose-50 hover:bg-rose-500"}
+                className={"hover: mb-2 flex w-full justify-center bg-white py-1 px-2 text-black"}
                 onClick={() => handleApprovalTransferHelper()}
               >
                 allow zora auction
@@ -150,7 +148,7 @@ const AuctionControls: React.FC<any> = ({ release }) => {
             )}
             {!isModuleApproved && (
               <button
-                className={"mb-2 flex w-full justify-center bg-rose-400 py-1 px-2 text-rose-50 hover:bg-rose-500"}
+                className={"hover: mb-2 flex w-full justify-center bg-white py-1 px-2 text-black"}
                 onClick={() => handleApprovalManager()}
               >
                 allow zora manager{" "}

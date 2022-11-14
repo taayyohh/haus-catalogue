@@ -13,7 +13,7 @@ const UpdateReservePrice: React.FC<any> = ({ release }) => {
         auction?.auctionHasEnded && !auction.isWinner ? undefined : (
           <div
             className={
-              "relative flex cursor-pointer items-center gap-1 rounded-2xl bg-rose-300 px-3 py-1 text-sm hover:bg-rose-700 hover:text-white"
+              "relative flex cursor-pointer items-center gap-1 rounded-2xl  px-3 py-1 text-sm hover:bg-[#081C15] hover:text-white"
             }
           >
             {auction?.isWinner && <>Claim</>}

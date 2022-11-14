@@ -22,9 +22,9 @@ const Nav = () => {
 
   return (
     <>
-      <div className="fixed z-10 hidden h-16 w-full items-center justify-between bg-rose-200 p-4 sm:flex">
+      <div className="fixed z-10 hidden h-16 w-full items-center justify-between  p-4 sm:flex bg-[#F9F9F9]">
         <input
-          className="focus:shadow-outline h-8 w-36 rounded bg-rose-200 px-4 placeholder:text-rose-500 focus:outline-none"
+          className="focus:shadow-outline h-8 w-36 rounded bg-[#f9f9f9] px-4 placeholder:text-slate-500 focus:outline-none"
           placeholder="Search"
         />
 
@@ -43,7 +43,7 @@ const Nav = () => {
           <ConnectButton showBalance={true} label={"Connect"} chainStatus={"none"} accountStatus={"address"} />
         </div>
       </div>
-      <div className="fixed z-10 flex h-16 w-full items-center justify-between bg-rose-200 p-4 sm:hidden">
+      <div className="fixed z-10 flex h-16 w-full items-center justify-between  p-4 sm:hidden">
         <button className="w-24">
           <Link href={"/"}>
             <img src="/lucidhaus.png" />
@@ -56,7 +56,7 @@ const Nav = () => {
         <motion.div
           variants={variants}
           className={
-            "absolute left-0 top-16 flex flex w-full w-full flex-col items-center overflow-hidden border-t-rose-900 bg-rose-200"
+            "absolute left-0 top-16 flex flex w-full w-full flex-col items-center overflow-hidden border-t-rose-900 "
           }
           initial={"initial"}
           animate={isOpen ? "animate" : "initial"}

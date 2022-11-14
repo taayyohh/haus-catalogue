@@ -173,7 +173,6 @@ const Form: React.FC<FormProps> = ({
                   />
                 ))}
             </motion.div>
-
             {!autoSubmit && (
               <div className={"flex"}>
                 {(stickySave && (
@@ -216,7 +215,7 @@ const Form: React.FC<FormProps> = ({
                           </motion.div>
                         )}
                         <button
-                          className={`my-3 bg-rose-400 ${adminStickySaveButton}`}
+                          className={`my-3  ${adminStickySaveButton}`}
                           type={"submit"}
                           disabled={!formik.dirty || hasConfirmed.values?.length === 0 || formik.isSubmitting}
                         >
@@ -228,7 +227,7 @@ const Form: React.FC<FormProps> = ({
                 )) || (
                   //TODO:: if its a formHandler form (i.e navigating between sections, we can abstract these "prev" and "next" buttons
                   <button
-                    className={`cursor-pointer bg-rose-500 text-rose-50 hover:bg-rose-600  hover:text-rose-100 ${defaultFormButton}`}
+                    className={`cursor-pointer bg-gray-800 text-white hover:bg-gray-900 ${defaultFormButton}`}
                     type={!isSubForm ? "submit" : "button"}
                     onClick={isSubForm ? () => handleSubmit(formik.values, formik.initialValues) : undefined}
                     disabled={!isEmpty(formik.errors)}

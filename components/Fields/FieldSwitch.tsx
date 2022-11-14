@@ -42,6 +42,7 @@ interface FieldSwitchProps {
     placeholder?: any
     disabled?: boolean
     minHeight?: number
+    isAddress?: boolean
   }
   formik: FormikProps<any>
   autoSubmit?: boolean
@@ -74,19 +75,6 @@ const FieldSwitch: React.FC<FieldSwitchProps> = ({
     name: string
   }
 
-  const [ensIsValid, setEnsIsValid] = React.useState<boolean>(false)
-  const [ensField, setEnsField] = React.useState<ensFieldProps | null>(null)
-  const { data: addressOfEns } = useEnsAddress({
-    name: ensField?.address || "",
-    chainId: 1,
-  })
-
-  React.useEffect(() => {
-    if (!!addressOfEns && !!ensField) {
-      ensField.formik?.setFieldValue(ensField.name, addressOfEns)
-      setEnsIsValid(true)
-    }
-  }, [addressOfEns, ensField])
 
   React.useEffect(() => {
     /*
@@ -125,17 +113,6 @@ const FieldSwitch: React.FC<FieldSwitchProps> = ({
       )
     }
 
-    if (field.name === "founderAddress" || field.name === "transactionContractAddress") {
-      if (!ethers.utils.isAddress(value)) {
-        setEnsField({
-          formik,
-          address: value,
-          name: field.name,
-        })
-      } else {
-        setEnsIsValid(true)
-      }
-    }
 
     formik.setFieldValue(field.name, field.type === NUMBER ? parseFloat(isNaN(value) ? undefined : value) : value)
   }
@@ -231,8 +208,8 @@ const FieldSwitch: React.FC<FieldSwitchProps> = ({
           perma={field.perma}
           placeholder={field.placeholder}
           step={field.step}
-          ensIsValid={ensIsValid}
           disabled={field.disabled}
+          isAddress={field.isAddress}
         />
       )
 

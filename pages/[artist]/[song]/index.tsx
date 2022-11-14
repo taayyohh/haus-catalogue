@@ -18,6 +18,9 @@ import { activeAuctionQuery } from "query/activeAuction"
 import { BsFillPlayFill } from "react-icons/bs"
 import { usePlayerStore } from "stores/usePlayerStore"
 import Meta from "../../../components/Layout/Meta"
+import { HAUS_CATALOGUE_PROXY } from "../../../constants/addresses"
+import bid from "../../../components/Album/Bid"
+import { ETHERSCAN_BASE_URL } from "../../../constants/etherscan"
 const ReactHtmlParser = require("react-html-parser").default
 
 export const getServerSideProps: GetServerSideProps = async context => {
@@ -66,6 +69,24 @@ const Song = ({ artist, song, slug }: any) => {
 
   const { countdownString } = useCountdown(auction)
 
+  const { data: ReserveAuctionCoreEth } = useSWR("ReserveAuctionCoreEth")
+
+  const { data: bidHistory } = useSWR(
+    release?.tokenId && ReserveAuctionCoreEth ? ["AuctionBid", release.tokenId] : null,
+    async () => {
+      const events = await ReserveAuctionCoreEth?.queryFilter("AuctionBid" as any, 0, "latest")
+
+      return events
+        .filter(
+          (event: { tokenContract: string; args: any }) =>
+            ethers.utils.getAddress(event.args.tokenContract) === ethers.utils.getAddress(HAUS_CATALOGUE_PROXY) &&
+            Number(event.args.tokenId) === Number(release?.tokenId)
+        )
+        .reverse()
+    },
+    { revalidateOnFocus: false }
+  )
+
   const { data: ens } = useEnsName({
     chainId: 1,
     address: ethers.utils.getAddress(release?.owner),
@@ -108,7 +129,7 @@ const Song = ({ artist, song, slug }: any) => {
         <div
           className={`fixed relative top-16 flex hidden h-12 w-full items-center ${
             auction?.auctionHasStarted && !auction?.auctionHasEnded ? "border-y-2" : "border-t-2"
-          } border-rose-100 bg-rose-200 sm:flex`}
+          }   sm:flex`}
         >
           <button onClick={() => router.back()} className={"absolute"}>
             <ChevronLeftIcon width={"28px"} height={"28px"} className={"ml-7 text-rose-100"} />
@@ -141,11 +162,7 @@ const Song = ({ artist, song, slug }: any) => {
                     </div>
                   )}
                   <AnimatedModal
-                    trigger={
-                      <button className={"rounded bg-rose-400 px-2 py-1 text-white hover:bg-rose-500"}>
-                        Place Bid
-                      </button>
-                    }
+                    trigger={<button className={"rounded bg-black px-2 py-1 text-white"}>Place Bid</button>}
                     size={"auto"}
                   >
                     <CreateBid release={release} />
@@ -182,12 +199,12 @@ const Song = ({ artist, song, slug }: any) => {
               <div className={"flex items-center justify-center"}>
                 <div
                   className={
-                    "mr-6 flex h-[80px] min-h-[80px] w-[80px] min-w-[80px] items-center justify-center rounded-full border-2 border-rose-100"
+                    "mr-6 flex h-[80px] min-h-[80px] w-[80px] min-w-[80px] items-center justify-center rounded-full border-2 "
                   }
                 >
                   <BsFillPlayFill
-                    size={50}
-                    color={"white"}
+                    size={44}
+                    color={"black"}
                     className={"cursor-pointer"}
                     onClick={() =>
                       addToQueue([
@@ -220,7 +237,7 @@ const Song = ({ artist, song, slug }: any) => {
           </div>
         </div>
         <div className={"mx-auto w-4/5 pt-16 pb-48"}>
-          <div className={"border-b-2 border-rose-100 pb-2 text-2xl font-bold"}>Record Details</div>
+          <div className={"border-b-2  pb-2 text-2xl font-bold"}>Record Details</div>
           <div className={"pt-4"}>{ReactHtmlParser(release?.metadata?.description)}</div>
           <div className={"mt-6 flex gap-10"}>
             <div className={"flex flex-col text-xl"}>
@@ -240,7 +257,7 @@ const Song = ({ artist, song, slug }: any) => {
           <div className={"mt-12 flex flex-col gap-10 sm:grid sm:grid-cols-[1fr,2fr]"}>
             <div>
               <div className={"text-2xl font-bold"}>Auction Info</div>
-              <div className={"mt-2 rounded-xl border-2 border-rose-100 p-8"}>
+              <div className={"mt-2 rounded-xl border-2  p-8"}>
                 <div className={"flex flex-col"}>
                   <div className={"flex flex-col"}>
                     <div>Reserve price: {auction?.reservePrice} ETH</div>
@@ -254,7 +271,22 @@ const Song = ({ artist, song, slug }: any) => {
             </div>
             <div>
               <div className={"text-2xl font-bold"}>Bid History</div>
-              <div className={"mt-2 rounded-xl border-2 border-rose-100 p-8"}></div>
+              <div className={"mt-2 box-border rounded-xl border-2 p-8"}>
+                {bidHistory?.map(({ transactionHash, args }: any) => {
+                  return (
+                    <div className={"box-border w-full pb-2"}>
+                      <div>
+                        Bid placed by {args?.auction?.highestBidder} for{" "}
+                        {ethers.utils.formatEther(Number(args?.auction?.highestBid).toString())} ETH
+                      </div>
+                      <a href={`${ETHERSCAN_BASE_URL}/tx/${transactionHash}`} target={"_blank"}>
+                        etherscan
+                      </a>
+                      {/*<div>{auction?.highestBid}</div>*/}
+                    </div>
+                  )
+                })}
+              </div>
             </div>
           </div>
         </div>

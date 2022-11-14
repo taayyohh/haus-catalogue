@@ -30,7 +30,7 @@ export const metadataFields = [
   },
   {
     name: "description",
-    type: RICH_TEXT,
+    type: TEXTAREA,
     inputLabel: "Song description",
   },
   {
@@ -54,12 +54,12 @@ export const metadataFields = [
     inputLabel: "Artist Name",
   },
   {
-    name: "artistAvatar",
+    name: "artist_avatar",
     type: SINGLE_IMAGE_UPLOAD,
     inputLabel: "Artist Avatar Image",
   },
   {
-    name: "artistHero",
+    name: "artist_hero",
     type: SINGLE_IMAGE_UPLOAD,
     inputLabel: "Artist Hero Image",
   },
@@ -67,10 +67,11 @@ export const metadataFields = [
     name: "artistWalletAddress",
     type: TEXT,
     inputLabel: "Artist Wallet Address",
+    isAddress: true
   },
   {
     name: "artistBio",
-    type: RICH_TEXT,
+    type: TEXTAREA,
     inputLabel: "Artist Biography",
   },
 ]
@@ -93,6 +94,8 @@ export const metadataInitialValues = {
   duration: "",
   external_url: "",
   image: "",
+  artist_avatar: "",
+  artist_hero: "",
   losslessAudio: "",
   mimeType: "",
   name: "",
