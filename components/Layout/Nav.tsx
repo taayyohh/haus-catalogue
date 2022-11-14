@@ -22,7 +22,7 @@ const Nav = () => {
 
   return (
     <>
-      <div className="fixed z-10 hidden h-16 w-full items-center justify-between  p-4 sm:flex bg-[#F9F9F9]">
+      <div className="fixed z-10 hidden h-16 w-full items-center justify-between  bg-[#F9F9F9] p-4 sm:flex">
         <input
           className="focus:shadow-outline h-8 w-36 rounded bg-[#f9f9f9] px-4 placeholder:text-slate-500 focus:outline-none"
           placeholder="Search"
@@ -49,15 +49,13 @@ const Nav = () => {
             <img src="/lucidhaus.png" />
           </Link>
         </button>
-        <div className={"ml-4"}>
-          <HamburgerMenuIcon width={"24px"} height={"24px"} onClick={() => setIsOpen(flag => !flag)} />
+        <div className={"ml-4"} onClick={() => setIsOpen(flag => !flag)}>
+          <HamburgerMenuIcon width={"24px"} height={"24px"} />
         </div>
 
         <motion.div
           variants={variants}
-          className={
-            "absolute left-0 top-16 flex flex w-full w-full flex-col items-center overflow-hidden border-t-rose-900 "
-          }
+          className={`absolute left-0 top-16 flex flex w-full w-full flex-col items-center overflow-hidden bg-[#F1F1F1]`}
           initial={"initial"}
           animate={isOpen ? "animate" : "initial"}
         >

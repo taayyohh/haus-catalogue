@@ -1,13 +1,14 @@
 import { gql, request } from "graphql-request"
 import { HAUS_CATALOGUE_PROXY } from "../constants/addresses"
+import { CHAIN } from "../constants/network"
 
 export const discographyQuery = async () => {
   const endpoint = "https://api.zora.co/graphql"
 
   const req = gql`
-    query DiscographyQuery($address: [String!]) {
+    query DiscographyQuery($address: [String!], $chain: Chain!) {
       tokens(
-        networks: { chain: GOERLI, network: ETHEREUM }
+        networks: { chain: $chain, network: ETHEREUM }
         where: { collectionAddresses: $address }
         pagination: { limit: 100 }
         sort: { sortKey: TOKEN_ID, sortDirection: DESC }
@@ -63,6 +64,7 @@ export const discographyQuery = async () => {
   `
   const variables = {
     address: HAUS_CATALOGUE_PROXY,
+    chain: CHAIN,
   }
 
   const tokens = await request(endpoint, req, variables)

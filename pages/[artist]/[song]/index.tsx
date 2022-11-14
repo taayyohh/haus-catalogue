@@ -21,6 +21,7 @@ import Meta from "../../../components/Layout/Meta"
 import { HAUS_CATALOGUE_PROXY } from "../../../constants/addresses"
 import bid from "../../../components/Album/Bid"
 import { ETHERSCAN_BASE_URL } from "../../../constants/etherscan"
+import {isActiveAuction} from "../../../query/isActiveAuction";
 const ReactHtmlParser = require("react-html-parser").default
 
 export const getServerSideProps: GetServerSideProps = async context => {
@@ -30,7 +31,7 @@ export const getServerSideProps: GetServerSideProps = async context => {
 
   try {
     const { fallback, discography } = await getDiscography()
-    const tokens = activeAuctionQuery()
+    const tokens =  activeAuctionQuery()
 
     return {
       props: {
@@ -61,6 +62,11 @@ const Song = ({ artist, song, slug }: any) => {
     }
   )
 
+
+  const token = isActiveAuction(release.tokenId)
+  console.log('ISS', token)
+
+
   const { data: creatorShare } = useSWR(release?.tokenId ? ["royaltyInfo", release.tokenId] : null, async () => {
     const bps = 10000
     const royaltyBPS = await royaltyInfo(Number(release?.tokenId), bps)
@@ -75,6 +81,33 @@ const Song = ({ artist, song, slug }: any) => {
     release?.tokenId && ReserveAuctionCoreEth ? ["AuctionBid", release.tokenId] : null,
     async () => {
       const events = await ReserveAuctionCoreEth?.queryFilter("AuctionBid" as any, 0, "latest")
+
+      return events
+        .filter(
+          (event: { tokenContract: string; args: any }) =>
+            ethers.utils.getAddress(event.args.tokenContract) === ethers.utils.getAddress(HAUS_CATALOGUE_PROXY) &&
+            Number(event.args.tokenId) === Number(release?.tokenId)
+        )
+        .reverse()
+    },
+    { revalidateOnFocus: false }
+  )
+
+  const { data: winnerHistory } = useSWR(
+    release?.tokenId && ReserveAuctionCoreEth ? ["AuctionEnded", release.tokenId] : null,
+    async () => {
+      const events = await ReserveAuctionCoreEth?.queryFilter("AuctionEnded" as any, 0, "latest")
+
+      console.log(
+        "AA",
+        events
+          .filter(
+            (event: { tokenContract: string; args: any }) =>
+              ethers.utils.getAddress(event.args.tokenContract) === ethers.utils.getAddress(HAUS_CATALOGUE_PROXY) &&
+              Number(event.args.tokenId) === Number(release?.tokenId)
+          )
+          .reverse()
+      )
 
       return events
         .filter(
@@ -128,20 +161,22 @@ const Song = ({ artist, song, slug }: any) => {
         />
         <div
           className={`fixed relative top-16 flex hidden h-12 w-full items-center ${
-            auction?.auctionHasStarted && !auction?.auctionHasEnded ? "border-y-2" : "border-t-2"
+            auction?.auctionHasStarted && !auction?.auctionHasEnded ? "border-y" : "border-t"
           }   sm:flex`}
         >
           <button onClick={() => router.back()} className={"absolute"}>
-            <ChevronLeftIcon width={"28px"} height={"28px"} className={"ml-7 text-rose-100"} />
+            <ChevronLeftIcon width={"28px"} height={"28px"} className={"ml-7 text-black"} />
           </button>
           {(!auction?.notForAuction && (
             <div className={"mx-auto flex w-4/5 items-center justify-between"}>
               {auction?.auctionHasStarted && !auction?.auctionHasEnded && (
                 <div className={"flex items-center gap-3"}>
                   <div className={"relative h-2 w-2 rounded-full"}>
-                    <span className="absolute inline-flex h-full w-full animate-ping rounded-full bg-amber-900 opacity-50"></span>
+                    <span className="absolute inline-flex h-full w-full animate-ping rounded-full bg-green-600 opacity-50"></span>
                   </div>
-                  <div className={"text-sm"}>auction ends: {countdownString}</div>
+                  <div className={"text-sm text-green-600"}>
+                    <strong className={"pr-2"}>Live</strong> {countdownString}
+                  </div>
                 </div>
               )}
               {auction?.auctionHasEnded && auction?.auctionHasStarted && <div>{countdownString}</div>}
@@ -237,7 +272,7 @@ const Song = ({ artist, song, slug }: any) => {
           </div>
         </div>
         <div className={"mx-auto w-4/5 pt-16 pb-48"}>
-          <div className={"border-b-2  pb-2 text-2xl font-bold"}>Record Details</div>
+          <div className={"border-b pb-2 text-2xl font-bold"}>Record Details</div>
           <div className={"pt-4"}>{ReactHtmlParser(release?.metadata?.description)}</div>
           <div className={"mt-6 flex gap-10"}>
             <div className={"flex flex-col text-xl"}>
@@ -245,7 +280,7 @@ const Song = ({ artist, song, slug }: any) => {
               <div>{release?.metadata?.mimeType.replace("audio/", ".")}</div>
             </div>
             <div className={"flex flex-col text-xl"}>
-              <div>Token ID</div>
+              <div className={'text-gray-500'}>Token ID</div>
               <a
                 target="_blank"
                 href={`https://goerli.etherscan.io/token/${release?.collectionAddress}?a=${release?.tokenId}#inventory`}
@@ -257,7 +292,7 @@ const Song = ({ artist, song, slug }: any) => {
           <div className={"mt-12 flex flex-col gap-10 sm:grid sm:grid-cols-[1fr,2fr]"}>
             <div>
               <div className={"text-2xl font-bold"}>Auction Info</div>
-              <div className={"mt-2 rounded-xl border-2  p-8"}>
+              <div className={"mt-2 rounded-xl border p-8"}>
                 <div className={"flex flex-col"}>
                   <div className={"flex flex-col"}>
                     <div>Reserve price: {auction?.reservePrice} ETH</div>
@@ -271,7 +306,7 @@ const Song = ({ artist, song, slug }: any) => {
             </div>
             <div>
               <div className={"text-2xl font-bold"}>Bid History</div>
-              <div className={"mt-2 box-border rounded-xl border-2 p-8"}>
+              <div className={"mt-2 box-border rounded-xl border p-8"}>
                 {bidHistory?.map(({ transactionHash, args }: any) => {
                   return (
                     <div className={"box-border w-full pb-2"}>

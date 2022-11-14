@@ -83,7 +83,7 @@ const Artist = ({ artist, discography }: any) => {
               <div className={"mx-auto w-11/12"}>
                 <div className={"py-12 text-center text-6xl font-bold uppercase text-white"}>{metadata?.artist}</div>
                 <div className={"mx-auto mb-20 w-1/2"}>
-                  <div className={"text-white"}>{JSON.stringify(metadata?.artistBio).slice(1, -1).replace(/\\n/g, String.fromCharCode(13, 10))}</div>
+                  <div className={"text-white"}>{JSON.stringify(metadata?.artistBio)?.slice(1, -1).replace(/\\n/g, String.fromCharCode(13, 10))}</div>
                 </div>
                 <div className=" grid grid-cols-2 gap-8 py-8 md:grid-cols-3 lg:grid-cols-4">
                   {discography?.map((release: any, i: any) => (
