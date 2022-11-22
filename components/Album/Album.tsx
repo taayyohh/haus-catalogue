@@ -5,7 +5,7 @@ import Countdown from "./Countdown"
 import { motion } from "framer-motion"
 import AuctionControls from "./AuctionControls"
 import Bid from "./Bid"
-import { slugify, walletSnippet } from "utils/helpers"
+import { slugify } from "utils/helpers"
 import Link from "next/link"
 import AlbumInner from "./AlbumInner"
 import { useLayoutStore } from "stores/useLayoutStore"
@@ -31,6 +31,8 @@ const Album: React.FC<any> = memo(({ release }) => {
     return ethers.utils.getAddress(signerAddress) === ethers.utils.getAddress(release?.owner)
   }, [signerAddress, release?.owner])
 
+  console.log('A', auction, release)
+
   return (
     <div>
       <motion.div
@@ -44,8 +46,8 @@ const Album: React.FC<any> = memo(({ release }) => {
       >
         <AlbumInner release={release} />
         <div className="flex w-full flex-col items-start py-2">
-          <div className={"flex w-full flex-col sm:flex-row items-start justify-between"}>
-            <div className={"flex flex-col my-1 sm:my-0"}>
+          <div className={"flex w-full flex-col items-start justify-between sm:flex-row"}>
+            <div className={"my-1 flex flex-col sm:my-0"}>
               <div className="text-xl font-bold">
                 {release?.metadata?.artist && (
                   <Link href={`${slugify(release?.metadata?.artist)}/${slugify(release?.name)}`}>{release?.name}</Link>

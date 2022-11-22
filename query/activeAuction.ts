@@ -1,10 +1,10 @@
 import { gql, request } from "graphql-request"
 import { HAUS_CATALOGUE_PROXY } from "../constants/addresses"
-import {CHAIN} from "../constants/network";
+import { CHAIN } from "../constants/network"
+
+const endpoint = "https://api.zora.co/graphql"
 
 export const activeAuctionQuery = async () => {
-  const endpoint = "https://api.zora.co/graphql"
-
   const req = gql`
     query ActiveAuctionQuery($address: [String!], $chain: Chain!) {
       events(
@@ -39,9 +39,37 @@ export const activeAuctionQuery = async () => {
 
   const variables = {
     address: HAUS_CATALOGUE_PROXY,
-    chain: CHAIN
+    chain: CHAIN,
   }
 
   const tokens = await request(endpoint, req, variables)
   return tokens.events.nodes
+}
+
+export const activeAuctionStartBlock = async (tokenId: string) => {
+  const req = gql`
+    query isActiveAuctionQuery($address: String!, $tokenId: String!, $chain: Chain!) {
+      market(
+        where: {
+          marketType: ACTIVE_V3_RESERVE_AUCTION
+          collectionAddress: $address
+          token: { address: $address, tokenId: $tokenId }
+        }
+        network: { network: ETHEREUM, chain: $chain }
+      ) {
+        transactionInfo {
+          blockNumber
+        }
+      }
+    }
+  `
+
+  const variables = {
+    address: HAUS_CATALOGUE_PROXY,
+    chain: CHAIN,
+    tokenId,
+  }
+
+  const data = await request(endpoint, req, variables)
+  return data.market.transactionInfo.blockNumber
 }

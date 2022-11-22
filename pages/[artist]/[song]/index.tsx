@@ -14,14 +14,16 @@ import CreateBid from "components/Album/CreateBid"
 import { useCountdown } from "hooks/useCountdown"
 import { useEnsAvatar, useEnsName } from "wagmi"
 import { ethers } from "ethers"
-import { activeAuctionQuery } from "query/activeAuction"
+import { activeAuctionQuery, activeAuctionStartBlock } from "query/activeAuction"
 import { BsFillPlayFill } from "react-icons/bs"
 import { usePlayerStore } from "stores/usePlayerStore"
 import Meta from "../../../components/Layout/Meta"
 import { HAUS_CATALOGUE_PROXY } from "../../../constants/addresses"
 import bid from "../../../components/Album/Bid"
 import { ETHERSCAN_BASE_URL } from "../../../constants/etherscan"
-import {isActiveAuction} from "../../../query/isActiveAuction";
+import { isActiveAuction } from "../../../query/isActiveAuction"
+import { tokenEventHistory } from "../../../query/tokenEventHistory"
+import SongNav from "../../../components/Layout/SongNav"
 const ReactHtmlParser = require("react-html-parser").default
 
 export const getServerSideProps: GetServerSideProps = async context => {
@@ -31,7 +33,7 @@ export const getServerSideProps: GetServerSideProps = async context => {
 
   try {
     const { fallback, discography } = await getDiscography()
-    const tokens =  activeAuctionQuery()
+    const tokens = activeAuctionQuery()
 
     return {
       props: {
@@ -62,10 +64,11 @@ const Song = ({ artist, song, slug }: any) => {
     }
   )
 
+  const { data: activeAuction } = useSWR(release?.tokenId ? ["activeAuction", release.tokenId] : null, async () => {
+    return await activeAuctionStartBlock(release.tokenId)
+  })
 
-  const token = isActiveAuction(release.tokenId)
-  console.log('ISS', token)
-
+  console.log("ISS", activeAuction)
 
   const { data: creatorShare } = useSWR(release?.tokenId ? ["royaltyInfo", release.tokenId] : null, async () => {
     const bps = 10000
@@ -73,14 +76,12 @@ const Song = ({ artist, song, slug }: any) => {
     return Number(royaltyBPS?.royaltyAmount) / 100
   })
 
-  const { countdownString } = useCountdown(auction)
-
   const { data: ReserveAuctionCoreEth } = useSWR("ReserveAuctionCoreEth")
 
   const { data: bidHistory } = useSWR(
-    release?.tokenId && ReserveAuctionCoreEth ? ["AuctionBid", release.tokenId] : null,
+    release?.tokenId && ReserveAuctionCoreEth && activeAuction ? ["AuctionBid", release.tokenId] : null,
     async () => {
-      const events = await ReserveAuctionCoreEth?.queryFilter("AuctionBid" as any, 0, "latest")
+      const events = await ReserveAuctionCoreEth?.queryFilter("AuctionBid" as any, activeAuction, "latest")
 
       return events
         .filter(
@@ -93,44 +94,24 @@ const Song = ({ artist, song, slug }: any) => {
     { revalidateOnFocus: false }
   )
 
-  const { data: winnerHistory } = useSWR(
-    release?.tokenId && ReserveAuctionCoreEth ? ["AuctionEnded", release.tokenId] : null,
-    async () => {
-      const events = await ReserveAuctionCoreEth?.queryFilter("AuctionEnded" as any, 0, "latest")
+  const { data: eventHistory } = useSWR(release?.tokenId ? ["TokenHistory", release.tokenId] : null, async () => {
+    const events = await tokenEventHistory(release.tokenId)
+    const organize = events.reduce((acc: any[] = [], cv: any) => {
+      const type = cv.eventType
+      const item = { [type]: cv }
 
-      console.log(
-        "AA",
-        events
-          .filter(
-            (event: { tokenContract: string; args: any }) =>
-              ethers.utils.getAddress(event.args.tokenContract) === ethers.utils.getAddress(HAUS_CATALOGUE_PROXY) &&
-              Number(event.args.tokenId) === Number(release?.tokenId)
-          )
-          .reverse()
-      )
+      acc.push(item)
 
-      return events
-        .filter(
-          (event: { tokenContract: string; args: any }) =>
-            ethers.utils.getAddress(event.args.tokenContract) === ethers.utils.getAddress(HAUS_CATALOGUE_PROXY) &&
-            Number(event.args.tokenId) === Number(release?.tokenId)
-        )
-        .reverse()
-    },
-    { revalidateOnFocus: false }
-  )
+      return acc
+    }, [])
 
-  const { data: ens } = useEnsName({
-    chainId: 1,
-    address: ethers.utils.getAddress(release?.owner),
+    return organize
   })
 
-  const { data: avatar } = useEnsAvatar({
-    addressOrName: ethers.utils.getAddress(release?.owner),
-    chainId: 1,
-  })
+  console.log("EVE", eventHistory)
 
   const { addToQueue, queuedMusic } = usePlayerStore()
+  const [activeTab, setIsActiveTab] = React.useState("History")
 
   return (
     <AnimatePresence exitBeforeEnter={true}>
@@ -159,68 +140,7 @@ const Song = ({ artist, song, slug }: any) => {
           musician={release?.metadata?.artist}
           description={release?.metadata.artist}
         />
-        <div
-          className={`fixed relative top-16 flex hidden h-12 w-full items-center ${
-            auction?.auctionHasStarted && !auction?.auctionHasEnded ? "border-y" : "border-t"
-          }   sm:flex`}
-        >
-          <button onClick={() => router.back()} className={"absolute"}>
-            <ChevronLeftIcon width={"28px"} height={"28px"} className={"ml-7 text-black"} />
-          </button>
-          {(!auction?.notForAuction && (
-            <div className={"mx-auto flex w-4/5 items-center justify-between"}>
-              {auction?.auctionHasStarted && !auction?.auctionHasEnded && (
-                <div className={"flex items-center gap-3"}>
-                  <div className={"relative h-2 w-2 rounded-full"}>
-                    <span className="absolute inline-flex h-full w-full animate-ping rounded-full bg-green-600 opacity-50"></span>
-                  </div>
-                  <div className={"text-sm text-green-600"}>
-                    <strong className={"pr-2"}>Live</strong> {countdownString}
-                  </div>
-                </div>
-              )}
-              {auction?.auctionHasEnded && auction?.auctionHasStarted && <div>{countdownString}</div>}
-              {!auction?.notForAuction && !auction?.auctionHasStarted && (
-                <div>Place a bid to kick off the auction!</div>
-              )}
 
-              {auction?.auctionHasStarted && !auction?.auctionHasEnded && (
-                <div className={"flex items-center"}>
-                  {(auction?.auctionHasStarted && !auction?.auctionHasEnded && (
-                    <div className={"mr-4"}>
-                      <span className={"font-bold"}>Current Bid: </span>
-                      {auction?.highestBid} ETH
-                    </div>
-                  )) || (
-                    <div className={"mr-4"}>
-                      <span className={"font-bold"}>Reserve Price</span>: {auction?.reservePrice} ETH
-                    </div>
-                  )}
-                  <AnimatedModal
-                    trigger={<button className={"rounded bg-black px-2 py-1 text-white"}>Place Bid</button>}
-                    size={"auto"}
-                  >
-                    <CreateBid release={release} />
-                  </AnimatedModal>
-                </div>
-              )}
-            </div>
-          )) || (
-            <div className={"mx-auto flex w-4/5 items-center justify-between"}>
-              <div className={"flex items-center gap-3"}>
-                <span className={"font-bold"}>collected by</span>
-                <div className={"flex items-center gap-2"}>
-                  {avatar && (
-                    <div className={"h-8 w-8 overflow-hidden rounded-full"}>
-                      <img src={avatar} />
-                    </div>
-                  )}
-                  {ens || release?.owner}
-                </div>
-              </div>
-            </div>
-          )}
-        </div>
         <div className={"mx-auto w-4/5 pt-32"}>
           <div className={"flex flex-col items-center gap-10 pt-12 sm:flex-row"}>
             <div
@@ -280,7 +200,7 @@ const Song = ({ artist, song, slug }: any) => {
               <div>{release?.metadata?.mimeType.replace("audio/", ".")}</div>
             </div>
             <div className={"flex flex-col text-xl"}>
-              <div className={'text-gray-500'}>Token ID</div>
+              <div className={"text-gray-500"}>Token ID</div>
               <a
                 target="_blank"
                 href={`https://goerli.etherscan.io/token/${release?.collectionAddress}?a=${release?.tokenId}#inventory`}
@@ -292,7 +212,7 @@ const Song = ({ artist, song, slug }: any) => {
           <div className={"mt-12 flex flex-col gap-10 sm:grid sm:grid-cols-[1fr,2fr]"}>
             <div>
               <div className={"text-2xl font-bold"}>Auction Info</div>
-              <div className={"mt-2 rounded-xl border p-8"}>
+              <div className={"mt-2 rounded-xl border bg-white p-8"}>
                 <div className={"flex flex-col"}>
                   <div className={"flex flex-col"}>
                     <div>Reserve price: {auction?.reservePrice} ETH</div>
@@ -305,22 +225,44 @@ const Song = ({ artist, song, slug }: any) => {
               </div>
             </div>
             <div>
-              <div className={"text-2xl font-bold"}>Bid History</div>
-              <div className={"mt-2 box-border rounded-xl border p-8"}>
-                {bidHistory?.map(({ transactionHash, args }: any) => {
+              <div className={"flex gap-5"}>
+                <div
+                  className={`cursor-pointer text-2xl font-bold ${
+                    activeTab === "Bid" ? "text-emerald-500" : "hover:text-emerald-500"
+                  }`}
+                >
+                  Bid
+                </div>
+                <div
+                  className={`cursor-pointer text-2xl font-bold ${
+                    activeTab === "History" ? "text-emerald-500 " : " hover:text-emerald-500"
+                  } `}
+                >
+                  History
+                </div>
+              </div>
+              <div className={"mt-2 box-border rounded-xl border bg-white p-8"}>
+                {eventHistory?.map((event: {}) => {
                   return (
-                    <div className={"box-border w-full pb-2"}>
-                      <div>
-                        Bid placed by {args?.auction?.highestBidder} for{" "}
-                        {ethers.utils.formatEther(Number(args?.auction?.highestBid).toString())} ETH
-                      </div>
-                      <a href={`${ETHERSCAN_BASE_URL}/tx/${transactionHash}`} target={"_blank"}>
-                        etherscan
-                      </a>
-                      {/*<div>{auction?.highestBid}</div>*/}
+                    <div>
+                      {Object.keys(event)[0]}
                     </div>
                   )
                 })}
+                {/*{bidHistory?.map(({ transactionHash, args }: any) => {*/}
+                {/*  return (*/}
+                {/*    <div className={"box-border w-full pb-2"}>*/}
+                {/*      <div>*/}
+                {/*        Bid placed by {args?.auction?.highestBidder} for{" "}*/}
+                {/*        {ethers.utils.formatEther(Number(args?.auction?.highestBid).toString())} ETH*/}
+                {/*      </div>*/}
+                {/*      <a href={`${ETHERSCAN_BASE_URL}/tx/${transactionHash}`} target={"_blank"}>*/}
+                {/*        etherscan*/}
+                {/*      </a>*/}
+                {/*      /!*<div>{auction?.highestBid}</div>*!/*/}
+                {/*    </div>*/}
+                {/*  )*/}
+                {/*})}*/}
               </div>
             </div>
           </div>
@@ -334,7 +276,8 @@ export default function SongPage({ fallback, artist, song, slug }: any) {
   // SWR hooks inside the `SWRConfig` boundary will use those values.
   return (
     <SWRConfig value={{ fallback }}>
-      <Song artist={artist} song={song} sluh={slug} />
+      <SongNav artist={artist} song={song} />
+      <Song artist={artist} song={song} slug={slug} />
     </SWRConfig>
   )
 }

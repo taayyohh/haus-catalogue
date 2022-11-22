@@ -10,7 +10,7 @@ import ZORA_ADDRESSES from "@zoralabs/v3/dist/addresses/5.json"
 export async function initZoraV3() {
   const { signer, provider } = useLayoutStore()
 
-  useSWR(signer ? "ReserveAuctionCoreEth" : null, () => {
+  useSWR(provider ? "ReserveAuctionCoreEth" : null, () => {
     return new ethers.Contract(
         ZORA_ADDRESSES.ReserveAuctionCoreEth,
         ReserveAuctionCoreEth.abi,

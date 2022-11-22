@@ -8,7 +8,7 @@ import { isCatalogueArtist } from "utils/isCatalogueArtist"
 import useSWR from "swr"
 
 const Nav = () => {
-  const { signerAddress, signer } = useLayoutStore()
+  const { signerAddress } = useLayoutStore()
   const { data: root } = useSWR("merkleRoot")
   const [isOpen, setIsOpen] = React.useState<boolean>(false)
   const variants = {

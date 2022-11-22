@@ -2,6 +2,8 @@ import React from "react"
 import { usePlayerStore } from "stores/usePlayerStore"
 import { BsFillPauseFill, BsFillPlayFill } from "react-icons/bs"
 import { BiSkipNext, BiSkipPrevious } from "react-icons/bi"
+import Link from "next/link"
+import { slugify } from "../../utils/helpers"
 
 const Player = () => {
   const audioRef = React.useRef(null)
@@ -203,7 +205,7 @@ const Player = () => {
     <div className="fixed bottom-2 flex flex w-full items-center justify-between px-4">
       <div className="flex items-center gap-4 ">
         <div>
-          <div className="inline-flex h-10 items-center gap-2 self-start rounded border bg-[#f9f9f9] p-2 shadow">
+          <div className="inline-flex h-10 items-center gap-2 self-start rounded border bg-white p-2 shadow">
             <button type="button" onClick={queue.length > 0 ? () => handlePrev() : () => {}}>
               <BiSkipPrevious size={28} />
             </button>
@@ -224,9 +226,16 @@ const Player = () => {
           <audio crossOrigin="anonymous" preload={"auto"} src={queue[currentPosition]?.audio} ref={audioRef} />
         </div>
         {media.currentSrc.length > 0 ? (
-          <div className="inline-flex h-10 items-center gap-2 self-start rounded border bg-[#f9f9f9] p-2 shadow">
-            <div>{queue[currentPosition]?.title}</div>
-            <div className="text-[#081C15]">{queue[currentPosition]?.artist}</div>
+          <div className="inline-flex h-10 items-center gap-2 self-start rounded border bg-white p-2 shadow">
+            <div>
+              <Link href={`/${slugify(queue[currentPosition]?.artist)}/${slugify(queue[currentPosition]?.title)}`}>
+                {queue[currentPosition]?.title}
+              </Link>
+            </div>
+            <div className="text-[#081C15]">
+              {" "}
+              <Link href={`/${slugify(queue[currentPosition]?.artist)}`}>{queue[currentPosition]?.artist}</Link>
+            </div>
           </div>
         ) : null}
       </div>
@@ -234,7 +243,7 @@ const Player = () => {
       <div className="hidden items-center gap-4 sm:visible sm:flex ">
         {currentTime && duration && (
           <div>
-            <div className="inline-flex h-10 items-center gap-2 self-start rounded border   p-2 shadow">
+            <div className="inline-flex h-10 items-center gap-2 self-start rounded border bg-white p-2 shadow">
               {currentTime} / {duration}
             </div>
           </div>

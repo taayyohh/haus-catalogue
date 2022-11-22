@@ -16,8 +16,8 @@ export const useCountdown = (auctionInfo: any) => {
       clearInterval(interval)
       setCountdownString(
         auctionInfo?.highestBidder === signerAddress
-          ? "You won!"
-          : `Auction won by ${walletSnippet(auctionInfo.highestBidder)} for ${auctionInfo.highestBid} ETH`
+          ? `You won with a bid of ${auctionInfo.highestBid} ETH!`
+          : ``
       )
     }
 
