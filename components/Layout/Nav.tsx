@@ -22,7 +22,7 @@ const Nav = () => {
 
   return (
     <>
-      <div className="fixed z-10 hidden h-16 w-full items-center justify-between  bg-[#F9F9F9] p-4 sm:flex">
+      <div className="fixed z-10 hidden h-16 w-full items-center justify-between bg-[#F9F9F9] p-4 sm:flex">
         <input
           className="focus:shadow-outline h-8 w-36 rounded bg-[#f9f9f9] px-4 placeholder:text-slate-500 focus:outline-none"
           placeholder="Search"
@@ -43,7 +43,7 @@ const Nav = () => {
           <ConnectButton showBalance={true} label={"Connect"} chainStatus={"none"} accountStatus={"address"} />
         </div>
       </div>
-      <div className="fixed z-10 flex h-16 w-full items-center justify-between  p-4 sm:hidden">
+      <div className="fixed z-10 flex h-16 w-full items-center justify-between  bg-white p-4 sm:hidden border-b">
         <button className="w-24">
           <Link href={"/"}>
             <img src="/lucidhaus.png" />
