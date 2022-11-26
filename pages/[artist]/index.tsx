@@ -81,7 +81,7 @@ const Artist = ({ artist, discography }: any) => {
 
         <div>
           {discography?.length > 0 ? (
-            <div className="mx-auto mt-[40vh] h-full w-full rounded border-t bg-white sm:mt-[65vh] sm:h-[100vh]  sm:w-11/12">
+            <div className="mx-auto mt-[40vh] h-full w-full rounded border-t bg-white sm:mt-[65vh] sm:min-h-[100vh] sm:w-11/12">
               <div className={"mx-auto w-11/12"}>
                 <div className={"py-12 text-center text-6xl font-bold uppercase text-black"}>
                   {metadata?.artist || metadata?.metadata?.artist}
