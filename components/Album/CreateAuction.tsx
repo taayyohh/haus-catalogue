@@ -45,7 +45,7 @@ const CreateAuction: React.FC<any> = ({ release }) => {
   return (
     <AnimatedModal
       trigger={
-        <button className={"hover: mb-2 flex w-full justify-center bg-white py-1 px-2 text-black"}>
+        <button className={"hover: mb-2 flex w-full justify-center bg-white py-1 px-2 text-black border rounded"}>
           create auction
         </button>
       }

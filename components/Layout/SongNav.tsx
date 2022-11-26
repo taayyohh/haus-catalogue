@@ -6,9 +6,7 @@ import useSWR from "swr"
 import { useRouter } from "next/router"
 import { useAuction } from "hooks/useAuction"
 import { useCountdown } from "hooks/useCountdown"
-import { useEnsAvatar, useEnsName } from "wagmi"
-import { ethers } from "ethers"
-import { useEnsData } from "../../hooks/useEnsData"
+import { useEnsData } from "hooks/useEnsData"
 
 const SongNav: React.FC<{ artist: string; song: string }> = ({ artist, song }) => {
   const { data: release } = useSWR(`${artist}/${song}`)

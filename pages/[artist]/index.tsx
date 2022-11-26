@@ -39,7 +39,9 @@ export const getServerSideProps: GetServerSideProps = async context => {
 const Artist = ({ artist, discography }: any) => {
   const { data: _artist } = useSWR(`${artist}`, { revalidateOnFocus: false })
   const router = useRouter()
-  const metadata = discography[0]?.metadata
+  const metadata =
+    discography.find((release: { metadata: { artist_hero_preview: any } }) => release.metadata.artist_hero_preview)
+      ?.metadata || discography[0].metadata
 
   return (
     <AnimatePresence>
@@ -63,7 +65,7 @@ const Artist = ({ artist, discography }: any) => {
             <ChevronLeftIcon width={"28px"} height={"28px"} className={"ml-7 text-black"} />
           </button>
         </div>
-        <div className={"mx-auto w-11/12 sm:w-4/5 pt-32"}>
+        <div className={"mx-auto w-11/12 pt-32 sm:w-4/5"}>
           <div>
             {metadata?.artist_hero_preview && (
               <div className={"fixed left-0 top-0 -z-10 h-[100vh] w-full overflow-hidden"}>
@@ -79,9 +81,11 @@ const Artist = ({ artist, discography }: any) => {
 
         <div>
           {discography?.length > 0 ? (
-            <div className="mx-auto mt-[40vh] h-full w-full sm:w-11/12 rounded border-t bg-white sm:mt-[65vh]  sm:h-[100vh]">
+            <div className="mx-auto mt-[40vh] h-full w-full rounded border-t bg-white sm:mt-[65vh] sm:h-[100vh]  sm:w-11/12">
               <div className={"mx-auto w-11/12"}>
-                <div className={"py-12 text-center text-6xl font-bold uppercase text-black"}>{metadata?.artist}</div>
+                <div className={"py-12 text-center text-6xl font-bold uppercase text-black"}>
+                  {metadata?.artist || metadata?.metadata?.artist}
+                </div>
                 <div className={"mx-auto mb-20 w-1/2"}>
                   <div className={"text-black"}>
                     {JSON.stringify(metadata?.artistBio)?.slice(1, -1).replace(/\\n/g, String.fromCharCode(13, 10))}

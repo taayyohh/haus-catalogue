@@ -71,6 +71,7 @@ const AuctionControls: React.FC<any> = ({ release }) => {
     animate: {
       height: "auto",
       padding: 10,
+      border: '1px solid #e5e7eb',
       transition: {
         duration: 0.2,
         ease: "easeInOut",
@@ -89,7 +90,7 @@ const AuctionControls: React.FC<any> = ({ release }) => {
       <motion.div
         variants={toggleVariants}
         animate={isOpen ? "animate" : "initial"}
-        className={"absolute top-1 right-1 cursor-pointer rounded bg-gray-900 p-2 shadow-2xl shadow-rose-300"}
+        className={"absolute top-1 right-1 cursor-pointer rounded bg-gray-900 p-2 shadow-xl"}
         onClick={() => setIsOpen(bool => !bool)}
       >
         <BsThreeDotsVertical size={20} color={"#fff"} />
@@ -98,14 +99,16 @@ const AuctionControls: React.FC<any> = ({ release }) => {
         initial={"initial"}
         variants={dropdownVariants}
         animate={isOpen ? "animate" : "initial"}
-        className={"absolute top-1 left-5 top-9 box-border h-0 w-10/12 overflow-hidden rounded bg-black shadow-2xl"}
+        className={"absolute top-1 left-5 top-9 box-border h-0 w-10/12 overflow-hidden rounded bg-[#f9f9f9] shadow-2xl"}
       >
-        <div className={"mb-2  text-sm font-bold text-white"}>Auction Controls</div>
+        <div className={"mb-2  text-xl  text-gray-500"}>Auction Controls</div>
         {!auction?.notForAuction ? (
           <>
             <AnimatedModal
               trigger={
-                <button className={"hover: mb-2 flex w-full justify-center bg-white py-1 px-2 text-black"}>
+                <button
+                  className={"mb-2 flex w-full justify-center rounded border bg-white py-1 px-2 text-black"}
+                >
                   update auction reserve price
                 </button>
               }
@@ -119,7 +122,7 @@ const AuctionControls: React.FC<any> = ({ release }) => {
               />
             </AnimatedModal>
             <button
-              className={"hover: mb-2 flex w-full justify-center bg-white py-1 px-2 text-black"}
+              className={"mb-2 flex w-full justify-center rounded border bg-white py-1 px-2 text-black"}
               onClick={() => handleCancelAuction()}
             >
               cancel auction
@@ -128,9 +131,8 @@ const AuctionControls: React.FC<any> = ({ release }) => {
         ) : isApprovedForAll && isModuleApproved ? (
           <>
             <CreateAuction release={release} />
-
             <button
-              className={"hover: mb-2 flex w-full justify-center bg-white py-1 px-2 text-black"}
+              className={"mb-2 flex w-full justify-center rounded border bg-white py-1 px-2 text-black"}
               onClick={() => handleBurn()}
             >
               burn token
@@ -140,7 +142,7 @@ const AuctionControls: React.FC<any> = ({ release }) => {
           <>
             {!isApprovedForAll && (
               <button
-                className={"hover: mb-2 flex w-full justify-center bg-white py-1 px-2 text-black"}
+                className={"mb-2 flex w-full justify-center rounded border bg-white py-1 px-2 text-black"}
                 onClick={() => handleApprovalTransferHelper()}
               >
                 allow zora auction
@@ -148,7 +150,7 @@ const AuctionControls: React.FC<any> = ({ release }) => {
             )}
             {!isModuleApproved && (
               <button
-                className={"hover: mb-2 flex w-full justify-center bg-white py-1 px-2 text-black"}
+                className={"mb-2 flex w-full justify-center rounded border bg-white py-1 px-2 text-black"}
                 onClick={() => handleApprovalManager()}
               >
                 allow zora manager{" "}

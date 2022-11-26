@@ -4,6 +4,7 @@ const ZoraAuctionTag = () => {
   return (
     <div className={"mt-6 flex items-center justify-end gap-3 text-xs uppercase"}>
       <a
+        target={"_blank"}
         href={"https://docs.zora.co/docs/smart-contracts/modules/ReserveAuctions/Core/zora-v3-auctions-coreETH"}
         className={"flex  items-center justify-center  gap-3 "}
       >
