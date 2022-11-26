@@ -102,7 +102,8 @@ const Song = ({ artist, song, slug }: any) => {
     const mintTime = mintEvent?.transactionInfo?.blockTimestamp
     const mintBlock = mintEvent?.transactionInfo?.blockNumber
     const transaction = events.map(
-      async transaction => await fetchTransaction({ hash: transaction.transactionInfo.transactionHash })
+      async (transaction: { transactionInfo: { transactionHash: any } }) =>
+        await fetchTransaction({ hash: transaction.transactionInfo.transactionHash })
     )
     console.log("TRAAA", transaction)
     // const transaction = await fetchTransaction({
