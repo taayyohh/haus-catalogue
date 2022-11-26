@@ -23,6 +23,7 @@ import CopyButton from "components/Shared/CopyButton"
 import AnimatedModal from "components/Modal/Modal"
 import CreateBid from "components/Album/CreateBid"
 import { fetchTransaction } from "@wagmi/core"
+import SettleAuction from "../../../components/Album/SettleAuction"
 
 const ReactHtmlParser = require("react-html-parser").default
 
@@ -100,19 +101,24 @@ const Song = ({ artist, song, slug }: any) => {
     const mintEvent = events[events.length - 1]
     const mintTime = mintEvent?.transactionInfo?.blockTimestamp
     const mintBlock = mintEvent?.transactionInfo?.blockNumber
-
-      // const transaction = await fetchTransaction({
-      //     hash: '0x5c504ed432cb51138bcf09aa5e8a410dd4a1e204ef84bfed1be16dfba1b22060',
-      // })
-
+    const transaction = events.map(
+      async transaction => await fetchTransaction({ hash: transaction.transactionInfo.transactionHash })
+    )
+    console.log("TRAAA", transaction)
+    // const transaction = await fetchTransaction({
+    //     hash: '0x5c504ed432cb51138bcf09aa5e8a410dd4a1e204ef84bfed1be16dfba1b22060',
+    // })
 
     return {
       events: events.reduce((acc: any[] = [], cv: any) => {
         const type = cv.eventType
         const item = { [type]: cv }
 
-        console.log('cv', cv?.transactionInfo?.transactionHash)
+        console.log("cv", cv?.transactionInfo?.transactionHash)
 
+        const transaction = fetchTransaction({
+          hash: cv?.transactionInfo?.transactionHash,
+        })
 
         acc.push(item)
 
@@ -261,7 +267,7 @@ const Song = ({ artist, song, slug }: any) => {
                       {displayRoyalty} <CopyButton text={_royaltyPayoutAddress} />
                     </div>
                   </div>
-                  {!auction?.notForAuction && !auction?.auctionHasEnded && (
+                  {(!auction?.notForAuction && !auction?.auctionHasEnded && (
                     <AnimatedModal
                       trigger={
                         <button
@@ -273,6 +279,19 @@ const Song = ({ artist, song, slug }: any) => {
                       size={"auto"}
                     >
                       <CreateBid release={release} />
+                    </AnimatedModal>
+                  )) || (
+                    <AnimatedModal
+                      trigger={
+                        <button
+                          className={"mt-4 w-full rounded bg-emerald-600 py-2 text-xl text-white hover:bg-emerald-500"}
+                        >
+                          Settle
+                        </button>
+                      }
+                      size={"auto"}
+                    >
+                      <SettleAuction release={release} />
                     </AnimatedModal>
                   )}
                 </div>

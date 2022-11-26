@@ -39,7 +39,7 @@ export const getServerSideProps: GetServerSideProps = async context => {
 const Artist = ({ artist, discography }: any) => {
   const { data: _artist } = useSWR(`${artist}`, { revalidateOnFocus: false })
   const router = useRouter()
-  const metadata = discography[2]?.metadata
+  const metadata = discography[0]?.metadata
 
   return (
     <AnimatePresence>
