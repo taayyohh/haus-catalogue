@@ -4,26 +4,25 @@ import { slugify } from "utils/helpers"
 import useSWR, { SWRConfig } from "swr"
 import { AnimatePresence, motion } from "framer-motion"
 import Link from "next/link"
-import { ChevronLeftIcon } from "@radix-ui/react-icons"
 import { useRouter } from "next/router"
 import { getDiscography } from "utils/getDiscographyNullMetadata"
 import { useAuction } from "hooks/useAuction"
 import useHausCatalogue from "hooks/useHausCatalogue"
-import AnimatedModal from "components/Modal/Modal"
-import CreateBid from "components/Album/CreateBid"
-import { useCountdown } from "hooks/useCountdown"
-import { useEnsAvatar, useEnsName } from "wagmi"
 import { ethers } from "ethers"
 import { activeAuctionQuery, activeAuctionStartBlock } from "query/activeAuction"
 import { BsFillPlayFill } from "react-icons/bs"
 import { usePlayerStore } from "stores/usePlayerStore"
-import Meta from "../../../components/Layout/Meta"
-import { HAUS_CATALOGUE_PROXY } from "../../../constants/addresses"
-import bid from "../../../components/Album/Bid"
-import { ETHERSCAN_BASE_URL } from "../../../constants/etherscan"
-import { isActiveAuction } from "../../../query/isActiveAuction"
-import { tokenEventHistory } from "../../../query/tokenEventHistory"
-import SongNav from "../../../components/Layout/SongNav"
+import Meta from "components/Layout/Meta"
+import { HAUS_CATALOGUE_PROXY } from "constants/addresses"
+import { tokenEventHistory } from "query/tokenEventHistory"
+import SongNav from "components/Layout/SongNav"
+import { ETHERSCAN_BASE_URL } from "constants/etherscan"
+import dayjs from "dayjs"
+import { useEnsData } from "hooks/useEnsData"
+import CopyButton from "../../../components/Shared/CopyButton"
+import AnimatedModal from "../../../components/Modal/Modal"
+import CreateBid from "../../../components/Album/CreateBid"
+
 const ReactHtmlParser = require("react-html-parser").default
 
 export const getServerSideProps: GetServerSideProps = async context => {
@@ -57,18 +56,19 @@ const Song = ({ artist, song, slug }: any) => {
   const router = useRouter()
   const { auction } = useAuction(release)
   const { royaltyInfo, royaltyPayoutAddress } = useHausCatalogue()
+
   const { data: _royaltyPayoutAddress } = useSWR(
     release?.tokenId ? ["royaltyPayoutAddress", release.tokenId] : null,
     async () => {
       return await royaltyPayoutAddress(Number(release?.tokenId))
     }
   )
+  const { displayName: displayRoyalty, ensAvatar: royaltyEnsAvatar } = useEnsData(_royaltyPayoutAddress as string)
+  const { displayName: displayOwner, ensAvatar: ownerEnsAvatar } = useEnsData(release?.owner as string)
 
   const { data: activeAuction } = useSWR(release?.tokenId ? ["activeAuction", release.tokenId] : null, async () => {
     return await activeAuctionStartBlock(release.tokenId)
   })
-
-  console.log("ISS", activeAuction)
 
   const { data: creatorShare } = useSWR(release?.tokenId ? ["royaltyInfo", release.tokenId] : null, async () => {
     const bps = 10000
@@ -96,19 +96,24 @@ const Song = ({ artist, song, slug }: any) => {
 
   const { data: eventHistory } = useSWR(release?.tokenId ? ["TokenHistory", release.tokenId] : null, async () => {
     const events = await tokenEventHistory(release.tokenId)
-    const organize = events.reduce((acc: any[] = [], cv: any) => {
-      const type = cv.eventType
-      const item = { [type]: cv }
+    const mintEvent = events[events.length - 1]
+    console.log("M", mintEvent)
+    const mintTime = mintEvent?.transactionInfo?.blockTimestamp
+    const mintBlock = mintEvent?.transactionInfo?.blockNumber
 
-      acc.push(item)
+    return {
+      events: events.reduce((acc: any[] = [], cv: any) => {
+        const type = cv.eventType
+        const item = { [type]: cv }
 
-      return acc
-    }, [])
+        acc.push(item)
 
-    return organize
+        return acc
+      }, []),
+      mintTime,
+      mintBlock,
+    }
   })
-
-  console.log("EVE", eventHistory)
 
   const { addToQueue, queuedMusic } = usePlayerStore()
   const [activeTab, setIsActiveTab] = React.useState("History")
@@ -198,7 +203,15 @@ const Song = ({ artist, song, slug }: any) => {
           <div className={"pt-4"}>{ReactHtmlParser(release?.metadata?.description)}</div>
           <div className={"mt-6 flex gap-10"}>
             <div className={"flex flex-col text-xl"}>
-              <div>Format</div>
+              <div className={"text-gray-500"}>Date Pressed</div>
+              <div>
+                <a href={`${ETHERSCAN_BASE_URL}/block/${eventHistory?.mintBlock}`}>
+                  {dayjs(eventHistory?.mintTime).format("MMMM, DD YYYY")}
+                </a>
+              </div>
+            </div>
+            <div className={"flex flex-col text-xl"}>
+              <div className={"text-gray-500"}>Format</div>
               <div>{release?.metadata?.mimeType.replace("audio/", ".")}</div>
             </div>
             <div className={"flex flex-col text-xl"}>
@@ -217,12 +230,39 @@ const Song = ({ artist, song, slug }: any) => {
               <div className={"mt-2 rounded-xl border bg-white p-8"}>
                 <div className={"flex flex-col"}>
                   <div className={"flex flex-col"}>
-                    <div>Reserve price: {auction?.reservePrice} ETH</div>
-                    <div></div>
+                    <div className={"mb-4"}>
+                      <div className={"text-lg text-gray-500"}>Reserve price</div>
+                      <div className={"text-2xl"}>{auction?.reservePrice} ETH</div>
+                    </div>
                   </div>
-                  <div>Creator share: {creatorShare}%</div>
-                  <div>Current owner: {release?.owner}</div>
-                  <div>Royalty Recipient: {_royaltyPayoutAddress}</div>
+                  <div className={"mb-1 flex justify-between border-b pb-1"}>
+                    <div className={"text-lg text-gray-500"}>Creator share</div>
+                    <div className={"text-xl"}>{creatorShare}%</div>
+                  </div>
+                  <div className={"flex justify-between"}>
+                    <div className={"text-lg text-gray-500"}>Current owner</div>
+                    <div className={"flex cursor-pointer items-center gap-2"}>
+                      {displayOwner} <CopyButton text={release?.owner} />
+                    </div>
+                  </div>
+                  <div className={"flex items-center justify-between"}>
+                    <div className={"text-lg text-gray-500"}>Royalty Recipient</div>
+                    <div className={"flex cursor-pointer items-center gap-2"}>
+                      {displayRoyalty} <CopyButton text={_royaltyPayoutAddress} />
+                    </div>
+                  </div>
+                  <AnimatedModal
+                    trigger={
+                      <button
+                        className={"mt-4 w-full rounded bg-emerald-600 py-2 text-xl text-white hover:bg-emerald-500"}
+                      >
+                        Place Bid
+                      </button>
+                    }
+                    size={"auto"}
+                  >
+                    <CreateBid release={release} />
+                  </AnimatedModal>
                 </div>
               </div>
             </div>
@@ -244,7 +284,7 @@ const Song = ({ artist, song, slug }: any) => {
                 </div>
               </div>
               <div className={"mt-2 box-border rounded-xl border bg-white p-8"}>
-                {eventHistory?.map((event: {}) => {
+                {eventHistory?.events?.map((event: {}) => {
                   return <div>{Object.keys(event)[0]}</div>
                 })}
                 {/*{bidHistory?.map(({ transactionHash, args }: any) => {*/}

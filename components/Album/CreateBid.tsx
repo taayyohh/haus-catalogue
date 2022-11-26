@@ -7,6 +7,7 @@ import { useLayoutStore } from "stores/useLayoutStore"
 import { useAuction } from "hooks/useAuction"
 import { useBalance } from "wagmi"
 import useSWR from "swr"
+import ZoraAuctionTag from "../Layout/ZoraAuctionTag";
 
 const CreateBid: React.FC<{ release: any }> = ({ release }) => {
   const { createBid } = useZoraV3()
@@ -63,6 +64,7 @@ const CreateBid: React.FC<{ release: any }> = ({ release }) => {
               validationSchema={validateCreateBid(auction?.minBid || 0)}
               submitCallback={handeCreateBid}
               buttonText={"Place Bid"}
+              children={<ZoraAuctionTag />}
             />
           )}
         </>

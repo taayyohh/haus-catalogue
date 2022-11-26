@@ -33,6 +33,7 @@ interface FormProps {
   autoSubmit?: boolean
   innerStyle?: any
   parentValues?: any
+  children?: any
 }
 
 const Form: React.FC<FormProps> = ({
@@ -53,6 +54,7 @@ const Form: React.FC<FormProps> = ({
   autoSubmit = false,
   innerStyle,
   parentValues,
+  children,
 }) => {
   /*
       handle mouseDown
@@ -238,6 +240,7 @@ const Form: React.FC<FormProps> = ({
                 )}
               </div>
             )}
+            {children}
           </form>
         )
       }}

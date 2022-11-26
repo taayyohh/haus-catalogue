@@ -11,6 +11,7 @@ import { useLayoutStore } from "stores/useLayoutStore"
 import AnimatedModal from "components/Modal/Modal"
 import { toSeconds } from "utils/helpers"
 import { ethers } from "ethers"
+import ZoraAuctionTag from "../Layout/ZoraAuctionTag"
 
 const CreateAuction: React.FC<any> = ({ release }) => {
   const { createAuction } = useZoraV3()
@@ -66,6 +67,7 @@ const CreateAuction: React.FC<any> = ({ release }) => {
             initialValues={createAuctionInitialValues}
             submitCallback={handleCreateAuction}
             buttonText={"Create Auction"}
+            children={<ZoraAuctionTag />}
           />
         )) || <ConnectButton showBalance={true} label={"CONNECT"} chainStatus={"none"} accountStatus={"address"} />}
       </div>

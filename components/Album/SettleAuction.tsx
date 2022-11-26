@@ -1,6 +1,7 @@
 import React from "react"
 import useZoraV3 from "hooks/useZoraV3"
 import { defaultFormButton } from "components/Fields/styles.css"
+import ZoraAuctionTag from "../Layout/ZoraAuctionTag"
 
 const SettleAuction: React.FC<any> = ({ release }) => {
   const { settleAuction } = useZoraV3()
@@ -10,10 +11,14 @@ const SettleAuction: React.FC<any> = ({ release }) => {
     handle settle auction
     
     */
+  const [status, setStatus] = React.useState("inactive")
   const handleSettleAuction = React.useCallback(async () => {
     if (!settleAuction) return
 
-    await settleAuction(release?.collectionAddress, Number(release?.tokenId))
+    const { wait } = await settleAuction(release?.collectionAddress, Number(release?.tokenId))
+    setStatus("pending")
+    await wait()
+    setStatus("success")
   }, [settleAuction])
 
   return (
@@ -28,12 +33,23 @@ const SettleAuction: React.FC<any> = ({ release }) => {
         </div>
       </div>
       <div className={"mb-20"}>Congrats! You have won! Settle the auction to claim your NFT.</div>
+      {status === "pending" && (
+        <div>
+          <div>claiming</div>
+        </div>
+      )}
+      {status === "success" && (
+        <div>
+          <div>success!</div>
+        </div>
+      )}
       <button
-        className={` text-rose-50 hover: hover:text-rose-100 ${defaultFormButton}`}
+        className={` hover: text-rose-50 hover:text-rose-100 ${defaultFormButton}`}
         onClick={() => handleSettleAuction()}
       >
         Settle Auction
       </button>
+      <ZoraAuctionTag />
     </div>
   )
 }

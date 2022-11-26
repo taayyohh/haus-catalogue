@@ -42,8 +42,11 @@ const useZoraV3 = () => {
 
      */
   const settleAuction = React.useCallback(
-    async (_tokenContract: PromiseOrValue<string>, _tokenId: PromiseOrValue<BigNumberish>) => {
-      await ReserveAuctionCoreEth.settleAuction(_tokenContract, _tokenId)
+    async (
+      _tokenContract: PromiseOrValue<string>,
+      _tokenId: PromiseOrValue<BigNumberish>
+    ): Promise<ContractTransaction> => {
+      return await ReserveAuctionCoreEth.settleAuction(_tokenContract, _tokenId)
     },
     [ReserveAuctionCoreEth]
   )

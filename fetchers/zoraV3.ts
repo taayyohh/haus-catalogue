@@ -2,20 +2,16 @@ import ReserveAuctionCoreEth from "@zoralabs/v3/dist/artifacts/ReserveAuctionCor
 import ZoraModuleManager from "@zoralabs/v3/dist/artifacts/ZoraModuleManager.sol/ZoraModuleManager.json"
 import AsksV1_1ABI from "@zoralabs/v3/dist/artifacts/AsksV1_1.sol/AsksV1_1.json"
 import ERC721TransferHelperABI from "@zoralabs/v3/dist/artifacts/ERC721TransferHelper.sol/ERC721TransferHelper.json"
-import {useLayoutStore} from "stores/useLayoutStore"
+import { useLayoutStore } from "stores/useLayoutStore"
 import useSWR from "swr"
-import {ethers, Signer} from "ethers"
+import { ethers, Signer } from "ethers"
 import ZORA_ADDRESSES from "@zoralabs/v3/dist/addresses/5.json"
 
 export async function initZoraV3() {
   const { signer, provider } = useLayoutStore()
 
-  useSWR(provider ? "ReserveAuctionCoreEth" : null, () => {
-    return new ethers.Contract(
-        ZORA_ADDRESSES.ReserveAuctionCoreEth,
-        ReserveAuctionCoreEth.abi,
-        (signer as Signer) ?? provider
-    )
+  useSWR(signer ? "ReserveAuctionCoreEth" : null, () => {
+    return new ethers.Contract(ZORA_ADDRESSES.ReserveAuctionCoreEth, ReserveAuctionCoreEth.abi, signer as Signer)
   })
 
   useSWR(signer ? "AsksV1_1" : null, () => {

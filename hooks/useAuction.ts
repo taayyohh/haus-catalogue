@@ -1,17 +1,32 @@
+import ReserveAuctionCoreEth from "@zoralabs/v3/dist/artifacts/ReserveAuctionCoreEth.sol/ReserveAuctionCoreEth.json"
 import useSWR from "swr"
-import { ethers } from "ethers"
+import { ethers, Signer } from "ethers"
 import { fromSeconds } from "utils/helpers"
 import { useLayoutStore } from "stores/useLayoutStore"
 import dayjs from "dayjs"
+import ZORA_ADDRESSES from "@zoralabs/v3/dist/addresses/5.json"
 
 export function useAuction(release: any) {
-  const { signerAddress } = useLayoutStore()
-  const { data: ReserveAuctionCoreEth } = useSWR("ReserveAuctionCoreEth")
+  const { signerAddress, provider } = useLayoutStore()
+  const { data: ReserveAuctionCoreEthWrite } = useSWR("ReserveAuctionCoreEth")
 
   const { data: auction } = useSWR(
     `${release?.collectionAddress}+${release?.tokenId}`,
     async () => {
-      const auction = await ReserveAuctionCoreEth.auctionForNFT(release?.collectionAddress, release?.tokenId)
+      let ReserveAuctionCoreEthRead
+      if (!ReserveAuctionCoreEthWrite) {
+        ReserveAuctionCoreEthRead = new ethers.Contract(
+          ZORA_ADDRESSES.ReserveAuctionCoreEth,
+          ReserveAuctionCoreEth.abi,
+          provider
+        )
+      }
+
+      const auction = await (ReserveAuctionCoreEthWrite || ReserveAuctionCoreEthRead).auctionForNFT(
+        release?.collectionAddress,
+        release?.tokenId
+      )
+
       const now = dayjs.unix(Date.now() / 1000)
       const end = dayjs.unix(parseInt(auction?.firstBidTime + auction?.duration) as number)
 
