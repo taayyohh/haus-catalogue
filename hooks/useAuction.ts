@@ -57,7 +57,7 @@ export function useAuction(release: any) {
           ethers.utils.getAddress(auction?.highestBidder) === signerAddress,
       }
     },
-    { revalidateOnFocus: false }
+    { revalidateOnFocus: true }
   )
 
   return { auction }

@@ -19,9 +19,10 @@ import SongNav from "components/Layout/SongNav"
 import { ETHERSCAN_BASE_URL } from "constants/etherscan"
 import dayjs from "dayjs"
 import { useEnsData } from "hooks/useEnsData"
-import CopyButton from "../../../components/Shared/CopyButton"
-import AnimatedModal from "../../../components/Modal/Modal"
-import CreateBid from "../../../components/Album/CreateBid"
+import CopyButton from "components/Shared/CopyButton"
+import AnimatedModal from "components/Modal/Modal"
+import CreateBid from "components/Album/CreateBid"
+import { fetchTransaction } from "@wagmi/core"
 
 const ReactHtmlParser = require("react-html-parser").default
 
@@ -97,14 +98,21 @@ const Song = ({ artist, song, slug }: any) => {
   const { data: eventHistory } = useSWR(release?.tokenId ? ["TokenHistory", release.tokenId] : null, async () => {
     const events = await tokenEventHistory(release.tokenId)
     const mintEvent = events[events.length - 1]
-    console.log("M", mintEvent)
     const mintTime = mintEvent?.transactionInfo?.blockTimestamp
     const mintBlock = mintEvent?.transactionInfo?.blockNumber
+
+      // const transaction = await fetchTransaction({
+      //     hash: '0x5c504ed432cb51138bcf09aa5e8a410dd4a1e204ef84bfed1be16dfba1b22060',
+      // })
+
 
     return {
       events: events.reduce((acc: any[] = [], cv: any) => {
         const type = cv.eventType
         const item = { [type]: cv }
+
+        console.log('cv', cv?.transactionInfo?.transactionHash)
+
 
         acc.push(item)
 
@@ -114,6 +122,8 @@ const Song = ({ artist, song, slug }: any) => {
       mintBlock,
     }
   })
+
+  console.log("EVE", eventHistory)
 
   const { addToQueue, queuedMusic } = usePlayerStore()
   const [activeTab, setIsActiveTab] = React.useState("History")
@@ -146,7 +156,7 @@ const Song = ({ artist, song, slug }: any) => {
           description={release?.metadata.artist}
         />
 
-        <div className={"mx-auto w-4/5 pt-32"}>
+        <div className={"mx-auto w-11/12 pt-32 sm:w-4/5"}>
           <div className={"flex flex-col items-center gap-10 pt-12 sm:flex-row"}>
             <div
               className={
@@ -193,12 +203,10 @@ const Song = ({ artist, song, slug }: any) => {
                   </div>
                 </div>
               </div>
-
-              {/*{console.log(release)}*/}
             </div>
           </div>
         </div>
-        <div className={"mx-auto w-4/5 pt-16 pb-48"}>
+        <div className={"mx-auto w-11/12 pt-16 pb-48 sm:w-4/5"}>
           <div className={"border-b pb-2 text-2xl font-bold"}>Record Details</div>
           <div className={"pt-4"}>{ReactHtmlParser(release?.metadata?.description)}</div>
           <div className={"mt-6 flex gap-10"}>
@@ -224,17 +232,19 @@ const Song = ({ artist, song, slug }: any) => {
               </a>
             </div>
           </div>
-          <div className={"mt-12 flex flex-col gap-10 sm:grid sm:grid-cols-[1fr,2fr]"}>
+          <div className={"mt-12 flex flex-col gap-10 sm:grid sm:grid-cols-[4fr,6fr]"}>
             <div>
               <div className={"text-2xl font-bold"}>Auction Info</div>
               <div className={"mt-2 rounded-xl border bg-white p-8"}>
                 <div className={"flex flex-col"}>
-                  <div className={"flex flex-col"}>
-                    <div className={"mb-4"}>
-                      <div className={"text-lg text-gray-500"}>Reserve price</div>
-                      <div className={"text-2xl"}>{auction?.reservePrice} ETH</div>
+                  {auction?.auctionHasStarted && !auction?.auctionHasEnded && (
+                    <div className={"flex flex-col"}>
+                      <div className={"mb-4"}>
+                        <div className={"text-lg text-gray-500"}>Reserve price</div>
+                        <div className={"text-2xl"}>{auction?.reservePrice} ETH</div>
+                      </div>
                     </div>
-                  </div>
+                  )}
                   <div className={"mb-1 flex justify-between border-b pb-1"}>
                     <div className={"text-lg text-gray-500"}>Creator share</div>
                     <div className={"text-xl"}>{creatorShare}%</div>
@@ -251,18 +261,20 @@ const Song = ({ artist, song, slug }: any) => {
                       {displayRoyalty} <CopyButton text={_royaltyPayoutAddress} />
                     </div>
                   </div>
-                  <AnimatedModal
-                    trigger={
-                      <button
-                        className={"mt-4 w-full rounded bg-emerald-600 py-2 text-xl text-white hover:bg-emerald-500"}
-                      >
-                        Place Bid
-                      </button>
-                    }
-                    size={"auto"}
-                  >
-                    <CreateBid release={release} />
-                  </AnimatedModal>
+                  {!auction?.notForAuction && !auction?.auctionHasEnded && (
+                    <AnimatedModal
+                      trigger={
+                        <button
+                          className={"mt-4 w-full rounded bg-emerald-600 py-2 text-xl text-white hover:bg-emerald-500"}
+                        >
+                          Place Bid
+                        </button>
+                      }
+                      size={"auto"}
+                    >
+                      <CreateBid release={release} />
+                    </AnimatedModal>
+                  )}
                 </div>
               </div>
             </div>

@@ -7,7 +7,6 @@ import Album from "components/Album/Album"
 import { ChevronLeftIcon } from "@radix-ui/react-icons"
 import { useRouter } from "next/router"
 import { getDiscography } from "utils/getDiscographyNullMetadata"
-import Image from "next/image"
 
 export const getServerSideProps: GetServerSideProps = async context => {
   const artist = context?.params?.artist as string
@@ -40,8 +39,7 @@ export const getServerSideProps: GetServerSideProps = async context => {
 const Artist = ({ artist, discography }: any) => {
   const { data: _artist } = useSWR(`${artist}`, { revalidateOnFocus: false })
   const router = useRouter()
-  const metadata = discography[1]?.metadata
-  console.log("_", metadata)
+  const metadata = discography[2]?.metadata
 
   return (
     <AnimatePresence>
@@ -65,25 +63,27 @@ const Artist = ({ artist, discography }: any) => {
             <ChevronLeftIcon width={"28px"} height={"28px"} className={"ml-7 text-black"} />
           </button>
         </div>
-        <div className={"mx-auto w-4/5 pt-32"}>
+        <div className={"mx-auto w-11/12 sm:w-4/5 pt-32"}>
           <div>
             {metadata?.artist_hero_preview && (
               <div className={"fixed left-0 top-0 -z-10 h-[100vh] w-full overflow-hidden"}>
-                <img src={metadata?.artist_hero_preview} />
-                {/*<Image src={metadata?.artist_hero_preview} layout={"fill"} />*/}
+                <img
+                  src={metadata?.artist_hero_preview}
+                  className={"h-full w-full object-cover"}
+                  alt={"artist cover image"}
+                />
               </div>
             )}
-            {/*<img src={metadata?.artist_avatar_preview} />*/}
           </div>
         </div>
 
         <div>
           {discography?.length > 0 ? (
-            <div className="mx-auto mt-[50vh] h-[100vh] w-full border-t  bg-white">
+            <div className="mx-auto mt-[40vh] h-full w-full sm:w-11/12 rounded border-t bg-white sm:mt-[65vh]  sm:h-[100vh]">
               <div className={"mx-auto w-11/12"}>
                 <div className={"py-12 text-center text-6xl font-bold uppercase text-black"}>{metadata?.artist}</div>
                 <div className={"mx-auto mb-20 w-1/2"}>
-                  <div className={"text-white"}>
+                  <div className={"text-black"}>
                     {JSON.stringify(metadata?.artistBio)?.slice(1, -1).replace(/\\n/g, String.fromCharCode(13, 10))}
                   </div>
                 </div>

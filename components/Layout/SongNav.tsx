@@ -8,6 +8,7 @@ import { useAuction } from "hooks/useAuction"
 import { useCountdown } from "hooks/useCountdown"
 import { useEnsAvatar, useEnsName } from "wagmi"
 import { ethers } from "ethers"
+import { useEnsData } from "../../hooks/useEnsData"
 
 const SongNav: React.FC<{ artist: string; song: string }> = ({ artist, song }) => {
   const { data: release } = useSWR(`${artist}/${song}`)
@@ -15,22 +16,10 @@ const SongNav: React.FC<{ artist: string; song: string }> = ({ artist, song }) =
   const { auction } = useAuction(release)
   const { countdownString } = useCountdown(auction)
 
-  const { data: ens } = useEnsName({
-    chainId: 1,
-    address: ethers.utils.getAddress(release?.owner),
-  })
-
-  const { data: avatar } = useEnsAvatar({
-    addressOrName: ethers.utils.getAddress(release?.owner),
-    chainId: 1,
-  })
+  const { displayName, ensAvatar } = useEnsData(release?.owner as string)
 
   return (
-    <div
-      className={`fixed relative top-16 flex hidden h-12 w-full items-center ${
-        auction?.auctionHasStarted && !auction?.auctionHasEnded ? "border-y" : "border-t"
-      }   sm:flex`}
-    >
+    <div className={`fixed relative top-16 flex hidden h-12 w-full items-center border-y sm:flex`}>
       <button onClick={() => router.back()} className={"absolute"}>
         <ChevronLeftIcon width={"28px"} height={"28px"} className={"ml-7 text-black"} />
       </button>
@@ -48,19 +37,18 @@ const SongNav: React.FC<{ artist: string; song: string }> = ({ artist, song }) =
           )}
           {auction?.auctionHasEnded && auction?.auctionHasStarted && <div>{countdownString}</div>}
           {!auction?.notForAuction && !auction?.auctionHasStarted && <div>Place a bid to kick off the auction!</div>}
-
-          {auction?.auctionHasStarted && !auction?.auctionHasEnded && (
-            <div className={"flex items-center"}>
-              {(auction?.auctionHasStarted && !auction?.auctionHasEnded && (
-                <div className={"mr-4"}>
-                  <span className={"font-bold"}>Current Bid: </span>
-                  {auction?.highestBid} ETH
-                </div>
-              )) || (
-                <div className={"mr-4"}>
-                  <span className={"font-bold"}>Reserve Price</span>: {auction?.reservePrice} ETH
-                </div>
-              )}
+          <div className={"flex items-center"}>
+            {(auction?.auctionHasStarted && !auction?.auctionHasEnded && (
+              <div className={"mr-4"}>
+                <span className={"font-bold"}>Current Bid: </span>
+                {auction?.highestBid} ETH
+              </div>
+            )) || (
+              <div className={"mr-4"}>
+                <span className={"font-bold"}>Reserve Price</span>: {auction?.reservePrice} ETH
+              </div>
+            )}
+            {!auction?.notForAuction && !auction?.auctionHasEnded && (
               <AnimatedModal
                 trigger={
                   <button className={"rounded bg-emerald-600 px-2 py-1 text-white hover:bg-emerald-500"}>
@@ -71,20 +59,21 @@ const SongNav: React.FC<{ artist: string; song: string }> = ({ artist, song }) =
               >
                 <CreateBid release={release} />
               </AnimatedModal>
-            </div>
-          )}
+            )}
+          </div>
         </div>
       )) || (
         <div className={"mx-auto flex w-4/5 items-center justify-between"}>
           <div className={"flex items-center gap-3"}>
             <span className={"font-bold"}>collected by</span>
             <div className={"flex items-center gap-2"}>
-              {avatar && (
+              {ensAvatar && (
                 <div className={"h-8 w-8 overflow-hidden rounded-full"}>
-                  <img src={avatar} />
+                  <img src={ensAvatar} />
                 </div>
               )}
-              {ens || release?.owner}
+
+              {displayName}
             </div>
           </div>
         </div>

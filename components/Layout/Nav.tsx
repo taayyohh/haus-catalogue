@@ -28,7 +28,7 @@ const Nav = () => {
           placeholder="Search"
         />
 
-        <button className="w-24">
+        <button className="w-24 absolute left-1/2 -m-12">
           <Link href={"/"}>
             <img src="/lucidhaus.png" />
           </Link>
@@ -40,10 +40,10 @@ const Nav = () => {
         )}
 
         <div id="connect">
-          <ConnectButton showBalance={true} label={"Connect"} chainStatus={"none"} accountStatus={"address"} />
+          <ConnectButton showBalance={true} label={"Connect"} accountStatus={"address"} />
         </div>
       </div>
-      <div className="fixed z-10 flex h-16 w-full items-center justify-between  bg-white p-4 sm:hidden border-b">
+      <div className="fixed z-10 flex h-16 w-full items-center justify-between  border-b bg-white p-4 sm:hidden">
         <button className="w-24">
           <Link href={"/"}>
             <img src="/lucidhaus.png" />
