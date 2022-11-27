@@ -7,9 +7,11 @@ import Album from "components/Album/Album"
 import { ChevronLeftIcon } from "@radix-ui/react-icons"
 import { useRouter } from "next/router"
 import { getDiscography } from "utils/getDiscographyNullMetadata"
+import Meta from "../../components/Layout/Meta"
 
 export const getServerSideProps: GetServerSideProps = async context => {
   const artist = context?.params?.artist as string
+  const slug = context?.resolvedUrl
 
   try {
     //TODO:: write more specific call
@@ -23,6 +25,7 @@ export const getServerSideProps: GetServerSideProps = async context => {
     return {
       props: {
         artist,
+        slug,
         artistDiscography,
         fallback,
         discography,
@@ -36,7 +39,7 @@ export const getServerSideProps: GetServerSideProps = async context => {
   }
 }
 
-const Artist = ({ artist, discography }: any) => {
+const Artist = ({ artist, discography, slug }: any) => {
   const { data: _artist } = useSWR(`${artist}`, { revalidateOnFocus: false })
   const router = useRouter()
   const metadata =
@@ -60,6 +63,13 @@ const Artist = ({ artist, discography }: any) => {
         animate="open"
         exit="closed"
       >
+        <Meta
+          title={metadata?.artist || metadata?.metadata?.artist}
+          type={"website"}
+          image={metadata?.artist_hero_preview}
+          description={metadata?.artistBio}
+          slug={slug}
+        />
         <div className={"fixed top-16 flex h-12 w-full items-center border-t-2  "}>
           <button onClick={() => router.back()}>
             <ChevronLeftIcon width={"28px"} height={"28px"} className={"ml-7 text-black"} />
@@ -105,11 +115,11 @@ const Artist = ({ artist, discography }: any) => {
   )
 }
 
-export default function ArtistPage({ fallback, artist, artistDiscography, song }: any) {
+export default function ArtistPage({ fallback, artist, artistDiscography, song, slug }: any) {
   // SWR hooks inside the `SWRConfig` boundary will use those values.
   return (
     <SWRConfig value={{ fallback }}>
-      <Artist artist={artist} song={song} discography={artistDiscography} />
+      <Artist artist={artist} song={song} discography={artistDiscography} slug={slug} />
     </SWRConfig>
   )
 }
