@@ -102,6 +102,16 @@ const Song = ({ artist, song, slug }: any) => {
   const { addToQueue, queuedMusic } = usePlayerStore()
   const [activeTab, setIsActiveTab] = React.useState("History")
 
+  const { data: mintInfo } = useSWR(release?.tokenId ? ["mint-info", release.tokenId] : null, async () => {
+    const events = await tokenEventHistory(release.tokenId)
+
+    //get mint even details, always the last item in the array
+    const mintEvent = events[events.length - 1]
+    const mintTime = mintEvent?.transactionInfo?.blockTimestamp
+    const mintBlock = mintEvent?.transactionInfo?.blockNumber
+    return { mintTime, mintBlock }
+  })
+
   return (
     <AnimatePresence exitBeforeEnter={true}>
       <motion.div
@@ -193,11 +203,11 @@ const Song = ({ artist, song, slug }: any) => {
           <div className={"mt-6 flex gap-10"}>
             <div className={"flex flex-col text-xl"}>
               <div className={"text-gray-500"}>Date Pressed</div>
-              {/*<div>*/}
-              {/*  <a href={`${ETHERSCAN_BASE_URL}/block/${eventHistory?.mintBlock}`}>*/}
-              {/*    {dayjs(eventHistory?.mintTime).format("MMMM, DD YYYY")}*/}
-              {/*  </a>*/}
-              {/*</div>*/}
+              <div>
+                <a href={`${ETHERSCAN_BASE_URL}/block/${mintInfo?.mintBlock}`}>
+                  {dayjs(mintInfo?.mintTime).format("MMMM, DD YYYY")}
+                </a>
+              </div>
             </div>
             <div className={"flex flex-col text-xl"}>
               <div className={"text-gray-500"}>Format</div>

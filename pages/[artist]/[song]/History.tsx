@@ -1,10 +1,9 @@
 import React from "react"
 import useSWR from "swr"
-import { tokenEventHistory } from "../../../query/tokenEventHistory"
+import { tokenEventHistory } from "query/tokenEventHistory"
 import { fetchTransaction } from "@wagmi/core"
 import axios from "axios"
-import { ETHER_ACTOR_BASE_URL, ETHERSCAN_BASE_URL } from "../../../constants/etherscan"
-import { DAYS_HOURS_MINS_SECS } from "../../../components/Fields/types"
+import { ETHER_ACTOR_BASE_URL, ETHERSCAN_BASE_URL } from "constants/etherscan"
 import { ethers } from "ethers"
 import dayjs from "dayjs"
 
