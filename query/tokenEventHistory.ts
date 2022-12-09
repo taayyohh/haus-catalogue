@@ -54,6 +54,15 @@ export const tokenEventHistory = async (tokenId: string) => {
                 }
                 ... on V3ReserveAuctionV1AuctionEndedProperties {
                   __typename
+                  auction {
+                    highestBid
+                    highestBidder
+                    highestBidPrice {
+                      chainTokenPrice {
+                        decimal
+                      }
+                    }
+                  }
                 }
                 ... on V3ReserveAuctionV1AuctionCanceledProperties {
                   __typename

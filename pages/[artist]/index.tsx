@@ -71,8 +71,11 @@ const Artist = ({ artist, discography, slug }: any) => {
           slug={slug}
         />
         <div className={"fixed top-16 flex h-12 w-full items-center border-t-2  "}>
-          <button onClick={() => router.back()}>
-            <ChevronLeftIcon width={"28px"} height={"28px"} className={"ml-7 text-black"} />
+          <button
+            onClick={() => router.back()}
+            className={"absolute left-7 rounded-full bg-[#ffffff78] p-1 hover:bg-white"}
+          >
+            <ChevronLeftIcon width={"22px"} height={"22px"} className={"text-black"} />
           </button>
         </div>
         <div className={"mx-auto w-11/12 pt-32 sm:w-4/5"}>

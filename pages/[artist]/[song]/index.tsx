@@ -16,7 +16,7 @@ import Meta from "components/Layout/Meta"
 import { HAUS_CATALOGUE_PROXY } from "constants/addresses"
 import { tokenEventHistory } from "query/tokenEventHistory"
 import SongNav from "components/Layout/SongNav"
-import { ETHERSCAN_BASE_URL } from "constants/etherscan"
+import { ETHER_ACTOR_BASE_URL, ETHERSCAN_BASE_URL } from "constants/etherscan"
 import dayjs from "dayjs"
 import { useEnsData } from "hooks/useEnsData"
 import CopyButton from "components/Shared/CopyButton"
@@ -24,6 +24,9 @@ import AnimatedModal from "components/Modal/Modal"
 import CreateBid from "components/Album/CreateBid"
 import { fetchTransaction } from "@wagmi/core"
 import SettleAuction from "../../../components/Album/SettleAuction"
+import Image from "next/image"
+import axios from "axios"
+import History from "./History"
 
 const ReactHtmlParser = require("react-html-parser").default
 
@@ -96,44 +99,6 @@ const Song = ({ artist, song, slug }: any) => {
     { revalidateOnFocus: false }
   )
 
-  const { data: eventHistory } = useSWR(release?.tokenId ? ["TokenHistory", release.tokenId] : null, async () => {
-    const events = await tokenEventHistory(release.tokenId)
-    const mintEvent = events[events.length - 1]
-    const mintTime = mintEvent?.transactionInfo?.blockTimestamp
-    const mintBlock = mintEvent?.transactionInfo?.blockNumber
-    const transaction = events.map(
-      async (transaction: { transactionInfo: { transactionHash: any } }) =>
-        await fetchTransaction({ hash: transaction.transactionInfo.transactionHash })
-    )
-    console.log("TRAAA", transaction)
-
-
-    // const transaction = await fetchTransaction({
-    //     hash: '0x5c504ed432cb51138bcf09aa5e8a410dd4a1e204ef84bfed1be16dfba1b22060',
-    // })
-
-    return {
-      events: events.reduce((acc: any[] = [], cv: any) => {
-        const type = cv.eventType
-        const item = { [type]: cv }
-
-        console.log("cv", cv?.transactionInfo?.transactionHash)
-
-        const transaction = fetchTransaction({
-          hash: cv?.transactionInfo?.transactionHash,
-        })
-
-        acc.push(item)
-
-        return acc
-      }, []),
-      mintTime,
-      mintBlock,
-    }
-  })
-
-  console.log("EVE", eventHistory)
-
   const { addToQueue, queuedMusic } = usePlayerStore()
   const [activeTab, setIsActiveTab] = React.useState("History")
 
@@ -169,12 +134,17 @@ const Song = ({ artist, song, slug }: any) => {
           <div className={"flex flex-col items-center gap-10 pt-12 sm:flex-row"}>
             <div
               className={
-                "h-full w-full sm:h-[300px] sm:min-h-[300px] sm:w-[300px] sm:min-w-[300px] md:h-[400px] " +
+                "relative h-full w-full sm:h-[300px] sm:min-h-[300px] sm:w-[300px] sm:min-w-[300px] md:h-[400px] " +
                 "md:min-h-[400px] md:w-[400px] md:min-w-[400px] " +
                 "rounded-xl border lg:h-[500px] lg:min-h-[500px] lg:w-[500px] lg:min-w-[500px]"
               }
             >
-              <img src={release?.metadata?.project.artwork.uri.replace("ipfs://", "https://ipfs.io/ipfs/")} />
+              <Image
+                layout="fill"
+                src={release?.metadata?.project.artwork.uri.replace("ipfs://", "https://ipfs.io/ipfs/")}
+                style={{ borderRadius: 10 }}
+                alt={`Album cover for ${release?.name}`}
+              />
             </div>
             <div>
               <div className={"flex items-center justify-center"}>
@@ -206,7 +176,9 @@ const Song = ({ artist, song, slug }: any) => {
                   />
                 </div>
                 <div className={"flex flex-col"}>
-                  <div className={"text-4xl font-bold"}>{release?.metadata?.name}</div>
+                  <div className={"cursor-pointer text-4xl font-bold hover:text-gray-700"}>
+                    {release?.metadata?.name}
+                  </div>
                   <div className={"text-3xl"}>
                     <Link href={`/${slugify(release.metadata.artist)}`}>{release.metadata.artist}</Link>
                   </div>
@@ -221,11 +193,11 @@ const Song = ({ artist, song, slug }: any) => {
           <div className={"mt-6 flex gap-10"}>
             <div className={"flex flex-col text-xl"}>
               <div className={"text-gray-500"}>Date Pressed</div>
-              <div>
-                <a href={`${ETHERSCAN_BASE_URL}/block/${eventHistory?.mintBlock}`}>
-                  {dayjs(eventHistory?.mintTime).format("MMMM, DD YYYY")}
-                </a>
-              </div>
+              {/*<div>*/}
+              {/*  <a href={`${ETHERSCAN_BASE_URL}/block/${eventHistory?.mintBlock}`}>*/}
+              {/*    {dayjs(eventHistory?.mintTime).format("MMMM, DD YYYY")}*/}
+              {/*  </a>*/}
+              {/*</div>*/}
             </div>
             <div className={"flex flex-col text-xl"}>
               <div className={"text-gray-500"}>Format</div>
@@ -255,7 +227,7 @@ const Song = ({ artist, song, slug }: any) => {
                     </div>
                   )}
                   <div className={"mb-1 flex justify-between border-b pb-1"}>
-                    <div className={"text-lg text-gray-500"}>Creator share</div>
+                    <div className={"text-lg text-gray-500"}>Artist share</div>
                     <div className={"text-xl"}>{creatorShare}%</div>
                   </div>
                   <div className={"flex justify-between"}>
@@ -284,18 +256,24 @@ const Song = ({ artist, song, slug }: any) => {
                       <CreateBid release={release} />
                     </AnimatedModal>
                   )) || (
-                    <AnimatedModal
-                      trigger={
-                        <button
-                          className={"mt-4 w-full rounded bg-emerald-600 py-2 text-xl text-white hover:bg-emerald-500"}
+                    <>
+                      {auction?.auctionHasStarted && (
+                        <AnimatedModal
+                          trigger={
+                            <button
+                              className={
+                                "mt-4 w-full rounded bg-emerald-600 py-2 text-xl text-white hover:bg-emerald-500"
+                              }
+                            >
+                              Settle
+                            </button>
+                          }
+                          size={"auto"}
                         >
-                          Settle
-                        </button>
-                      }
-                      size={"auto"}
-                    >
-                      <SettleAuction release={release} />
-                    </AnimatedModal>
+                          <SettleAuction release={release} />
+                        </AnimatedModal>
+                      )}
+                    </>
                   )}
                 </div>
               </div>
@@ -318,9 +296,7 @@ const Song = ({ artist, song, slug }: any) => {
                 </div>
               </div>
               <div className={"mt-2 box-border rounded-xl border bg-white p-8"}>
-                {eventHistory?.events?.map((event: {}) => {
-                  return <div>{Object.keys(event)[0]}</div>
-                })}
+                <History release={release} />
                 {/*{bidHistory?.map(({ transactionHash, args }: any) => {*/}
                 {/*  return (*/}
                 {/*    <div className={"box-border w-full pb-2"}>*/}

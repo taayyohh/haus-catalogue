@@ -30,7 +30,7 @@ const Nav = () => {
 
         <button className="w-24 absolute left-1/2 -m-12">
           <Link href={"/"}>
-            <img src="/lucidhaus.png" />
+            <img src="/lucidhaus.png" alt={'LucidHaus Logo'} />
           </Link>
         </button>
         {isCatalogueArtist(signerAddress, root) && (

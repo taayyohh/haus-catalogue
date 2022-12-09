@@ -44,15 +44,14 @@ const Album: React.FC<any> = memo(({ release }) => {
       >
         <AlbumInner release={release} />
         <div className="flex w-full flex-col items-start py-2">
-          <div className={"flex w-full flex-col items-start justify-between sm:flex-row gap-1"}>
+          <div className={"flex w-full flex-col items-start justify-between gap-1 sm:flex-row"}>
             <div className={"my-1 flex flex-col sm:my-0"}>
               <div className="text-xl font-bold">
                 {release?.metadata?.artist && (
                   <Link href={`${slugify(release?.metadata?.artist)}/${slugify(release?.name)}`}>{release?.name}</Link>
                 )}
               </div>
-
-              <div className={'hover:opacity-80'}>
+              <div className={"hover:opacity-80"}>
                 {release?.metadata?.artist && (
                   <Link href={`${slugify(release?.metadata?.artist)}`}>{release?.metadata?.artist}</Link>
                 )}
