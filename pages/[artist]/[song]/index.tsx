@@ -202,7 +202,7 @@ const Song = ({ artist, song, slug }: any) => {
           <div className={"pt-4"}>{ReactHtmlParser(release?.metadata?.description)}</div>
           <div className={"mt-6 flex gap-10"}>
             <div className={"flex flex-col text-xl"}>
-              <div className={"text-gray-500"}>Date Pressed</div>
+              <div className={"text-gray-500"}>Date Minted</div>
               <div>
                 <a href={`${ETHERSCAN_BASE_URL}/block/${mintInfo?.mintBlock}`}>
                   {dayjs(mintInfo?.mintTime).format("MMMM, DD YYYY")}
