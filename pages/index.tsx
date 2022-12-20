@@ -9,6 +9,10 @@ import Link from "next/link"
 import { getDiscography } from "utils/getDiscographyNullMetadata"
 import Meta from "../components/Layout/Meta"
 import Image from "next/image"
+import Countdown from "../components/Album/Countdown"
+import { useCountdown } from "../hooks/useCountdown"
+import {useAuction} from "../hooks/useAuction";
+import Bid from "../components/Album/Bid";
 
 export async function getServerSideProps() {
   try {
@@ -47,8 +51,12 @@ const Catalogue: React.FC<any> = ({ discography }) => {
           trackNumber: release?.metadata?.trackNumber,
         },
       ],
+      release
     }
   }, [discography])
+
+  const { auction } = useAuction(random?.release)
+  const { countdownString } = useCountdown(auction)
 
   React.useEffect(() => {
     if (!random) return
@@ -131,6 +139,7 @@ const Catalogue: React.FC<any> = ({ discography }) => {
                         {currentTime} / {duration}
                       </div>
                     )}
+                    <Bid release={random?.release} />
                     {/*<Countdown countdownString={countdownString} />*/}
                   </div>
                 </motion.div>
