@@ -167,7 +167,7 @@ const Song = ({ artist, song, slug }: any) => {
           <div className={"flex flex-col items-center gap-10 pt-12 sm:flex-row"}>
             <div
               className={
-                "relative h-full w-full sm:h-[300px] sm:min-h-[300px] sm:w-[300px] sm:min-w-[300px] md:h-[400px] " +
+                "relative h-full w-full h-[300px] min-h-[300px] w-[300px] min-w-[300px] md:h-[400px] " +
                 "md:min-h-[400px] md:w-[400px] md:min-w-[400px] " +
                 "rounded-xl border lg:h-[500px] lg:min-h-[500px] lg:w-[500px] lg:min-w-[500px]"
               }
