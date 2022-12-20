@@ -16,10 +16,10 @@ const AlbumInner = ({ release }: any) => {
       {release?.metadata?.artist && (
         <Link href={`${slugify(release?.metadata?.artist)}/${slugify(release?.name)}`}>
           {/*<Image*/}
-          {/*  src={release?.metadata?.project?.artwork.uri.replace("ipfs://", "https://ipfs.io/ipfs/")}*/}
+          {/*  src={release?.metadata?.project?.artwork.uri.replace("ipfs://", "https://nftstorage.link/ipfs/")}*/}
           {/*  layout="fill"*/}
           {/*/>*/}
-          <img src={release?.metadata?.project?.artwork.uri.replace("ipfs://", "https://ipfs.io/ipfs/")} />
+          <img src={release?.metadata?.project?.artwork.uri.replace("ipfs://", "https://nftstorage.link/ipfs/")} />
         </Link>
       )}
       <PlayButton release={release} isHover={isHover} />

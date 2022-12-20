@@ -30,7 +30,7 @@ export const metadataFields = [
   },
   {
     name: "description",
-    type: TEXTAREA,
+    type: RICH_TEXT,
     inputLabel: "Song description",
   },
   {
@@ -71,7 +71,7 @@ export const metadataFields = [
   },
   {
     name: "artistBio",
-    type: TEXTAREA,
+    type: RICH_TEXT,
     inputLabel: "Artist Biography",
   },
 ]

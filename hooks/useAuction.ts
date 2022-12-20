@@ -4,7 +4,9 @@ import { ethers, Signer } from "ethers"
 import { fromSeconds } from "utils/helpers"
 import { useLayoutStore } from "stores/useLayoutStore"
 import dayjs from "dayjs"
-import ZORA_ADDRESSES from "@zoralabs/v3/dist/addresses/5.json"
+import ZORA_ADDRESSES_GOERLI from "@zoralabs/v3/dist/addresses/5.json"
+import ZORA_ADDRESSES_MAINNET from "@zoralabs/v3/dist/addresses/1.json"
+import { CHAIN } from "../constants/network"
 
 export function useAuction(release: any) {
   const { signerAddress, provider } = useLayoutStore()
@@ -16,7 +18,9 @@ export function useAuction(release: any) {
       let ReserveAuctionCoreEthRead
       if (!ReserveAuctionCoreEthWrite) {
         ReserveAuctionCoreEthRead = new ethers.Contract(
-          ZORA_ADDRESSES.ReserveAuctionCoreEth,
+          CHAIN === "MAINNET"
+            ? ZORA_ADDRESSES_MAINNET.ReserveAuctionCoreEth
+            : ZORA_ADDRESSES_GOERLI.ReserveAuctionCoreEth,
           ReserveAuctionCoreEth.abi,
           provider
         )

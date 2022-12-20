@@ -36,18 +36,20 @@ const Catalogue: React.FC<any> = ({ discography }) => {
   const random = React.useMemo(() => {
     const random = (max: []) => Math.floor(Math.random() * max.length)
     const release = discography[random(discography)]
+    
     return {
       artist: release?.metadata?.artist,
-      image: release?.metadata?.project?.artwork.uri.replace("ipfs://", "https://ipfs.io/ipfs/"),
+      image: release?.metadata?.project?.artwork.uri.replace("ipfs://", "https://nftstorage.link/ipfs/"),
       songs: [
         {
-          audio: [release?.metadata?.losslessAudio.replace("ipfs://", "https://ipfs.io/ipfs/")],
+          audio: [release?.metadata?.losslessAudio.replace("ipfs://", "https://nftstorage.link/ipfs/")],
           title: release?.metadata?.title,
           trackNumber: release?.metadata?.trackNumber,
         },
       ],
     }
   }, [discography])
+  
 
   React.useEffect(() => {
     if (!random) return
@@ -60,7 +62,7 @@ const Catalogue: React.FC<any> = ({ discography }) => {
       <Meta
         title={random?.songs[0]?.title}
         type={"music.song"}
-        image={random?.image.replace("ipfs://", "https://ipfs.io/ipfs/")}
+        image={random?.image?.replace("ipfs://", "https://nftstorage.link/ipfs/")}
         slug={"/"}
         track={random?.songs[0].trackNumber}
         musician={random?.artist}

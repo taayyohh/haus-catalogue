@@ -88,7 +88,7 @@ const SingleAudioUpload: React.FC<SingleImageUploadProps> = ({ id, formik, input
             <>
               {(value && (
                 <audio controls>
-                  <source src={value.replace("ipfs://", "https://ipfs.io/ipfs/")} className={singleImagePreview} />
+                  <source src={value.replace("ipfs://", "https://nftstorage.link/ipfs/")} className={singleImagePreview} />
                 </audio>
               )) || (
                 <>

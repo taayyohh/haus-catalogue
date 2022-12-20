@@ -99,7 +99,7 @@ const ActiveBidHistory: React.FC<{ history: any; tokenId: number }> = ({ history
     <div className={"max-h-96 overflow-y-scroll"}>
       {eventHistory?.events?.map((event: any) => {
         return (
-          <>
+          <div key={event.tx.hash}>
             {transformEvent(event) && (
               <div className={"mb-2 flex overflow-hidden break-words rounded-xl border"} key={event.tx.hash}>
                 <a
@@ -112,7 +112,7 @@ const ActiveBidHistory: React.FC<{ history: any; tokenId: number }> = ({ history
                 </a>
               </div>
             )}
-          </>
+          </div>
         )
       })}
     </div>

@@ -1,6 +1,5 @@
 import dayjs from "dayjs"
 import React from "react"
-import { walletSnippet } from "utils/helpers"
 import { useLayoutStore } from "stores/useLayoutStore"
 
 interface countdownResponseProps {

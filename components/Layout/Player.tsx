@@ -136,18 +136,18 @@ const Player = () => {
     })
 
     media.addEventListener("play", (event: any) => {
-      console.log("play", event)
-      console.log("duration", media.duration)
+      // console.log("play", event)
+      // console.log("duration", media.duration)
     })
 
     media.addEventListener("pause", (event: any) => {
-      console.log("pause", event)
-      console.log("ended", media.ended)
-      console.log("hiiii")
+      // console.log("pause", event)
+      // console.log("ended", media.ended)
+      // console.log("hiiii")
       setIsPlaying(false)
 
       if (media.ended) {
-        console.log("queue", queue)
+        // console.log("queue", queue)
         if (queue.length > 1) {
           handleNext()
         } else {

@@ -104,15 +104,15 @@ const History: React.FC<{ release: any }> = ({ release }) => {
   }
 
   // const { data: isAuc}
-    // is activeAuction
-    // if yes local lst createAuction and get blocktime
-    // listen to blocktime
+  // is activeAuction
+  // if yes local lst createAuction and get blocktime
+  // listen to blocktime
 
   return (
     <div className={"max-h-96 overflow-y-scroll"}>
       {eventHistory?.events?.map((event: any) => {
         return (
-          <>
+          <div key={event.tx.hash}>
             {transformEvent(event) && (
               <div className={"mb-2 flex overflow-hidden break-words rounded-xl border"} key={event.tx.hash}>
                 <a
@@ -127,7 +127,7 @@ const History: React.FC<{ release: any }> = ({ release }) => {
                 </a>
               </div>
             )}
-          </>
+          </div>
         )
       })}
     </div>

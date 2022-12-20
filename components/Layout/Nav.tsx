@@ -22,11 +22,11 @@ const Nav = () => {
 
   return (
     <>
-      <div className="fixed z-10 hidden h-16 w-full items-center justify-between bg-[#F9F9F9] p-4 sm:flex">
-        <input
-          className="focus:shadow-outline h-8 w-36 rounded bg-[#f9f9f9] px-4 placeholder:text-slate-500 focus:outline-none"
-          placeholder="Search"
-        />
+      <div className="fixed z-10 hidden h-16 w-full items-center justify-end bg-[#F9F9F9] p-4 sm:flex">
+        {/*<input*/}
+        {/*  className="focus:shadow-outline h-8 w-36 rounded bg-[#f9f9f9] px-4 placeholder:text-slate-500 focus:outline-none"*/}
+        {/*  placeholder="Search"*/}
+        {/*/>*/}
 
         <button className="w-24 absolute left-1/2 -m-12">
           <Link href={"/"}>
@@ -60,7 +60,7 @@ const Nav = () => {
           animate={isOpen ? "animate" : "initial"}
         >
           {isCatalogueArtist(signerAddress, root) && (
-            <div className={""}>
+            <div className={"flex mr-12"}>
               <Link href={"/mint"}>Mint</Link>
             </div>
           )}

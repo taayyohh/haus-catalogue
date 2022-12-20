@@ -1,9 +1,12 @@
-import ZORA_ADDRESSES from "@zoralabs/v3/dist/addresses/5.json"
+import ZORA_ADDRESSES_GOERLI from "@zoralabs/v3/dist/addresses/5.json"
+import ZORA_ADDRESSES_MAINNET from "@zoralabs/v3/dist/addresses/1.json"
+
 import React from "react"
 import useSWR from "swr"
 import { BigNumberish, ContractTransaction, ethers, Signer } from "ethers"
 import { PromiseOrValue } from "@typechain/ethers-v5/static/common"
 import { useLayoutStore } from "stores/useLayoutStore"
+import { CHAIN } from "../constants/network"
 
 const useZoraV3 = () => {
   const { signer } = useLayoutStore()
@@ -89,14 +92,16 @@ const useZoraV3 = () => {
       return ZoraModuleManager?.isModuleApproved(
         // @ts-ignore
         signer._address, // NFT owner address
-        ZORA_ADDRESSES.ReserveAuctionCoreEth
+        CHAIN === "MAINNET" ? ZORA_ADDRESSES_MAINNET.ReserveAuctionCoreEth : ZORA_ADDRESSES_GOERLI.ReserveAuctionCoreEth
       )
     },
     { revalidateOnFocus: true }
   )
 
   const handleApprovalManager = React.useCallback(async () => {
-    await ZoraModuleManager.setApprovalForModule(ZORA_ADDRESSES.ReserveAuctionCoreEth, true)
+    const address =
+      CHAIN === "MAINNET" ? ZORA_ADDRESSES_MAINNET.ReserveAuctionCoreEth : ZORA_ADDRESSES_GOERLI.ReserveAuctionCoreEth
+    await ZoraModuleManager.setApprovalForModule(address, true)
   }, [ZoraModuleManager])
 
   return {

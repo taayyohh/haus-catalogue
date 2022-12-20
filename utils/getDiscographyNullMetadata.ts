@@ -9,7 +9,7 @@ export async function getDiscographyNullMetadata(
   const treatedAlbum = nullDiscography.map(
     async (album: { tokenUrl: string; metadata: {}; name: string; description: string; image: string }) => {
       const metadata = await Promise.all(
-        [album.tokenUrl.replace("ipfs://", "https://ipfs.io/ipfs/")].map(url => fetch(url))
+        [album.tokenUrl.replace("ipfs://", "https://nftstorage.link/ipfs/")].map(url => fetch(url))
       ).then(async res => {
         return Promise.all(res.map(async data => await data.json()))
       })

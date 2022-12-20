@@ -43,9 +43,6 @@ const MetadataForm: React.FC<{ merkle: any }> = ({ merkle }) => {
       values.attributes.artist_wallet = values.artistWalletAddress
       values.attributes.artist_avatar = values.artist
       const metadata = await client.store(values)
-      console.log("meta", metadata)
-
-      console.log("valu", values)
       /*
     
          construct TokenData Struct
@@ -82,7 +79,6 @@ const MetadataForm: React.FC<{ merkle: any }> = ({ merkle }) => {
       contract.mint(tokenData, contentData, proof)
       contract.on("ContentUpdated", (tokenId, contentHash, contentURI) => {
         formik.resetForm()
-        console.log("ContentUpdated", tokenId, contentHash, contentURI)
       })
     },
     [signerAddress, merkle, contract]

@@ -152,7 +152,7 @@ const Song = ({ artist, song, slug }: any) => {
         <Meta
           title={release?.name}
           type={"music.song"}
-          image={release?.image?.url?.replace("ipfs://", "https://ipfs.io/ipfs/")}
+          image={release?.image?.url?.replace("ipfs://", "https://nftstorage.link/ipfs/")}
           slug={slug}
           album={release?.metadata?.albumTitle}
           track={release?.metadata?.trackNumber}
@@ -171,7 +171,7 @@ const Song = ({ artist, song, slug }: any) => {
             >
               <Image
                 layout="fill"
-                src={release?.metadata?.project.artwork.uri.replace("ipfs://", "https://ipfs.io/ipfs/")}
+                src={release?.metadata?.project.artwork.uri.replace("ipfs://", "https://nftstorage.link/ipfs/")}
                 style={{ borderRadius: 10 }}
                 alt={`Album cover for ${release?.name}`}
               />
@@ -192,10 +192,10 @@ const Song = ({ artist, song, slug }: any) => {
                         ...queuedMusic,
                         {
                           artist: release?.metadata?.artist,
-                          image: release?.metadata?.project.artwork.uri.replace("ipfs://", "https://ipfs.io/ipfs/"),
+                          image: release?.metadata?.project.artwork.uri.replace("ipfs://", "https://nftstorage.link/ipfs/"),
                           songs: [
                             {
-                              audio: [release?.metadata?.losslessAudio.replace("ipfs://", "https://ipfs.io/ipfs/")],
+                              audio: [release?.metadata?.losslessAudio.replace("ipfs://", "https://nftstorage.link/ipfs/")],
                               title: release?.metadata?.title,
                               trackNumber: release?.metadata?.trackNumber,
                             },

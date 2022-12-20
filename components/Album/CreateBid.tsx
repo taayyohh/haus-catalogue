@@ -48,7 +48,7 @@ const CreateBid: React.FC<{ release: any }> = ({ release }) => {
     <div className={"flex flex-col"}>
       <div className={"mb-8 flex items-center gap-5"}>
         <div className={"h-20 w-20"}>
-          <img src={release?.metadata?.project?.artwork.uri.replace("ipfs://", "https://ipfs.io/ipfs/")} />
+          <img src={release?.metadata?.project?.artwork.uri.replace("ipfs://", "https://nftstorage.link/ipfs/")} />
         </div>
         <div className={"flex flex-col"}>
           <div className="text-xl font-bold">{release?.name}</div>

@@ -30,10 +30,10 @@ const PlayButton: React.FC<any> = ({ release, isHover }) => {
             ...queuedMusic,
             {
               artist: release?.metadata?.artist,
-              image: release?.metadata?.project.artwork.uri.replace("ipfs://", "https://ipfs.io/ipfs/"),
+              image: release?.metadata?.project.artwork.uri.replace("ipfs://", "https://nftstorage.link/ipfs/"),
               songs: [
                 {
-                  audio: [release?.metadata?.losslessAudio.replace("ipfs://", "https://ipfs.io/ipfs/")],
+                  audio: [release?.metadata?.losslessAudio.replace("ipfs://", "https://nftstorage.link/ipfs/")],
                   title: release?.metadata?.title,
                   trackNumber: release?.metadata?.trackNumber,
                 },

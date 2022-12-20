@@ -105,8 +105,6 @@ const SmartInput: React.FC<SmartInputProps> = ({
     },
   }
 
-  console.log("E", ensName, value)
-
   return (
     <fieldset className={`mb-8 p-0 ${defaultFieldsetStyle}`}>
       {inputLabel && <label className={defaultInputLabelStyle}>{inputLabel}</label>}
@@ -119,7 +117,7 @@ const SmartInput: React.FC<SmartInputProps> = ({
         onChange={onChange}
         onBlur={handleBlur}
         onFocus={handleFocus}
-        value={ensName ? ensName : typeof value === "number" && isNaN(value) ? "" : value}
+        value={typeof value === "number" && isNaN(value) ? "" : value}
         className={!!errorMessage ? defaultInputErrorStyle : defaultInputStyle}
         min={0}
         max={max}

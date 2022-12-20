@@ -1,12 +1,14 @@
 import { HausCatalogue__factory } from "types/ethers-contracts/factories/HausCatalogue__factory"
-import ZORA_ADDRESSES from "@zoralabs/v3/dist/addresses/5.json"
+import ZORA_ADDRESSES_GOERLI from "@zoralabs/v3/dist/addresses/5.json"
+import ZORA_ADDRESSES_MAINNET from "@zoralabs/v3/dist/addresses/1.json"
 import React from "react"
 import { PromiseOrValue } from "@typechain/ethers-v5/static/common"
 import { BigNumberish, BytesLike, ethers, Signer } from "ethers"
 import { HausCatalogue } from "types/ethers-contracts"
 import { useLayoutStore } from "stores/useLayoutStore"
 import useSWR from "swr"
-import {HAUS_CATALOGUE_PROXY} from "constants/addresses";
+import { HAUS_CATALOGUE_PROXY } from "constants/addresses"
+import { CHAIN } from "../constants/network"
 
 const useHausCatalogue = () => {
   const { signer, provider } = useLayoutStore()
@@ -179,7 +181,10 @@ const useHausCatalogue = () => {
   )
 
   const handleApprovalTransferHelper = React.useCallback(async () => {
-    await hausCatalogueContract?.setApprovalForAll(ZORA_ADDRESSES.ERC721TransferHelper, true)
+    await hausCatalogueContract?.setApprovalForAll(
+      CHAIN === "MAINNET" ? ZORA_ADDRESSES_MAINNET.ERC721TransferHelper : ZORA_ADDRESSES_GOERLI.ERC721TransferHelper,
+      true
+    )
   }, [ReserveAuctionCoreEth, hausCatalogueContract])
 
   return {

@@ -8,6 +8,8 @@ import { ChevronLeftIcon } from "@radix-ui/react-icons"
 import { useRouter } from "next/router"
 import { getDiscography } from "utils/getDiscographyNullMetadata"
 import Meta from "../../components/Layout/Meta"
+import axios from "axios"
+const ReactHtmlParser = require("react-html-parser").default
 
 export const getServerSideProps: GetServerSideProps = async context => {
   const artist = context?.params?.artist as string
@@ -100,9 +102,7 @@ const Artist = ({ artist, discography, slug }: any) => {
                   {metadata?.artist || metadata?.metadata?.artist}
                 </div>
                 <div className={"mx-auto mb-20 w-1/2"}>
-                  <div className={"text-black"}>
-                    {JSON.stringify(metadata?.artistBio)?.slice(1, -1).replace(/\\n/g, String.fromCharCode(13, 10))}
-                  </div>
+                  <div className={"text-black"}>{ReactHtmlParser(metadata?.artistBio)}</div>
                 </div>
                 <div className=" grid grid-cols-2 gap-8 py-8 md:grid-cols-3 lg:grid-cols-4">
                   {discography?.map((release: any, i: any) => (
