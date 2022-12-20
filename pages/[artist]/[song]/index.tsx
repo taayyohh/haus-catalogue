@@ -160,7 +160,7 @@ const Song = ({ artist, song, slug }: any) => {
           album={release?.metadata?.albumTitle}
           track={release?.metadata?.trackNumber}
           musician={release?.metadata?.artist}
-          description={stripHTML(release?.metadata.artist)}
+          description={release?.metadata.artist}
         />
 
         <div className={"mx-auto w-11/12 pt-32 sm:w-4/5"}>
