@@ -132,7 +132,7 @@ const SmartInput: React.FC<SmartInputProps> = ({
         </div>
       )}
       {(typeof value === "number" || value) && perma ? (
-        <div className={`absolute right-4 top-[52%]`}>{perma}</div>
+        <div className={`absolute right-4 top-[52px]`}>{perma}</div>
       ) : null}
       <motion.div variants={helperVariants} initial={"init"} animate={isFocus ? "open" : "init"}>
         {!!helperText && helperText?.length > 0 ? <div className={defaultHelperTextStyle}>{helperText}</div> : null}
