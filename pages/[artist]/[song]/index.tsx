@@ -26,7 +26,7 @@ import SettleAuction from "components/Album/SettleAuction"
 import Image from "next/image"
 import History from "./History"
 import ActiveBidHistory from "./ActiveBidHistory"
-import { useHTMLStripper } from "../../../hooks/useHTMLStripper"
+import {useHTMLStripper} from "../../../hooks/useHTMLStripper";
 
 const ReactHtmlParser = require("react-html-parser").default
 
@@ -62,6 +62,7 @@ const Song = ({ artist, song, slug }: any) => {
   const { auction } = useAuction(release)
   const { royaltyInfo, royaltyPayoutAddress } = useHausCatalogue()
   const stripHTML = useHTMLStripper()
+
 
   const { data: _royaltyPayoutAddress } = useSWR(
     release?.tokenId ? ["royaltyPayoutAddress", release.tokenId] : null,
@@ -154,7 +155,7 @@ const Song = ({ artist, song, slug }: any) => {
         <Meta
           title={release?.name}
           type={"music.song"}
-          image={release?.image?.metadata?.image_uri?.replace("ipfs://", "https://nftstorage.link/ipfs/")}
+          image={release?.metadata?.image_uri?.replace("ipfs://", "https://nftstorage.link/ipfs/")}
           slug={slug}
           album={release?.metadata?.albumTitle}
           track={release?.metadata?.trackNumber}
