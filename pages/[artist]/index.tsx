@@ -9,6 +9,7 @@ import { useRouter } from "next/router"
 import { getDiscography } from "utils/getDiscographyNullMetadata"
 import Meta from "../../components/Layout/Meta"
 import axios from "axios"
+import {useHTMLStripper} from "../../hooks/useHTMLStripper";
 const ReactHtmlParser = require("react-html-parser").default
 
 export const getServerSideProps: GetServerSideProps = async context => {
@@ -47,6 +48,8 @@ const Artist = ({ artist, discography, slug }: any) => {
   const metadata =
     discography.find((release: { metadata: { artist_hero_preview: any } }) => release.metadata.artist_hero_preview)
       ?.metadata || discography[0].metadata
+  const stripHTML = useHTMLStripper()
+
 
   return (
     <AnimatePresence>
@@ -69,7 +72,7 @@ const Artist = ({ artist, discography, slug }: any) => {
           title={metadata?.artist || metadata?.metadata?.artist}
           type={"website"}
           image={metadata?.artist_hero_preview}
-          description={metadata?.artistBio}
+          description={stripHTML(metadata?.artistBio)}
           slug={slug}
         />
         <div className={"fixed top-16 flex h-12 w-full items-center border-t-2  "}>
