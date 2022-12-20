@@ -1,6 +1,7 @@
 import create from "zustand"
 
 interface Media {
+  src: any
   readyState: number
   duration: number
   currentTime: number
@@ -51,6 +52,7 @@ export const usePlayerStore = create<PlayerState>(set => ({
     }))
   },
   media: {
+    src: "",
     readyState: 0,
     duration: 0,
     currentTime: 0,

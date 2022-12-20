@@ -36,7 +36,7 @@ const Catalogue: React.FC<any> = ({ discography }) => {
   const random = React.useMemo(() => {
     const random = (max: []) => Math.floor(Math.random() * max.length)
     const release = discography[random(discography)]
-    
+
     return {
       artist: release?.metadata?.artist,
       image: release?.metadata?.project?.artwork.uri.replace("ipfs://", "https://nftstorage.link/ipfs/"),
@@ -49,7 +49,6 @@ const Catalogue: React.FC<any> = ({ discography }) => {
       ],
     }
   }, [discography])
-  
 
   React.useEffect(() => {
     if (!random) return
@@ -101,8 +100,8 @@ const Catalogue: React.FC<any> = ({ discography }) => {
                       <Image
                         className={`h-full w-full ${isPlaying ? "animate-spin-slow" : ""}`}
                         src={queue[currentPosition]?.image}
-                        layout='fill'
-                        // layout={'fill'}
+                        layout="fill"
+                        priority
                       />
                     )}
 

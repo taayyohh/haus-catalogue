@@ -10,7 +10,7 @@ import { useAuction } from "hooks/useAuction"
 import useHausCatalogue from "hooks/useHausCatalogue"
 import { ethers } from "ethers"
 import { activeAuctionQuery, activeAuctionStartBlock } from "query/activeAuction"
-import { BsFillPlayFill } from "react-icons/bs"
+import { BsFillPauseFill, BsFillPlayFill } from "react-icons/bs"
 import { usePlayerStore } from "stores/usePlayerStore"
 import Meta from "components/Layout/Meta"
 import { HAUS_CATALOGUE_PROXY } from "constants/addresses"
@@ -113,7 +113,7 @@ const Song = ({ artist, song, slug }: any) => {
     { revalidateOnFocus: false }
   )
 
-  const { addToQueue, queuedMusic } = usePlayerStore()
+  const { addToQueue, queuedMusic, media, isPlaying } = usePlayerStore()
   const [activeTab, setIsActiveTab] = React.useState("")
 
   const { data: mintInfo } = useSWR(release?.tokenId ? ["mint-info", release.tokenId] : null, async () => {
@@ -183,27 +183,87 @@ const Song = ({ artist, song, slug }: any) => {
                     "mr-6 flex h-[80px] min-h-[80px] w-[80px] min-w-[80px] items-center justify-center rounded-full border-2 "
                   }
                 >
-                  <BsFillPlayFill
-                    size={44}
-                    color={"black"}
-                    className={"cursor-pointer"}
-                    onClick={() =>
-                      addToQueue([
-                        ...queuedMusic,
-                        {
-                          artist: release?.metadata?.artist,
-                          image: release?.metadata?.project.artwork.uri.replace("ipfs://", "https://nftstorage.link/ipfs/"),
-                          songs: [
+                  {(isPlaying && (
+                    <button
+                      type="button"
+                      onClick={() => {
+                        //TODO: cleanup
+                        const isThisSong =
+                          media.src ===
+                          release?.metadata?.losslessAudio.replace("ipfs://", "https://nftstorage.link/ipfs/")
+
+                        if (isThisSong) {
+                          isPlaying ? media.pause() : media.play()
+                        } else {
+                          addToQueue([
+                            ...queuedMusic,
                             {
-                              audio: [release?.metadata?.losslessAudio.replace("ipfs://", "https://nftstorage.link/ipfs/")],
-                              title: release?.metadata?.title,
-                              trackNumber: release?.metadata?.trackNumber,
+                              artist: release?.metadata?.artist,
+                              image: release?.metadata?.project.artwork.uri.replace(
+                                "ipfs://",
+                                "https://nftstorage.link/ipfs/"
+                              ),
+                              songs: [
+                                {
+                                  audio: [
+                                    release?.metadata?.losslessAudio.replace(
+                                      "ipfs://",
+                                      "https://nftstorage.link/ipfs/"
+                                    ),
+                                  ],
+                                  title: release?.metadata?.title,
+                                  trackNumber: release?.metadata?.trackNumber,
+                                },
+                              ],
                             },
-                          ],
-                        },
-                      ])
-                    }
-                  />
+                          ])
+                        }
+                      }}
+                    >
+                      <BsFillPauseFill size={44} />
+                    </button>
+                  )) || (
+                    <button
+                      type="button"
+                      onClick={() => {
+                        //TODO: cleanup
+
+                        // @ts-ignore
+                        const isThisSong =
+                          media.src ===
+                          release?.metadata?.losslessAudio.replace("ipfs://", "https://nftstorage.link/ipfs/")
+
+                        if (isThisSong) {
+                          isPlaying ? media.pause() : media.play()
+                        } else {
+                          addToQueue([
+                            ...queuedMusic,
+                            {
+                              artist: release?.metadata?.artist,
+                              image: release?.metadata?.project.artwork.uri.replace(
+                                "ipfs://",
+                                "https://nftstorage.link/ipfs/"
+                              ),
+                              songs: [
+                                {
+                                  audio: [
+                                    release?.metadata?.losslessAudio.replace(
+                                      "ipfs://",
+                                      "https://nftstorage.link/ipfs/"
+                                    ),
+                                  ],
+                                  title: release?.metadata?.title,
+                                  trackNumber: release?.metadata?.trackNumber,
+                                },
+                              ],
+                            },
+                          ])
+                        }
+                      }}
+                    >
+                      <BsFillPlayFill size={44} />
+                    </button>
+                  )}
                 </div>
                 <div className={"flex flex-col"}>
                   <div className={"cursor-pointer text-4xl font-bold hover:text-gray-700"}>
