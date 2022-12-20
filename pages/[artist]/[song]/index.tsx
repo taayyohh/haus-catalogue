@@ -16,17 +16,16 @@ import Meta from "components/Layout/Meta"
 import { HAUS_CATALOGUE_PROXY } from "constants/addresses"
 import { tokenEventHistory } from "query/tokenEventHistory"
 import SongNav from "components/Layout/SongNav"
-import { ETHER_ACTOR_BASE_URL, ETHERSCAN_BASE_URL } from "constants/etherscan"
+import { ETHERSCAN_BASE_URL } from "constants/etherscan"
 import dayjs from "dayjs"
 import { useEnsData } from "hooks/useEnsData"
 import CopyButton from "components/Shared/CopyButton"
 import AnimatedModal from "components/Modal/Modal"
 import CreateBid from "components/Album/CreateBid"
-import { fetchTransaction } from "@wagmi/core"
-import SettleAuction from "../../../components/Album/SettleAuction"
+import SettleAuction from "components/Album/SettleAuction"
 import Image from "next/image"
-import axios from "axios"
 import History from "./History"
+import ActiveBidHistory from "./ActiveBidHistory"
 
 const ReactHtmlParser = require("react-html-parser").default
 
@@ -71,10 +70,6 @@ const Song = ({ artist, song, slug }: any) => {
   const { displayName: displayRoyalty, ensAvatar: royaltyEnsAvatar } = useEnsData(_royaltyPayoutAddress as string)
   const { displayName: displayOwner, ensAvatar: ownerEnsAvatar } = useEnsData(release?.owner as string)
 
-  const { data: activeAuction } = useSWR(release?.tokenId ? ["activeAuction", release.tokenId] : null, async () => {
-    return await activeAuctionStartBlock(release.tokenId)
-  })
-
   const { data: creatorShare } = useSWR(release?.tokenId ? ["royaltyInfo", release.tokenId] : null, async () => {
     const bps = 10000
     const royaltyBPS = await royaltyInfo(Number(release?.tokenId), bps)
@@ -83,10 +78,29 @@ const Song = ({ artist, song, slug }: any) => {
 
   const { data: ReserveAuctionCoreEth } = useSWR("ReserveAuctionCoreEth")
 
+  const { data: eventHistory } = useSWR(["TokenHistory", release.tokenId])
+  const latestCreateAuction = eventHistory?.events?.filter(
+    (item: { decoded: { functionName: string } }) => item.decoded.functionName === "createAuction"
+  )?.[0]
+
+  const auctionBlockStart = React.useMemo(() => {
+    if (!latestCreateAuction) return
+    const timestamp = new Date(latestCreateAuction.event.transactionInfo.blockTimestamp)
+    const blockNumber = latestCreateAuction.event.transactionInfo.blockNumber
+    const auctionDuration = latestCreateAuction?.event?.properties?.properties?.auction.duration
+    timestamp.setSeconds(timestamp.getSeconds() + Number(auctionDuration))
+
+    const now = dayjs.unix(Date.now() / 1000)
+    const end = dayjs.unix(timestamp.getTime() / 1000)
+    const isActive = end.diff(now, "second") > 0
+
+    if (isActive) return blockNumber
+  }, [latestCreateAuction])
+
   const { data: bidHistory } = useSWR(
-    release?.tokenId && ReserveAuctionCoreEth && activeAuction ? ["AuctionBid", release.tokenId] : null,
+    auctionBlockStart && release?.tokenId && ReserveAuctionCoreEth ? ["AuctionBid", release.tokenId] : null,
     async () => {
-      const events = await ReserveAuctionCoreEth?.queryFilter("AuctionBid" as any, activeAuction, "latest")
+      const events = await ReserveAuctionCoreEth?.queryFilter("AuctionBid" as any, auctionBlockStart, "latest")
 
       return events
         .filter(
@@ -100,7 +114,7 @@ const Song = ({ artist, song, slug }: any) => {
   )
 
   const { addToQueue, queuedMusic } = usePlayerStore()
-  const [activeTab, setIsActiveTab] = React.useState("History")
+  const [activeTab, setIsActiveTab] = React.useState("")
 
   const { data: mintInfo } = useSWR(release?.tokenId ? ["mint-info", release.tokenId] : null, async () => {
     const events = await tokenEventHistory(release.tokenId)
@@ -111,6 +125,12 @@ const Song = ({ artist, song, slug }: any) => {
     const mintBlock = mintEvent?.transactionInfo?.blockNumber
     return { mintTime, mintBlock }
   })
+
+  React.useEffect(() => {
+    setIsActiveTab(bidHistory ? "Bid" : "History")
+  }, [bidHistory])
+
+  React.useEffect(() => {}, [])
 
   return (
     <AnimatePresence exitBeforeEnter={true}>
@@ -217,7 +237,7 @@ const Song = ({ artist, song, slug }: any) => {
               <div className={"text-gray-500"}>Token ID</div>
               <a
                 target="_blank"
-                href={`https://goerli.etherscan.io/token/${release?.collectionAddress}?a=${release?.tokenId}#inventory`}
+                href={`${ETHERSCAN_BASE_URL}/token/${release?.collectionAddress}?a=${release?.tokenId}#inventory`}
               >
                 {release?.tokenId}
               </a>
@@ -294,6 +314,7 @@ const Song = ({ artist, song, slug }: any) => {
                   className={`cursor-pointer text-2xl font-bold ${
                     activeTab === "Bid" ? "text-emerald-500" : "hover:text-emerald-500"
                   }`}
+                  onClick={() => setIsActiveTab("Bid")}
                 >
                   Bid
                 </div>
@@ -301,26 +322,21 @@ const Song = ({ artist, song, slug }: any) => {
                   className={`cursor-pointer text-2xl font-bold ${
                     activeTab === "History" ? "text-emerald-500 " : " hover:text-emerald-500"
                   } `}
+                  onClick={() => setIsActiveTab("History")}
                 >
                   History
                 </div>
               </div>
               <div className={"mt-2 box-border rounded-xl border bg-white p-8"}>
-                <History release={release} />
-                {/*{bidHistory?.map(({ transactionHash, args }: any) => {*/}
-                {/*  return (*/}
-                {/*    <div className={"box-border w-full pb-2"}>*/}
-                {/*      <div>*/}
-                {/*        Bid placed by {args?.auction?.highestBidder} for{" "}*/}
-                {/*        {ethers.utils.formatEther(Number(args?.auction?.highestBid).toString())} ETH*/}
-                {/*      </div>*/}
-                {/*      <a href={`${ETHERSCAN_BASE_URL}/tx/${transactionHash}`} target={"_blank"}>*/}
-                {/*        etherscan*/}
-                {/*      </a>*/}
-                {/*      /!*<div>{auction?.highestBid}</div>*!/*/}
-                {/*    </div>*/}
-                {/*  )*/}
-                {/*})}*/}
+                {activeTab === "History" && <History release={release} />}
+                {activeTab === "Bid" && (
+                  <>
+                    {" "}
+                    {(bidHistory && <ActiveBidHistory history={bidHistory} tokenId={release?.tokenId} />) || (
+                      <div>No Active Auction.</div>
+                    )}
+                  </>
+                )}
               </div>
             </div>
           </div>

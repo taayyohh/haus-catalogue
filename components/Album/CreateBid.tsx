@@ -6,8 +6,8 @@ import useZoraV3 from "hooks/useZoraV3"
 import { useLayoutStore } from "stores/useLayoutStore"
 import { useAuction } from "hooks/useAuction"
 import { useBalance } from "wagmi"
-import useSWR from "swr"
-import ZoraAuctionTag from "../Layout/ZoraAuctionTag";
+import useSWR, { mutate } from "swr"
+import ZoraAuctionTag from "../Layout/ZoraAuctionTag"
 
 const CreateBid: React.FC<{ release: any }> = ({ release }) => {
   const { createBid } = useZoraV3()
@@ -35,7 +35,9 @@ const CreateBid: React.FC<{ release: any }> = ({ release }) => {
       await createBid(release?.collectionAddress, release?.tokenId, values?.amount)
       setIsSubmitting(true)
       ReserveAuctionCoreEth.on("AuctionBid", (tokenContract: any, tokenId: any, firstBid: any, auction: any) => {
-        console.log("t", tokenContract, tokenId, firstBid, auction)
+        mutate(["ActiveBid", Number(tokenId).toString()])
+        mutate(["ActiveBidHistory", Number(tokenId).toString()])
+        mutate([`${release?.collectionAddress}+${release?.tokenId}`])
         setIsSubmitting(false)
       })
     },
