@@ -139,7 +139,7 @@ const Catalogue: React.FC<any> = ({ discography }) => {
                         {currentTime} / {duration}
                       </div>
                     )}
-                    <Bid release={random?.release} />
+                    {/*<Bid release={random?.release} />*/}
                     {/*<Countdown countdownString={countdownString} />*/}
                   </div>
                 </motion.div>
