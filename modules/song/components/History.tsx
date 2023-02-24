@@ -1,29 +1,36 @@
 import React from "react"
 import useSWR from "swr"
+import { tokenEventHistory } from "data/query/tokenEventHistory"
 import { fetchTransaction } from "@wagmi/core"
 import axios from "axios"
 import { ETHER_ACTOR_BASE_URL, ETHERSCAN_BASE_URL } from "constants/etherscan"
 import { ethers } from "ethers"
 import dayjs from "dayjs"
 
-const ActiveBidHistory: React.FC<{ history: any; tokenId: number }> = ({ history, tokenId }) => {
+export const History: React.FC<{ release: any }> = ({ release }) => {
   const { data: eventHistory } = useSWR(
-    history ? ["ActiveBidHistory", tokenId] : null,
+    release?.tokenId ? ["TokenHistory", release.tokenId] : null,
     async () => {
-      /*
-          
-         get mint even details, always the last item in the array
-          
-      */
+      const events = await tokenEventHistory(release.tokenId)
 
       /*
-          
-        get transaction details for each event
-          
-       */
+    
+          get mint even details, always the last item in the array
+    
+         */
+      const mintEvent = events[events.length - 1]
+      const mintTime = mintEvent?.transactionInfo?.blockTimestamp
+      const mintBlock = mintEvent?.transactionInfo?.blockNumber
+
+      /*
+    
+          get transaction details for each event
+    
+         */
       const tx = await Promise.all(
-        history.map(
-          async (transaction: { transactionHash: any }) => await fetchTransaction({ hash: transaction.transactionHash })
+        events.map(
+          async (transaction: { transactionInfo: { transactionHash: any } }) =>
+            await fetchTransaction({ hash: transaction.transactionInfo.transactionHash })
         )
       )
 
@@ -35,20 +42,21 @@ const ActiveBidHistory: React.FC<{ history: any; tokenId: number }> = ({ history
       )
 
       return {
-        events: history.reduce((acc: any[] = [], cv: any, i: number) => {
+        events: events.reduce((acc: any[] = [], cv: any, i: number) => {
           const type = cv.eventType
 
           acc.push({ decoded: decoded[i], event: cv, tx: tx[i] })
 
           return acc
         }, []),
+        mintTime,
+        mintBlock,
       }
     },
     {
       revalidateOnMount: true,
       revalidateIfStale: true,
       revalidateOnFocus: true,
-      refreshInterval: 1000,
     }
   )
 
@@ -95,6 +103,11 @@ const ActiveBidHistory: React.FC<{ history: any; tokenId: number }> = ({ history
     }
   }
 
+  // const { data: isAuc}
+  // is activeAuction
+  // if yes local lst createAuction and get blocktime
+  // listen to blocktime
+
   return (
     <div className={"max-h-96 overflow-y-scroll"}>
       {eventHistory?.events?.map((event: any) => {
@@ -108,7 +121,9 @@ const ActiveBidHistory: React.FC<{ history: any; tokenId: number }> = ({ history
                   target={"_blank"}
                 >
                   <div>{transformEvent(event)}</div>
-                  <div className={"mt-4 text-xs"}>{dayjs(event.event.blockTimestamp).format("MMM DD, YYYY")}</div>
+                  <div className={"mt-4 text-xs"}>
+                    {dayjs(event.event.transactionInfo.blockTimestamp).format("MMM DD, YYYY")}
+                  </div>
                 </a>
               </div>
             )}
@@ -118,5 +133,3 @@ const ActiveBidHistory: React.FC<{ history: any; tokenId: number }> = ({ history
     </div>
   )
 }
-
-export default ActiveBidHistory

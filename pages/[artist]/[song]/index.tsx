@@ -24,9 +24,9 @@ import AnimatedModal from "components/Modal/Modal"
 import CreateBid from "components/Album/CreateBid"
 import SettleAuction from "components/Album/SettleAuction"
 import Image from "next/image"
-import History from "./History"
-import ActiveBidHistory from "./ActiveBidHistory"
-import { useHTMLStripper } from "../../../hooks/useHTMLStripper"
+import { ActiveBidHistory, History } from "modules/song"
+import { useHTMLStripper } from "hooks/useHTMLStripper"
+import { ipfsGateway } from "../../../utils/ipfsGateway"
 
 const ReactHtmlParser = require("react-html-parser").default
 
@@ -62,8 +62,6 @@ const Song = ({ artist, song, slug }: any) => {
   const { auction } = useAuction(release)
   const { royaltyInfo, royaltyPayoutAddress } = useHausCatalogue()
   const stripHTML = useHTMLStripper()
-
-  console.log('Re', release)
 
   const { data: _royaltyPayoutAddress } = useSWR(
     release?.tokenId ? ["royaltyPayoutAddress", release.tokenId] : null,
@@ -194,35 +192,19 @@ const Song = ({ artist, song, slug }: any) => {
                       type="button"
                       onClick={() => {
                         //TODO: cleanup
-                        const isThisSong =
-                          media.src ===
-                          release?.metadata?.losslessAudio.replace("ipfs://", "https://nftstorage.link/ipfs/")
+                        const isThisSong = media.src === ipfsGateway(release?.metadata?.losslessAudio)
 
                         if (isThisSong) {
                           isPlaying ? media.pause() : media.play()
                         } else {
-                          addToQueue([
-                            ...queuedMusic,
-                            {
-                              artist: release?.metadata?.artist,
-                              image: release?.metadata?.project.artwork.uri.replace(
-                                "ipfs://",
-                                "https://nftstorage.link/ipfs/"
-                              ),
-                              songs: [
-                                {
-                                  audio: [
-                                    release?.metadata?.losslessAudio.replace(
-                                      "ipfs://",
-                                      "https://nftstorage.link/ipfs/"
-                                    ),
-                                  ],
-                                  title: release?.metadata?.title,
-                                  trackNumber: release?.metadata?.trackNumber,
-                                },
-                              ],
-                            },
-                          ])
+                          addToQueue({
+                            artist: release.metadata.artist,
+                            image: ipfsGateway(release.metadata.project.artwork.uri),
+                            audio: ipfsGateway(release.metadata.losslessAudio),
+                            title: release.metadata.title,
+                            trackNumber: release.metadata.trackNumber,
+                            release,
+                          })
                         }
                       }}
                     >
@@ -235,35 +217,19 @@ const Song = ({ artist, song, slug }: any) => {
                         //TODO: cleanup
 
                         // @ts-ignore
-                        const isThisSong =
-                          media.src ===
-                          release?.metadata?.losslessAudio.replace("ipfs://", "https://nftstorage.link/ipfs/")
+                        const isThisSong = media.src === ipfsGateway(release?.metadata?.losslessAudio)
 
                         if (isThisSong) {
                           isPlaying ? media.pause() : media.play()
                         } else {
-                          addToQueue([
-                            ...queuedMusic,
-                            {
-                              artist: release?.metadata?.artist,
-                              image: release?.metadata?.project.artwork.uri.replace(
-                                "ipfs://",
-                                "https://nftstorage.link/ipfs/"
-                              ),
-                              songs: [
-                                {
-                                  audio: [
-                                    release?.metadata?.losslessAudio.replace(
-                                      "ipfs://",
-                                      "https://nftstorage.link/ipfs/"
-                                    ),
-                                  ],
-                                  title: release?.metadata?.title,
-                                  trackNumber: release?.metadata?.trackNumber,
-                                },
-                              ],
-                            },
-                          ])
+                          addToQueue({
+                            artist: release.metadata.artist,
+                            image: ipfsGateway(release.metadata.project.artwork.uri),
+                            audio: ipfsGateway(release.metadata.losslessAudio.replace),
+                            title: release.metadata.title,
+                            trackNumber: release.metadata.trackNumber,
+                            release,
+                          })
                         }
                       }}
                     >
