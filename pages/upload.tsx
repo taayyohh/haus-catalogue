@@ -3,9 +3,10 @@ import Bundlr from "@bundlr-network/client"
 import { useLayoutStore } from "../stores/useLayoutStore"
 import { Formik } from "formik"
 import { ethers } from "ethers"
+import { useProvider } from "wagmi"
 
 const Upload = () => {
-  const provider = useLayoutStore((state: any) => state.provider)
+  const provider = useProvider()
 
   /* initialize bundler */
   const bundlr = React.useMemo(async () => {

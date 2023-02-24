@@ -1,5 +1,5 @@
-import { Provider } from "@ethersproject/abstract-provider"
 import { ethers } from "ethers"
+import {Provider} from "@wagmi/core";
 
 export async function isValidAddress(address: string, provider: Provider | undefined) {
   const resolvedName = await provider?.resolveName(address)

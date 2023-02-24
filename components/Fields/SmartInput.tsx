@@ -12,8 +12,8 @@ import {
 import { isEmpty } from "utils/helpers"
 import useSWR from "swr"
 import { CheckIcon } from "@radix-ui/react-icons"
-import { useLayoutStore } from "../../stores/useLayoutStore"
 import { getEnsName } from "../../utils/ens"
+import { useProvider } from "wagmi"
 
 interface SmartInputProps {
   id: string
@@ -54,7 +54,7 @@ const SmartInput: React.FC<SmartInputProps> = ({
   disabled = false,
   isAddress,
 }) => {
-  const { provider } = useLayoutStore()
+  const provider = useProvider()
 
   const { data: ensName } = useSWR(
     isAddress ? ["ens", value] : null,

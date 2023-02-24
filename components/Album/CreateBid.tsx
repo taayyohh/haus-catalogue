@@ -18,7 +18,7 @@ const CreateBid: React.FC<{ release: any }> = ({ release }) => {
     isError,
     isLoading,
   } = useBalance({
-    addressOrName: signerAddress as string,
+    address: signerAddress as `0x${string}`,
   })
   const _balance = parseFloat(balance?.formatted as string).toFixed(4)
   const { data: ReserveAuctionCoreEth } = useSWR("ReserveAuctionCoreEth")

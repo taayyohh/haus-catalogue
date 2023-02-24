@@ -1,34 +1,24 @@
 import "styles/globals.css"
 import type { AppProps } from "next/app"
 import "@rainbow-me/rainbowkit/styles.css"
-import { getDefaultWallets, RainbowKitProvider } from "@rainbow-me/rainbowkit"
-import { configureChains, createClient, WagmiConfig, defaultChains } from "wagmi"
-import { alchemyProvider } from "wagmi/providers/alchemy"
+import { WagmiConfig } from "wagmi"
+import { client } from "data/contract/client"
+import { chains } from "data/contract/chains"
 import Layout from "components/Layout/Layout"
+import { RainbowKitProvider } from "@rainbow-me/rainbowkit"
+import { useIsMounted } from "utils/useIsMounted"
 
 function MyApp({ Component, pageProps }: AppProps) {
-  const { chains, provider } = configureChains(
-    [defaultChains.find(chain => chain.id.toString() === process.env.NEXT_PUBLIC_CHAIN_ID)!],
-    [alchemyProvider({ apiKey: process.env.NEXT_PUBLIC_ALCHEMY_ID })]
-  )
-
-  const { connectors } = getDefaultWallets({
-    appName: "Haus Catalogue",
-    chains,
-  })
-
-  const wagmiClient = createClient({
-    autoConnect: true,
-    connectors,
-    provider,
-  })
+  const isMounted = useIsMounted()
 
   return (
-    <WagmiConfig client={wagmiClient}>
+    <WagmiConfig client={client}>
       <RainbowKitProvider chains={chains}>
-        <Layout>
-          <Component {...pageProps} />
-        </Layout>
+        {isMounted && (
+          <Layout>
+            <Component {...pageProps} />
+          </Layout>
+        )}
       </RainbowKitProvider>
     </WagmiConfig>
   )

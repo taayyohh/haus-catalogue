@@ -8,7 +8,7 @@ export const useEnsData = (address?: string | undefined) => {
   })
 
   const { data: ensAvatar } = useEnsAvatar({
-    addressOrName: address,
+    address: address as `0x${string}`,
   })
 
   const { data: ensAddress } = useEnsAddress({

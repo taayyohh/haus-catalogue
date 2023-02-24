@@ -10,13 +10,13 @@ import Link from "next/link"
 import AlbumInner from "./AlbumInner"
 import { useLayoutStore } from "stores/useLayoutStore"
 import { ethers } from "ethers"
+import { useSigner } from "wagmi"
 
-interface SongProps {
-
-}
+interface SongProps {}
 
 const Album: React.FC<any> = memo(({ release }) => {
   const { signerAddress } = useLayoutStore()
+  const signer = useSigner()
   const { auction } = useAuction(release)
   const { countdownString } = useCountdown(auction)
   const [isHover, setIsHover] = React.useState<boolean>(false)
@@ -30,7 +30,7 @@ const Album: React.FC<any> = memo(({ release }) => {
   }
 
   const isTokenOwner = React.useMemo(() => {
-    if (!signerAddress || !release?.owner) return
+    if (signerAddress === '0x' || !release?.owner) return
 
     return ethers.utils.getAddress(signerAddress) === ethers.utils.getAddress(release?.owner)
   }, [signerAddress, release?.owner])

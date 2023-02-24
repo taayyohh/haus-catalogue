@@ -13,13 +13,11 @@ type Props = {
 }
 
 const Layout = ({ children }: Props) => {
-  const { setSigner, setProvider, setSignerAddress } = useLayoutStore()
+  const { setSigner, setSignerAddress } = useLayoutStore()
   const { data: signer, status } = useSigner()
 
   React.useEffect(() => {
     if (status === "success") {
-      const provider = new ethers.providers.JsonRpcProvider(ALCHEMY_RPC_URL)
-      setProvider(signer?.provider ?? provider)
       setSigner(signer)
       //@ts-ignore
       setSignerAddress(signer?._address)
