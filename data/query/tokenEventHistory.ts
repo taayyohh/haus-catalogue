@@ -1,6 +1,6 @@
 import { gql, request } from "graphql-request"
-import { HAUS_CATALOGUE_PROXY } from "../constants/addresses"
-import { CHAIN } from "../constants/network"
+import { HAUS_CATALOGUE_PROXY } from "../../constants/addresses"
+import { CHAIN } from "../../constants/network"
 
 export const tokenEventHistory = async (tokenId: string) => {
   const endpoint = "https://api.zora.co/graphql"

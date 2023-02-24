@@ -1,16 +1,16 @@
 import { gql, request } from "graphql-request"
-import { HAUS_CATALOGUE_PROXY } from "../constants/addresses"
-import { CHAIN } from "../constants/network"
+import { HAUS_CATALOGUE_PROXY } from "constants/addresses"
+import { CHAIN } from "constants/network"
+import { ZORA_API } from "constants/api"
+import { ReleaseProps } from "./typings"
 
 export const discographyQuery = async () => {
-  const endpoint = "https://api.zora.co/graphql"
-
   const req = gql`
     query DiscographyQuery($address: [String!], $chain: Chain!) {
       tokens(
         networks: { chain: $chain, network: ETHEREUM }
         where: { collectionAddresses: $address }
-        pagination: { limit: 100 }
+        pagination: { limit: 50 }
         sort: { sortKey: TOKEN_ID, sortDirection: DESC }
       ) {
         nodes {
@@ -43,20 +43,6 @@ export const discographyQuery = async () => {
             }
             collectionName
             collectionAddress
-            content {
-              mediaEncoding {
-                ... on ImageEncodingTypes {
-                  large
-                  poster
-                }
-                ... on AudioEncodingTypes {
-                  large
-                }
-              }
-              url
-              size
-              mimeType
-            }
           }
         }
       }
@@ -67,10 +53,7 @@ export const discographyQuery = async () => {
     chain: CHAIN,
   }
 
-  const tokens = await request(endpoint, req, variables)
-  return tokens.tokens.nodes?.reduce((acc: any[], cv: any) => {
-    acc.push(cv.token)
-
-    return acc
-  }, [])
+  const data = await request(ZORA_API, req, variables)
+  const discography = data.tokens.nodes.map(({ token }: { token: ReleaseProps }) => token)
+  return discography as ReleaseProps[]
 }

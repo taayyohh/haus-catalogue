@@ -9,12 +9,12 @@ import { getDiscography } from "utils/getDiscographyNullMetadata"
 import { useAuction } from "hooks/useAuction"
 import useHausCatalogue from "hooks/useHausCatalogue"
 import { ethers } from "ethers"
-import { activeAuctionQuery, activeAuctionStartBlock } from "query/activeAuction"
+import { activeAuctionQuery, activeAuctionStartBlock } from "data/query/activeAuction"
 import { BsFillPauseFill, BsFillPlayFill } from "react-icons/bs"
 import { usePlayerStore } from "stores/usePlayerStore"
 import Meta from "components/Layout/Meta"
 import { HAUS_CATALOGUE_PROXY } from "constants/addresses"
-import { tokenEventHistory } from "query/tokenEventHistory"
+import { tokenEventHistory } from "data/query/tokenEventHistory"
 import SongNav from "components/Layout/SongNav"
 import { ETHERSCAN_BASE_URL } from "constants/etherscan"
 import dayjs from "dayjs"
@@ -26,7 +26,7 @@ import SettleAuction from "components/Album/SettleAuction"
 import Image from "next/image"
 import History from "./History"
 import ActiveBidHistory from "./ActiveBidHistory"
-import {useHTMLStripper} from "../../../hooks/useHTMLStripper";
+import { useHTMLStripper } from "../../../hooks/useHTMLStripper"
 
 const ReactHtmlParser = require("react-html-parser").default
 
@@ -63,6 +63,7 @@ const Song = ({ artist, song, slug }: any) => {
   const { royaltyInfo, royaltyPayoutAddress } = useHausCatalogue()
   const stripHTML = useHTMLStripper()
 
+  console.log('Re', release)
 
   const { data: _royaltyPayoutAddress } = useSWR(
     release?.tokenId ? ["royaltyPayoutAddress", release.tokenId] : null,
@@ -81,7 +82,7 @@ const Song = ({ artist, song, slug }: any) => {
 
   const { data: ReserveAuctionCoreEth } = useSWR("ReserveAuctionCoreEth")
 
-  const { data: eventHistory } = useSWR(["TokenHistory", release.tokenId])
+  const { data: eventHistory } = useSWR(["token-history", release?.tokenId])
   const latestCreateAuction = eventHistory?.events?.filter(
     (item: { decoded: { functionName: string } }) => item.decoded.functionName === "createAuction"
   )?.[0]
@@ -167,17 +168,19 @@ const Song = ({ artist, song, slug }: any) => {
           <div className={"flex flex-col items-center gap-10 pt-12 sm:flex-row"}>
             <div
               className={
-                "relative h-full w-full h-[300px] min-h-[300px] w-[300px] min-w-[300px] md:h-[400px] " +
+                "relative h-full h-[300px] min-h-[300px] w-full w-[300px] min-w-[300px] md:h-[400px] " +
                 "md:min-h-[400px] md:w-[400px] md:min-w-[400px] " +
                 "rounded-xl border lg:h-[500px] lg:min-h-[500px] lg:w-[500px] lg:min-w-[500px]"
               }
             >
-              <Image
-                layout="fill"
-                src={release?.metadata?.project.artwork.uri.replace("ipfs://", "https://nftstorage.link/ipfs/")}
-                style={{ borderRadius: 10 }}
-                alt={`Album cover for ${release?.name}`}
-              />
+              {release?.metadata?.project.artwork.uri && (
+                <Image
+                  layout="fill"
+                  src={release?.metadata?.project.artwork.uri.replace("ipfs://", "https://nftstorage.link/ipfs/")}
+                  style={{ borderRadius: 10 }}
+                  alt={`Album cover for ${release?.name}`}
+                />
+              )}
             </div>
             <div>
               <div className={"flex items-center justify-center"}>
@@ -272,9 +275,11 @@ const Song = ({ artist, song, slug }: any) => {
                   <div className={"cursor-pointer text-4xl font-bold hover:text-gray-700"}>
                     {release?.metadata?.name}
                   </div>
-                  <div className={"text-3xl"}>
-                    <Link href={`/${slugify(release.metadata.artist)}`}>{release.metadata.artist}</Link>
-                  </div>
+                  {release?.metadata.artist && (
+                    <div className={"text-3xl"}>
+                      <Link href={`/${slugify(release?.metadata.artist)}`}>{release?.metadata.artist}</Link>
+                    </div>
+                  )}
                 </div>
               </div>
             </div>

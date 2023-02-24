@@ -7,7 +7,7 @@
 import _ from "lodash"
 import { isAddress } from "ethers/lib/utils"
 
-export const ZERO_ADDRESS = '0x0000000000000000000000000000000000000000'
+export const ZERO_ADDRESS = "0x0000000000000000000000000000000000000000"
 
 export const flatten = (object: object) => {
   return Object.assign(
@@ -188,7 +188,8 @@ export const fromSeconds = (_seconds: number) => {
  *
  */
 
-export const slugify = (string: string) => {
+export const slugify = (string: string | undefined) => {
+  if (!string) return ''
   const a = "àáâäæãåāăąçćčđďèéêëēėęěğǵḧîïíīįìłḿñńǹňôöòóœøōõőṕŕřßśšşșťțûüùúūǘůűųẃẍÿýžźż·/_,:;"
   const b = "aaaaaaaaaacccddeeeeeeeegghiiiiiilmnnnnoooooooooprrsssssttuuuuuuuuuwxyyzzz------"
   const p = new RegExp(a.split("").join("|"), "g")

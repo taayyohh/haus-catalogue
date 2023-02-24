@@ -1,6 +1,6 @@
 import React from "react"
 import useSWR from "swr"
-import { tokenEventHistory } from "query/tokenEventHistory"
+import { tokenEventHistory } from "data/query/tokenEventHistory"
 import { fetchTransaction } from "@wagmi/core"
 import axios from "axios"
 import { ETHER_ACTOR_BASE_URL, ETHERSCAN_BASE_URL } from "constants/etherscan"

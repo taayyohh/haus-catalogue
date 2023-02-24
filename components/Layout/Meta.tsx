@@ -9,7 +9,7 @@ interface MetaProps {
   description?: string
   duration?: string
   album?: string
-  track?: string
+  track?:number
   musician?: string
 }
 
@@ -26,7 +26,7 @@ const Meta: React.FC<MetaProps> = ({ title, type, slug, image, description, dura
         <>
           <meta property="music:duration" content={duration} />
           <meta property="music:album" content={album} />
-          <meta property="music:album:track" content={track} />
+          <meta property="music:album:track" content={track?.toString()} />
           <meta property="music:musician" content={musician} />
         </>
       )}

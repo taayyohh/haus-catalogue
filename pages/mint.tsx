@@ -1,5 +1,5 @@
 import React from "react"
-import MetadataForm from "./MetaDataForm/MetadataForm"
+import MetadataForm from "../modules/mint/components/MetaDataForm/MetadataForm"
 import { MerkleTree } from "merkletreejs"
 import { useLayoutStore } from "stores/useLayoutStore"
 import useSWR from "swr"

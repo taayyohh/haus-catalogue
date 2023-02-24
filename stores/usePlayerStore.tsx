@@ -1,4 +1,5 @@
 import create from "zustand"
+import { PlayerTrack } from "../data/query/typings"
 
 interface Media {
   src: any
@@ -23,7 +24,7 @@ interface Media {
 }
 interface PlayerState {
   queuedMusic: {}[]
-  addToQueue: (songs: {}[]) => void
+  addToQueue: (track: PlayerTrack) => void
   media: Media
   setCurrentMedia: (media: Media) => void
   isPlaying: boolean
@@ -32,7 +33,7 @@ interface PlayerState {
   setDuration: (duration: string) => void
   currentTime: string
   setCurrentTime: (duration: string) => void
-  queue: []
+  queue: PlayerTrack[]
   setQueue: (music: []) => void
   currentPosition: number
   setCurrentPosition: (position: number) => void
@@ -46,9 +47,9 @@ export const usePlayerStore = create<PlayerState>(set => ({
     }))
   },
   queuedMusic: [],
-  addToQueue: (songs: {}[]) => {
+  addToQueue: (track: PlayerTrack) => {
     set(state => ({
-      queuedMusic: [...songs],
+      queuedMusic: [...state.queuedMusic, track],
     }))
   },
   media: {

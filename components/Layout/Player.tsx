@@ -4,6 +4,7 @@ import { BsFillPauseFill, BsFillPlayFill } from "react-icons/bs"
 import { BiSkipNext, BiSkipPrevious } from "react-icons/bi"
 import Link from "next/link"
 import { slugify } from "../../utils/helpers"
+import { PlayerTrack } from "../../data/query/typings"
 
 const Player = () => {
   const audioRef = React.useRef(null)
@@ -50,16 +51,9 @@ const Player = () => {
 
   // /* handle add to queue */
   const handleAddToQueue = React.useMemo(() => {
-    return queuedMusic.reduce((acc = [], cv: any) => {
-      const artist = cv.artist
-      const image = cv.image
-
-      return cv.songs.reduce((acc = [], cv: any) => {
-        // @ts-ignore
-        acc.push({ ...cv, artist, image })
-
-        return acc
-      }, [])
+    return queuedMusic.reduce((acc: PlayerTrack[] = [], cv: PlayerTrack) => {
+      acc.push(cv)
+      return acc
     }, [])
   }, [queuedMusic])
 

@@ -11,6 +11,10 @@ import AlbumInner from "./AlbumInner"
 import { useLayoutStore } from "stores/useLayoutStore"
 import { ethers } from "ethers"
 
+interface SongProps {
+
+}
+
 const Album: React.FC<any> = memo(({ release }) => {
   const { signerAddress } = useLayoutStore()
   const { auction } = useAuction(release)

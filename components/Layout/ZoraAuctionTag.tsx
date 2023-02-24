@@ -21,13 +21,13 @@ const ZoraAuctionTag = () => {
                 gradientUnits="userSpaceOnUse"
                 gradientTransform="translate(21.287 7.794) scale(24.093)"
               >
-                <stop offset="0.156" stop-color="#DCC8D0"></stop>
-                <stop offset="0.302" stop-color="#78C8CF"></stop>
-                <stop offset="0.427" stop-color="#4D959E"></stop>
-                <stop offset="0.557" stop-color="#305EB9"></stop>
-                <stop offset="0.797" stop-color="#311F12"></stop>
-                <stop offset="0.906" stop-color="#684232"></stop>
-                <stop offset="1" stop-color="#2D1C13"></stop>
+                <stop offset="0.156" stopColor="#DCC8D0"></stop>
+                <stop offset="0.302" stopColor="#78C8CF"></stop>
+                <stop offset="0.427" stopColor="#4D959E"></stop>
+                <stop offset="0.557" stopColor="#305EB9"></stop>
+                <stop offset="0.797" stopColor="#311F12"></stop>
+                <stop offset="0.906" stopColor="#684232"></stop>
+                <stop offset="1" stopColor="#2D1C13"></stop>
               </radialGradient>
             </defs>
           </svg>

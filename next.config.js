@@ -6,7 +6,7 @@ const nextConfig = {
     MERKLE: process.env.MERKLE,
   },
   images: {
-    domains: ["ipfs.io", "nftstorage.link"],
+    domains: ["ipfs.io", "nftstorage.link", "ipfs.zora.co"],
   },
 }
 

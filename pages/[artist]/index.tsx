@@ -8,7 +8,6 @@ import { ChevronLeftIcon } from "@radix-ui/react-icons"
 import { useRouter } from "next/router"
 import { getDiscography } from "utils/getDiscographyNullMetadata"
 import Meta from "../../components/Layout/Meta"
-import axios from "axios"
 import {useHTMLStripper} from "../../hooks/useHTMLStripper";
 const ReactHtmlParser = require("react-html-parser").default
 
