@@ -1,5 +1,5 @@
-import { PlayerTrack, ReleaseProps } from "data/query/typings"
-import { ipfsGateway } from "utils/ipfsGateway"
+import { PlayerTrack, ReleaseProps } from 'data/query/typings'
+import { ipfsGateway } from 'utils'
 
 export const randomSong = (songs: ReleaseProps[]): PlayerTrack => {
   const random = (max: ReleaseProps[]) => Math.floor(Math.random() * max.length)

@@ -84,6 +84,6 @@ export const tokenEventHistory = async (tokenId: string) => {
     chain: CHAIN,
   }
 
-  const tokens = await request(endpoint, req, variables)
+  const tokens: { token: { events: any } } = await request(endpoint, req, variables)
   return tokens.token.events
 }

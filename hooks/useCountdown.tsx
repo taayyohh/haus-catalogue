@@ -1,28 +1,31 @@
 import dayjs from "dayjs"
 import React from "react"
-import { useLayoutStore } from "stores/useLayoutStore"
+import { useSigner } from "wagmi"
+import { ethers } from "ethers"
 
 interface countdownResponseProps {
   countdownString: string
 }
 
 export const useCountdown = (auctionInfo: any) => {
-  const { signerAddress } = useLayoutStore()
+  const { data: signer } = useSigner()
   const [countdownString, setCountdownString] = React.useState("")
   React.useEffect(() => {
     if (!auctionInfo || auctionInfo.firstBidTime === 0) return
     const endAuction = (interval: NodeJS.Timer) => {
       clearInterval(interval)
       setCountdownString(
-        auctionInfo?.highestBidder === signerAddress
-          ? `You won with a bid of ${auctionInfo.highestBid} ETH!`
+        //@ts-ignore
+        auctionInfo?.highestBidder === signer?._address
+          ? `You won with a bid of ${ethers.utils.formatEther(auctionInfo.highestBid.toString())} ETH!`
           : ``
       )
     }
 
     const interval = setInterval(() => {
       const now = dayjs.unix(Date.now() / 1000)
-      const end = dayjs.unix(auctionInfo?.endTime as number)
+      const end = dayjs.unix(parseInt(auctionInfo?.firstBidTime + auctionInfo?.duration) as number)
+
       let countdown = end.diff(now, "second")
 
       if (countdown > 0) {
@@ -37,7 +40,7 @@ export const useCountdown = (auctionInfo: any) => {
     return () => {
       clearInterval(interval)
     }
-  }, [auctionInfo, signerAddress])
+  }, [auctionInfo, signer])
 
   const response: countdownResponseProps = {
     countdownString,

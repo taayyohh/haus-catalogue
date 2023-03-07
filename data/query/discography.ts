@@ -53,7 +53,7 @@ export const discographyQuery = async () => {
     chain: CHAIN,
   }
 
-  const data = await request(ZORA_API, req, variables)
+  const data: { tokens: { nodes: [] } } = await request(ZORA_API, req, variables)
   const discography = data.tokens.nodes.map(({ token }: { token: ReleaseProps }) => token)
   return discography as ReleaseProps[]
 }

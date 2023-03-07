@@ -9,11 +9,11 @@ import {
   defaultInputLabelStyle,
   defaultInputStyle,
 } from "./styles.css"
-import { isEmpty } from "utils/helpers"
 import useSWR from "swr"
 import { CheckIcon } from "@radix-ui/react-icons"
 import { getEnsName } from "../../utils/ens"
 import { useProvider } from "wagmi"
+import {isEmpty} from "../../utils/isEmpty";
 
 interface SmartInputProps {
   id: string

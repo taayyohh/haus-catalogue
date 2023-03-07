@@ -1,12 +1,13 @@
 import React from "react"
 import { ethers } from "ethers"
-import { useLayoutStore } from "stores/useLayoutStore"
 import { MerkleTree } from "merkletreejs"
-import useHausCatalogue from "hooks/useHausCatalogue"
-import useZoraV3 from "hooks/useZoraV3"
-import { HausCatalogue__factory } from "types/ethers-contracts"
+import { HausCatalogue__factory } from "@contract/types/ethers-contracts"
 import useSWR, { SWRConfig } from "swr"
-import { HAUS_CATALOGUE_PROXY } from "constants/addresses"
+import { HAUS_CATALOGUE_PROXY, ZORA_V3_ADDRESSES } from "constants/addresses"
+import { useContractRead, useContractWrite, usePrepareContractWrite, useProvider, useSigner } from "wagmi"
+import ZORA_MODULE_ABI from "data/contract/abi/ZoraModuleManager.json"
+import { AddressType } from "../typings"
+import CATALOGUE_ABI from "data/contract/abi/HausCatalogueABI.json"
 const keccak256 = require("keccak256")
 
 export async function getServerSideProps() {
@@ -32,9 +33,10 @@ export async function getServerSideProps() {
 }
 
 const Settings: React.FC<any> = ({ allow }) => {
-  const { handleApprovalTransferHelper } = useHausCatalogue()
-  const { handleApprovalManager, isModuleApproved } = useZoraV3()
-  const { signer, provider, signerAddress } = useLayoutStore()
+  const { data: signer } = useSigner()
+  const provider = useProvider()
+  //@ts-ignore
+  const signerAddress = signer?._address
   const { data: isApprovedForAll } = useSWR("isApprovedForAll")
   const { data: owner } = useSWR("owner")
 
@@ -43,6 +45,32 @@ const Settings: React.FC<any> = ({ allow }) => {
     // @ts-ignore
     signer ?? provider
   )
+
+  const { data: isModuleApproved }: any = useContractRead({
+    enabled: !!signer,
+    abi: ZORA_MODULE_ABI,
+    address: ZORA_V3_ADDRESSES?.ZoraModuleManager as unknown as AddressType,
+    functionName: "isModuleApproved", // @ts-ignore
+    args: [signer?._address, ZORA_V3_ADDRESSES?.ReserveAuctionCoreEth],
+  })
+
+  const { config: zoraModuleApprovalConfig } = usePrepareContractWrite({
+    enabled: !!ZORA_V3_ADDRESSES?.ZoraModuleManager,
+    address: ZORA_V3_ADDRESSES?.ZoraModuleManager as unknown as AddressType,
+    abi: ZORA_MODULE_ABI,
+    functionName: "setApprovalForModule",
+    args: [ZORA_V3_ADDRESSES?.ReserveAuctionCoreEth, true],
+  })
+  const { writeAsync: setApprovalForModule } = useContractWrite(zoraModuleApprovalConfig)
+
+  const { config: catalogueApprovalConfig } = usePrepareContractWrite({
+    enabled: !!signer,
+    address: HAUS_CATALOGUE_PROXY as unknown as AddressType,
+    abi: CATALOGUE_ABI,
+    functionName: "setApprovalForAll",
+    args: [ZORA_V3_ADDRESSES?.ERC721TransferHelper, true],
+  })
+  const { writeAsync: setApprovalForAll } = useContractWrite(catalogueApprovalConfig)
 
   /*
   
@@ -75,8 +103,26 @@ const Settings: React.FC<any> = ({ allow }) => {
           </div>
         </div>
       )}
-      {isApprovedForAll === false && <div onClick={() => handleApprovalTransferHelper()}>allow zora auction</div>}
-      {isModuleApproved === false && <div onClick={() => handleApprovalManager()}>allow zora manager </div>}
+      {isApprovedForAll === false && (
+        <div
+          onClick={async () => {
+            const txn = await setApprovalForAll?.()
+            await txn?.wait()
+          }}
+        >
+          allow zora auction
+        </div>
+      )}
+      {isModuleApproved === false && (
+        <div
+          onClick={async () => {
+            const txn = await setApprovalForModule?.()
+            await txn?.wait()
+          }}
+        >
+          allow zora manager{" "}
+        </div>
+      )}
     </div>
   )
 }

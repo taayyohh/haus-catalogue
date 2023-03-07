@@ -11,7 +11,7 @@ utils/merkle.ts
 
 # next.js
 /.next/
-/out/
+/@contract/out/
 
 # production
 /build

@@ -1,14 +1,15 @@
 import React from "react"
 import { GetServerSideProps } from "next"
-import { slugify } from "utils/helpers"
 import useSWR, { SWRConfig } from "swr"
 import { AnimatePresence, motion } from "framer-motion"
-import Album from "components/Album/Album"
+import { SongCard } from "modules/song"
 import { ChevronLeftIcon } from "@radix-ui/react-icons"
 import { useRouter } from "next/router"
-import { getDiscography } from "utils/getDiscographyNullMetadata"
-import Meta from "../../components/Layout/Meta"
-import {useHTMLStripper} from "../../hooks/useHTMLStripper";
+import { getDiscography } from "modules/song/utils/getDiscography"
+import Meta from "components/Meta"
+import { useHTMLStripper } from "hooks/useHTMLStripper"
+
+import { slugify } from "utils"
 const ReactHtmlParser = require("react-html-parser").default
 
 export const getServerSideProps: GetServerSideProps = async context => {
@@ -49,7 +50,6 @@ const Artist = ({ artist, discography, slug }: any) => {
       ?.metadata || discography[0].metadata
   const stripHTML = useHTMLStripper()
 
-
   return (
     <AnimatePresence>
       <motion.div
@@ -67,13 +67,6 @@ const Artist = ({ artist, discography, slug }: any) => {
         animate="open"
         exit="closed"
       >
-        <Meta
-          title={metadata?.artist || metadata?.metadata?.artist}
-          type={"website"}
-          image={metadata?.artist_hero_preview}
-          description={stripHTML(metadata?.artistBio)}
-          slug={slug}
-        />
         <div className={"fixed top-16 flex h-12 w-full items-center border-t-2  "}>
           <button
             onClick={() => router.back()}
@@ -108,7 +101,7 @@ const Artist = ({ artist, discography, slug }: any) => {
                 </div>
                 <div className=" grid grid-cols-2 gap-8 py-8 md:grid-cols-3 lg:grid-cols-4">
                   {discography?.map((release: any, i: any) => (
-                    <Album key={i} release={release} />
+                    <SongCard key={i} release={release} />
                   ))}
                 </div>
               </div>
@@ -116,6 +109,13 @@ const Artist = ({ artist, discography, slug }: any) => {
           ) : null}
         </div>
       </motion.div>
+      <Meta
+        title={metadata?.artist || metadata?.metadata?.artist}
+        type={"website"}
+        image={metadata?.artist_hero_preview}
+        description={stripHTML(metadata?.artistBio)}
+        slug={slug}
+      />
     </AnimatePresence>
   )
 }

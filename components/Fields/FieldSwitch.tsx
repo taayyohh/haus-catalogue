@@ -15,12 +15,9 @@ import {
   TEXT,
   TEXTAREA,
 } from "./types"
-import { ethers } from "ethers"
 import { FormikProps } from "formik"
 import dynamic from "next/dynamic"
 import React, { BaseSyntheticEvent, ReactNode } from "react"
-import { compareAndReturn } from "utils/helpers"
-import { useEnsAddress } from "wagmi"
 import SingleImageUpload from "./SingleImageUpload"
 import SingleAudioUpload from "./SingleAudioUpload"
 import DaysHoursMinsSecs from "./DaysHoursMinsSecs"
@@ -75,21 +72,6 @@ const FieldSwitch: React.FC<FieldSwitchProps> = ({
     name: string
   }
 
-
-  React.useEffect(() => {
-    /*
-
-          compare initial values against entered values
-          and null confirmation of changes on value change
-
-        */
-    if (!!hasConfirmed?.state && !!setHasConfirmed) {
-      let updates = compareAndReturn(formik.initialValues, formik.values)
-
-      setHasConfirmed({ state: hasConfirmed.state, values: updates })
-    }
-  }, [formik.values])
-
   /*
 
           handle smartInput onChange
@@ -98,21 +80,6 @@ const FieldSwitch: React.FC<FieldSwitchProps> = ({
   const handleChange = (e: BaseSyntheticEvent) => {
     const { value } = e.target
     if (!formik) return
-    /*
-
-            custom field handling
-
-         */
-    if (field.name === "daoName") {
-      formik.setFieldValue(
-        "daoSymbol",
-        `$${value
-          .toUpperCase()
-          .replace(/[AEIOU\s]/g, "")
-          .slice(0, 4)}`
-      )
-    }
-
 
     formik.setFieldValue(field.name, field.type === NUMBER ? parseFloat(isNaN(value) ? undefined : value) : value)
   }
