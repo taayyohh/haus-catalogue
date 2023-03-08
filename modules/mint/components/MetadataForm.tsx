@@ -1,27 +1,27 @@
-import React from "react"
-import Form from "components/Fields/Form"
-import { metadataFields, metadataInitialValues } from "components/Fields/fields/metadataFields"
-import { NFTStorage } from "nft.storage"
-import { ethers } from "ethers"
-import CID from "cids"
-import { FormikHelpers, FormikValues } from "formik"
-import { HausCatalogue__factory } from "@contract/types/ethers-contracts"
-import { HAUS_CATALOGUE_PROXY } from "constants/addresses"
-import { TokenInput } from "nft.storage/dist/src/token"
-import { useProvider, useSigner } from "wagmi"
+import { prepareWriteContract, writeContract } from '@wagmi/core'
+import CID from 'cids'
+import Form from 'components/Fields/Form'
+import {
+  metadataFields,
+  metadataInitialValues,
+} from 'components/Fields/fields/metadataFields'
+import { HAUS_CATALOGUE_PROXY } from 'constants/addresses'
+import CATALOGUE_ABI from 'data/contract/abi/HausCatalogueABI.json'
+import { ethers } from 'ethers'
+import { FormikHelpers, FormikValues } from 'formik'
+import { NFTStorage } from 'nft.storage'
+import { TokenInput } from 'nft.storage/dist/src/token'
+import React from 'react'
+import { AddressType } from 'typings'
+import { useSigner } from 'wagmi'
 
 export const MetadataForm: React.FC<{ merkle: any }> = ({ merkle }) => {
-  const client = new NFTStorage({ token: process.env.NFT_STORAGE_TOKEN ? process.env.NFT_STORAGE_TOKEN : "" })
+  const client = new NFTStorage({
+    token: process.env.NFT_STORAGE_TOKEN ? process.env.NFT_STORAGE_TOKEN : '',
+  })
   const { data: signer } = useSigner()
-  const provider = useProvider()
   //@ts-ignore
   const signerAddress = signer?._address
-
-  const contract = HausCatalogue__factory.connect(
-    HAUS_CATALOGUE_PROXY || "",
-    // @ts-ignore
-    signer ?? provider
-  )
 
   /*
       
@@ -30,7 +30,7 @@ export const MetadataForm: React.FC<{ merkle: any }> = ({ merkle }) => {
     */
   const submitCallBack = React.useCallback(
     async (values: FormikValues, formik?: FormikHelpers<{}>) => {
-      if (!signerAddress || !contract) return
+      if (!signerAddress) return
 
       /*
     
@@ -80,19 +80,33 @@ export const MetadataForm: React.FC<{ merkle: any }> = ({ merkle }) => {
       const leaf = merkle.leaf(signerAddress)
       const proof = merkle.hexProof(leaf)
 
-      contract.mint(tokenData, contentData, proof)
-      contract.on("ContentUpdated", (tokenId, contentHash, contentURI) => {
-        formik?.resetForm()
+      const config = await prepareWriteContract({
+        address: HAUS_CATALOGUE_PROXY as unknown as AddressType,
+        abi: CATALOGUE_ABI,
+        functionName: 'mint',
+        signer: signer,
+        args: [tokenData, contentData, proof],
       })
+
+      const { wait } = await writeContract(config)
+      await wait()
     },
-    [signerAddress, merkle, contract]
+    [signerAddress, merkle]
   )
 
   return (
-    <div className={"max-h-[75vh] overflow-hidden overflow-y-scroll rounded border  px-12 px-8 py-8 shadow-inner"}>
-      <div className={"mb-12 text-4xl font-bold"}>Mint</div>
-      <div className={"mb-24"}>
-        <Form fields={metadataFields} initialValues={metadataInitialValues} submitCallback={submitCallBack} />
+    <div
+      className={
+        'max-h-[75vh] overflow-hidden overflow-y-scroll rounded border  px-12 px-8 py-8 shadow-inner'
+      }
+    >
+      <div className={'mb-12 text-4xl font-bold'}>Mint</div>
+      <div className={'mb-24'}>
+        <Form
+          fields={metadataFields}
+          initialValues={metadataInitialValues}
+          submitCallback={submitCallBack}
+        />
       </div>
     </div>
   )
