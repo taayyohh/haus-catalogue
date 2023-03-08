@@ -5,7 +5,7 @@ import { slugify } from 'utils'
 
 export async function getDiscography() {
   try {
-    const discography = [
+    const discography: ReleaseProps[] = [
       ...sanitizeDiscography(await discographyQuery()),
       ...(await repairMetadata(await discographyQuery())),
     ]
