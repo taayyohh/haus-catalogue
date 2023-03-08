@@ -1,3 +1,3 @@
-export const ipfsGateway = (uri: string) => {
-  return uri.replace("ipfs://", "https://ipfs.zora.co/ipfs/")
+export const ipfsGateway = (uri: string): string => {
+  return uri.replace("ipfs://", "https://nftstorage.link/ipfs/")
 }

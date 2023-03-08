@@ -1,9 +1,9 @@
 import React from "react"
-import MetadataForm from "../modules/mint/components/MetaDataForm/MetadataForm"
+import { MetadataForm } from "modules/mint"
 import { MerkleTree } from "merkletreejs"
-import { useLayoutStore } from "stores/useLayoutStore"
 import useSWR from "swr"
 import { isCatalogueArtist } from "utils/isCatalogueArtist"
+import { useSigner } from "wagmi"
 const keccak256 = require("keccak256")
 
 const Mint: React.FC<{ allow: string[] }> = ({ allow }) => {
@@ -13,7 +13,9 @@ const Mint: React.FC<{ allow: string[] }> = ({ allow }) => {
   const hexProof = (leaf: any) => tree.getHexProof(leaf)
   const positionalHexProof = (leaf: any) => tree.getPositionalHexProof(leaf)
   const proof = (leaf: any) => tree.getProof(leaf)
-  const { signerAddress } = useLayoutStore()
+  const { data: signer } = useSigner()
+  //@ts-ignore
+  const signerAddress = signer?._address
   const { data: root } = useSWR("merkleRoot")
 
   return (

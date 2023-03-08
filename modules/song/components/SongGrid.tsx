@@ -1,5 +1,5 @@
 import React from "react"
-import Album from "components/Album/Album"
+import { SongCard } from "modules/song"
 import { ReleaseProps } from "data/query/typings"
 
 export const SongGrid: React.FC<{ discography: ReleaseProps[] }> = ({ discography }) => {
@@ -9,7 +9,7 @@ export const SongGrid: React.FC<{ discography: ReleaseProps[] }> = ({ discograph
         <div className="mx-auto w-11/12 border-t">
           <div className="grid grid-cols-2 gap-8 py-8 md:grid-cols-3 lg:grid-cols-4">
             {discography?.map((release: any, i: any) => (
-              <Album key={i} release={release} />
+              <SongCard key={i} release={release} />
             ))}
           </div>
         </div>

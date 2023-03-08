@@ -1,40 +1,25 @@
-import create from "zustand"
-import { PlayerTrack } from "../data/query/typings"
+import { create } from "zustand"
+import { PlayerTrack } from "data/query/typings"
 
-interface Media {
-  src: any
-  readyState: number
-  duration: number
-  currentTime: number
-  currentSrc: string
-  buffered: object
-  controlsList: object
-  ended: boolean
-  error: object
-  networkState: number
-  seekable: object
-  seeking: boolean
-  textTracks: object
-  volume: number
-  muted: boolean
-  paused: boolean
-  addEventListener: (type: string, event: object) => void
-  play: () => void
-  pause: () => void
+export type PlayerQueueType = "play" | "front" | "back"
+export interface QueueItem {
+  track: PlayerTrack
+  type: PlayerQueueType
 }
-interface PlayerState {
-  queuedMusic: {}[]
-  addToQueue: (track: PlayerTrack) => void
-  media: Media
-  setCurrentMedia: (media: Media) => void
+
+export interface PlayerState {
+  queuedItem: QueueItem | null
+  addToQueue: (track: PlayerTrack, type: PlayerQueueType) => void
+  media: HTMLAudioElement | undefined
+  setCurrentMedia: (media: HTMLAudioElement) => void
   isPlaying: boolean
   setIsPlaying: (is: boolean) => void
   duration: string
   setDuration: (duration: string) => void
   currentTime: string
   setCurrentTime: (duration: string) => void
-  queue: PlayerTrack[]
-  setQueue: (music: []) => void
+  queue: QueueItem[]
+  clearQueueItem: () => void
   currentPosition: number
   setCurrentPosition: (position: number) => void
 }
@@ -46,40 +31,21 @@ export const usePlayerStore = create<PlayerState>(set => ({
       isPlaying: is,
     }))
   },
-  queuedMusic: [],
-  addToQueue: (track: PlayerTrack) => {
+  addToQueue: (track: PlayerTrack, type: PlayerQueueType) => {
     set(state => ({
-      queuedMusic: [...state.queuedMusic, track],
+      queue: [{ track, type }, ...state.queue],
+      queuedItem: { track, type },
     }))
   },
-  media: {
-    src: "",
-    readyState: 0,
-    duration: 0,
-    currentTime: 0,
-    currentSrc: "",
-    buffered: {},
-    controlsList: {},
-    ended: false,
-    error: {},
-    networkState: 0,
-    seekable: {},
-    seeking: false,
-    textTracks: {},
-    volume: 0,
-    muted: false,
-    paused: false,
-    addEventListener: () => {},
-    play: () => {},
-    pause: () => {},
-  },
-  setCurrentMedia: (media: Media) => set({ media }),
+  media: undefined,
+  setCurrentMedia: (media: HTMLAudioElement) => set({ media }),
   duration: "",
   setDuration: duration => set({ duration }),
   currentTime: "",
   setCurrentTime: currentTime => set({ currentTime }),
   queue: [],
-  setQueue: queue => set({ queue }),
+  queuedItem: null,
+  clearQueueItem: () => set({ queuedItem: null }),
   currentPosition: 0,
   setCurrentPosition: currentPosition => set({ currentPosition }),
 }))
