@@ -15,6 +15,7 @@ import {
   useProvider,
   useSigner,
 } from 'wagmi'
+import SHA256 from "crypto-js/sha256";
 
 const keccak256 = require('keccak256')
 
@@ -86,9 +87,9 @@ const Settings: React.FC<any> = ({ allow }) => {
   const { writeAsync: setApprovalForAll } = useContractWrite(catalogueApprovalConfig)
 
   /*
-  
+
     generate root
-  
+
 
    */
   const leaves = allow?.map((x: string) => keccak256(x))

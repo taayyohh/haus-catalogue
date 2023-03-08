@@ -13,6 +13,7 @@ import { NFTStorage } from 'nft.storage'
 import { TokenInput } from 'nft.storage/dist/src/token'
 import React from 'react'
 import { AddressType } from 'typings'
+import { getMerkleProof } from 'utils/merkleProof'
 import { useSigner } from 'wagmi'
 
 export const MetadataForm: React.FC<{ merkle: any }> = ({ merkle }) => {
@@ -24,18 +25,18 @@ export const MetadataForm: React.FC<{ merkle: any }> = ({ merkle }) => {
   const signerAddress = signer?._address
 
   /*
-      
+
         handle form submission
-       
+
     */
   const submitCallBack = React.useCallback(
     async (values: FormikValues, formik?: FormikHelpers<{}>) => {
       if (!signerAddress) return
 
       /*
-    
+
         sanitize values for Metadata Upload
-     
+
       */
       values.title = values.name
       values.project.title = values.title
@@ -48,9 +49,9 @@ export const MetadataForm: React.FC<{ merkle: any }> = ({ merkle }) => {
       values.attributes.artist_avatar = values.artist
       const metadata = await client.store(values as TokenInput)
       /*
-    
+
          construct TokenData Struct
-     
+
      */
       const tokenData = {
         metadataURI: metadata.url,
@@ -60,9 +61,9 @@ export const MetadataForm: React.FC<{ merkle: any }> = ({ merkle }) => {
       }
 
       /*
-      
+
            construct ContentData Struct
-       
+
        */
       const cid = new CID(values.cid).toV0()
       const hash = cid.toString(cid.multibaseName)
@@ -72,24 +73,23 @@ export const MetadataForm: React.FC<{ merkle: any }> = ({ merkle }) => {
         contentHash,
       }
 
-      /*
-      
-           construct proof
-       
-       */
       const leaf = merkle.leaf(signerAddress)
       const proof = merkle.hexProof(leaf)
 
-      const config = await prepareWriteContract({
-        address: HAUS_CATALOGUE_PROXY as unknown as AddressType,
-        abi: CATALOGUE_ABI,
-        functionName: 'mint',
-        signer: signer,
-        args: [tokenData, contentData, proof],
-      })
+      try {
+        const config = await prepareWriteContract({
+          address: HAUS_CATALOGUE_PROXY as unknown as AddressType,
+          abi: CATALOGUE_ABI,
+          functionName: 'mint',
+          signer: signer,
+          args: [tokenData, contentData, proof],
+        })
 
-      const { wait } = await writeContract(config)
-      await wait()
+        const { wait } = await writeContract(config)
+        await wait()
+      } catch (err) {
+        console.log('err', err)
+      }
     },
     [signerAddress, merkle]
   )
