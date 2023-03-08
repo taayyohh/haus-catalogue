@@ -1,23 +1,15 @@
 import { HamburgerMenuIcon } from '@radix-ui/react-icons'
 import { ConnectButton } from '@rainbow-me/rainbowkit'
-import { HAUS_CATALOGUE_PROXY } from 'constants/addresses'
-import ABI from 'data/contract/abi/HausCatalogueABI.json'
 import { motion } from 'framer-motion'
 import Link from 'next/link'
 import React from 'react'
-import { AddressType } from 'typings'
 import { isCatalogueArtist } from 'utils/isCatalogueArtist'
-import { useContractRead, useSigner } from 'wagmi'
+import { useSigner } from 'wagmi'
 
 const Nav = () => {
   const { data: signer } = useSigner()
   //@ts-ignore
   const signerAddress = signer?._address
-  const { data: root }: any = useContractRead({
-    abi: ABI,
-    address: HAUS_CATALOGUE_PROXY as unknown as AddressType,
-    functionName: 'merkleRoot',
-  })
   const [isOpen, setIsOpen] = React.useState<boolean>(false)
   const variants = {
     initial: {
@@ -41,7 +33,7 @@ const Nav = () => {
             <img src="/lucidhaus.png" alt={'LucidHaus Logo'} />
           </Link>
         </button>
-        {isCatalogueArtist(signerAddress, root) && (
+        {isCatalogueArtist(signerAddress) && (
           <div className={'absolute right-[220px]'}>
             <Link href={'/mint'}>Mint</Link>
           </div>
@@ -67,7 +59,7 @@ const Nav = () => {
           initial={'initial'}
           animate={isOpen ? 'animate' : 'initial'}
         >
-          {isCatalogueArtist(signerAddress, root) && (
+          {isCatalogueArtist(signerAddress) && (
             <div className={'flex mr-12'}>
               <Link href={'/mint'}>Mint</Link>
             </div>
