@@ -20,7 +20,6 @@ export const getServerSideProps: GetServerSideProps = async (context) => {
   try {
     //TODO:: write more specific call
     const { fallback, discography } = await getDiscography()
-    console.log('d', discography)
 
     // @ts-ignore
     const artistDiscography: ReleaseProps[] = discography?.reduce(
