@@ -10,6 +10,7 @@ import Meta from 'components/Meta'
 import { useHTMLStripper } from 'hooks/useHTMLStripper'
 
 import { slugify } from 'utils'
+import { ReleaseProps } from 'data/query/typings'
 const ReactHtmlParser = require('react-html-parser').default
 
 export const getServerSideProps: GetServerSideProps = async (context) => {
@@ -19,11 +20,17 @@ export const getServerSideProps: GetServerSideProps = async (context) => {
   try {
     //TODO:: write more specific call
     const { fallback, discography } = await getDiscography()
-    const artistDiscography = discography?.reduce((acc: any[] = [], cv: any) => {
-      if (slugify(cv.metadata.artist) === artist) acc.push(cv)
+    console.log('d', discography)
 
-      return acc
-    }, [])
+    // @ts-ignore
+    const artistDiscography: ReleaseProps[] = discography?.reduce(
+      (acc: ReleaseProps[] = [], cv: ReleaseProps) => {
+        if (slugify(cv.metadata.artist) === artist) acc.push(cv)
+
+        return acc
+      },
+      []
+    )
 
     return {
       props: {
