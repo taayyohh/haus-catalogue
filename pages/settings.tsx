@@ -15,7 +15,6 @@ import {
   useProvider,
   useSigner,
 } from 'wagmi'
-import SHA256 from "crypto-js/sha256";
 
 const keccak256 = require('keccak256')
 
