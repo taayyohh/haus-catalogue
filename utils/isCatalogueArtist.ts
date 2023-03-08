@@ -1,14 +1,13 @@
-import keccak256 from "keccak256"
-import { MerkleTree } from "merkletreejs"
+import SHA256 from 'crypto-js/sha256'
+import { MerkleTree } from 'merkletreejs'
 
-export const isCatalogueArtist = function (signerAddress: `0x${string}`, root: string | Buffer) {
-  const ALLOW = process.env.MERKLE?.split(",") || []
-  const leaves = ALLOW?.map(x => keccak256(x))
-  const tree = new MerkleTree(leaves, keccak256, { sort: true })
-  const leaf = (address: string) => keccak256(address)
-  const hexProof = (leaf: any) => tree.getHexProof(leaf)
+export const isCatalogueArtist = function (signerAddress: `0x${string}`) {
+  const merkle = process.env.MERKLE
+  const leaves = merkle?.split(',')?.map((x) => SHA256(x)) || []
+  const tree = new MerkleTree(leaves, SHA256)
+  const root = tree.getRoot().toString('hex')
+  const leaf = SHA256(signerAddress)
+  const proof = tree.getProof(leaf.toString())
 
-  const _leaf = leaf(signerAddress)
-  const _proof = hexProof(_leaf)
-  return tree.verify(_proof, _leaf, root)
+  return tree.verify(proof, leaf.toString(), root)
 }

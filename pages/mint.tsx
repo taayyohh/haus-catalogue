@@ -1,10 +1,7 @@
-import { HAUS_CATALOGUE_PROXY } from 'constants/addresses'
-import ABI from 'data/contract/abi/HausCatalogueABI.json'
 import { MerkleTree } from 'merkletreejs'
 import React from 'react'
-import { AddressType } from 'typings'
 import { isCatalogueArtist } from 'utils/isCatalogueArtist'
-import { useContractRead, useSigner } from 'wagmi'
+import { useSigner } from 'wagmi'
 
 import { MetadataForm } from 'modules/mint'
 
@@ -20,15 +17,10 @@ const Mint: React.FC<{ allow: string[] }> = ({ allow }) => {
   const { data: signer } = useSigner()
   //@ts-ignore
   const signerAddress = signer?._address
-  const { data: root }: any = useContractRead({
-    abi: ABI,
-    address: HAUS_CATALOGUE_PROXY as unknown as AddressType,
-    functionName: 'merkleRoot',
-  })
 
   return (
     <div>
-      {isCatalogueArtist(signerAddress, root) && (
+      {isCatalogueArtist(signerAddress) && (
         <div className={'mx-auto mb-32 w-full rounded p-4 px-8 pt-32 sm:w-3/4 md:w-2/3'}>
           <MetadataForm
             merkle={{ hexProof, positionalHexProof, proof, leaf, tree, leaves }}
