@@ -55,7 +55,7 @@ const Song = ({ artist, song, slug }: any) => {
           <ReleaseDetails release={release} auction={auction} />
           <div
             className={
-              'mt-12 flex flex-col gap-10 grid sm:grid sm:grid-cols-[4fr,6fr] mx-auto w-11/12 pt-16 sm:w-4/5'
+              'mt-12 flex flex-col gap-10 sm:grid sm:grid-cols-[4fr,6fr] mx-auto w-11/12 pt-16 sm:w-4/5'
             }
           >
             <AuctionInfo auction={auction} release={release} />
