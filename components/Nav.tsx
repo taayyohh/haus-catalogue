@@ -48,7 +48,7 @@ const Nav = () => {
       <div className="fixed z-10 flex h-16 w-full items-center justify-between  border-b bg-white p-4 sm:hidden">
         <button className="w-24">
           <Link href={"/"}>
-            <img src="/public/lucidhaus.png" />
+            <img src="/lucidhaus.png" />
           </Link>
         </button>
         <div className={"ml-4"} onClick={() => setIsOpen(flag => !flag)}>

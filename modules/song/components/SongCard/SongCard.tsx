@@ -4,7 +4,7 @@ import Countdown from "./Countdown"
 import { motion } from "framer-motion"
 import { AuctionControls, Bid } from "modules/auction/components"
 import Link from "next/link"
-import AlbumInner from "./AlbumInner"
+import SongCardInner from "./SongCardInner"
 import { ethers } from "ethers"
 import { useContractRead, useSigner } from "wagmi"
 import ABI from "data/contract/abi/ReserveAuctionCoreETH.json"
@@ -54,7 +54,7 @@ export const SongCard: React.FC<any> = memo(({ release }) => {
         onMouseOver={() => setIsHover(true)}
         onMouseLeave={() => setIsHover(false)}
       >
-        <AlbumInner release={release} />
+        <SongCardInner release={release} />
         <div className="flex w-full flex-col items-start py-2">
           <div className={"flex w-full flex-col items-start justify-between gap-1 sm:flex-row"}>
             <div className={"my-1 flex flex-col sm:my-0"}>

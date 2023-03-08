@@ -4,7 +4,7 @@ import Link from "next/link"
 import Image from "next/image"
 import {slugify} from "../../../../utils/slugify";
 
-const AlbumInner = ({ release }: any) => {
+const SongCardInner = ({ release }: any) => {
   const [isHover, setIsHover] = React.useState<boolean>(false)
 
   return (
@@ -27,4 +27,4 @@ const AlbumInner = ({ release }: any) => {
   )
 }
 
-export default AlbumInner
+export default SongCardInner

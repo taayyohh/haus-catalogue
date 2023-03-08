@@ -1,11 +1,11 @@
-import { ipfsGateway } from "utils"
-import { BsFillPauseFill, BsFillPlayFill } from "react-icons/bs"
-import React from "react"
-import { ReleaseProps } from "data/query/typings"
-import { usePlayerStore } from "stores/usePlayerStore"
+import { ipfsGateway } from 'utils'
+import { BsFillPauseFill, BsFillPlayFill } from 'react-icons/bs'
+import React from 'react'
+import { ReleaseProps } from 'data/query/typings'
+import { usePlayerStore } from 'stores/usePlayerStore'
 
 export const PlayButton: React.FC<{ release: ReleaseProps }> = ({ release }) => {
-  const { isPlaying, addToQueue, media, queue } = usePlayerStore()
+  const { isPlaying, addToQueue, media, queue, setIsPlaying } = usePlayerStore()
 
   const handleClick = React.useCallback(
     (release: ReleaseProps) => {
@@ -13,16 +13,17 @@ export const PlayButton: React.FC<{ release: ReleaseProps }> = ({ release }) => 
         return
       }
 
-      console.log("meda", media, isPlaying)
-      // if (media.src === ipfsGateway(release?.metadata?.losslessAudio)) {
-      //   if (isPlaying) {
-      //     media.pause()
-      //   } else {
-      //     media.play()
-      //   }
-      // }
-      //
-      // if (!media) {
+      if (media?.src === ipfsGateway(release?.metadata?.losslessAudio)) {
+        if (isPlaying) {
+          media.pause()
+          setIsPlaying(false)
+        } else {
+          media.play()
+          setIsPlaying(true)
+        }
+        return
+      }
+
       addToQueue(
         {
           artist: release.metadata.artist,
@@ -32,15 +33,18 @@ export const PlayButton: React.FC<{ release: ReleaseProps }> = ({ release }) => 
           trackNumber: release.metadata.trackNumber,
           release,
         },
-        "play"
+        'play'
       )
-      // }
     },
     [release, media, addToQueue, isPlaying, queue]
   )
 
   return (
-    <div className={"flex h-[120px] min-h-[120px] w-[120px] min-w-[120px] items-center justify-center rounded-full "}>
+    <div
+      className={
+        'flex h-[80px] min-h-[80px] w-[80px] min-w-[80px] sm:h-[120px] sm:min-h-[120px] sm:w-[120px] sm:min-w-[120px] items-center justify-center rounded-full '
+      }
+    >
       <button type="button" onClick={() => handleClick(release)}>
         {(isPlaying && media?.src === ipfsGateway(release?.metadata?.losslessAudio) && (
           <BsFillPauseFill size={44} />

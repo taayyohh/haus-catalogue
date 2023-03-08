@@ -4,7 +4,7 @@ export const hhmmss = (secs: string) => {
     let minutes = Math.floor((sec_num - hours * 3600) / 60) || ""
     let seconds = sec_num - hours * 3600 - Number(minutes) * 60 || ""
     if (minutes < 10) {
-        minutes = "0" + minutes
+        minutes = "00" + minutes
     }
     if (seconds < 10) {
         seconds = "0" + seconds

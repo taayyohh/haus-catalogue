@@ -1,9 +1,9 @@
-import React, { useState } from 'react'
+import React from 'react'
 import { usePlayerStore } from 'stores/usePlayerStore'
 import { SWRConfig } from 'swr'
 import { getDiscography } from 'modules/song/utils/getDiscography'
 import Meta from 'components/Meta'
-import { PlayerTrack, ReleaseProps } from 'data/query/typings'
+import { ReleaseProps } from 'data/query/typings'
 import { ipfsGateway } from 'utils/ipfsGateway'
 import { randomSong, SongGrid, NowPlaying } from 'modules/song'
 
@@ -31,36 +31,36 @@ export async function getServerSideProps() {
 const Home: React.FC<{ discography: ReleaseProps[] }> = ({ discography }) => {
   const addToQueue = usePlayerStore((state) => state.addToQueue)
   const queue = usePlayerStore((state) => state.queue)
+  const currentPosition = usePlayerStore((state) => state.currentPosition)
 
   /*  generate random song  */
 
-  const [randomTrack, setRandomTrack] = useState<PlayerTrack | null>(null)
   React.useEffect(() => {
     if (!discography) return
 
     const random = randomSong(discography)
-    setRandomTrack(random)
+    addToQueue(random, 'front')
   }, [])
 
   return (
     <>
-      {!!randomTrack && (
+      {!!queue[currentPosition]?.track ? (
         <div className="absolute top-0 left-0 m-0 mx-auto box-border h-full w-screen min-w-0">
           <Meta
-            title={randomTrack?.title}
+            title={queue[currentPosition]?.track?.title}
             type={'music.song'}
-            image={ipfsGateway(randomTrack?.image)}
+            image={ipfsGateway(queue[currentPosition]?.track?.image)}
             slug={'/'}
-            track={randomTrack?.trackNumber}
-            musician={randomTrack?.artist}
+            track={queue[currentPosition]?.track?.trackNumber}
+            musician={queue[currentPosition]?.track?.artist}
             description={'LucidHaus Catalogue <3'}
           />
           <div className="m-0 mx-auto box-border w-screen min-w-0">
-            <NowPlaying track={queue[0]?.track || randomTrack} />
+            <NowPlaying track={queue[currentPosition]?.track} />
             <SongGrid discography={discography} />
           </div>
         </div>
-      )}
+      ) : null}
     </>
   )
 }

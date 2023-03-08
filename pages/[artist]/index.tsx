@@ -1,18 +1,18 @@
-import React from "react"
-import { GetServerSideProps } from "next"
-import useSWR, { SWRConfig } from "swr"
-import { AnimatePresence, motion } from "framer-motion"
-import { SongCard } from "modules/song"
-import { ChevronLeftIcon } from "@radix-ui/react-icons"
-import { useRouter } from "next/router"
-import { getDiscography } from "modules/song/utils/getDiscography"
-import Meta from "components/Meta"
-import { useHTMLStripper } from "hooks/useHTMLStripper"
+import React from 'react'
+import { GetServerSideProps } from 'next'
+import useSWR, { SWRConfig } from 'swr'
+import { AnimatePresence, motion } from 'framer-motion'
+import { SongCard } from 'modules/song'
+import { ChevronLeftIcon } from '@radix-ui/react-icons'
+import { useRouter } from 'next/router'
+import { getDiscography } from 'modules/song'
+import Meta from 'components/Meta'
+import { useHTMLStripper } from 'hooks/useHTMLStripper'
 
-import { slugify } from "utils"
-const ReactHtmlParser = require("react-html-parser").default
+import { slugify } from 'utils'
+const ReactHtmlParser = require('react-html-parser').default
 
-export const getServerSideProps: GetServerSideProps = async context => {
+export const getServerSideProps: GetServerSideProps = async (context) => {
   const artist = context?.params?.artist as string
   const slug = context?.resolvedUrl
 
@@ -35,7 +35,7 @@ export const getServerSideProps: GetServerSideProps = async context => {
       },
     }
   } catch (error: any) {
-    console.log("err", error)
+    console.log('err', error)
     return {
       notFound: true,
     }
@@ -46,8 +46,10 @@ const Artist = ({ artist, discography, slug }: any) => {
   const { data: _artist } = useSWR(`${artist}`, { revalidateOnFocus: false })
   const router = useRouter()
   const metadata =
-    discography.find((release: { metadata: { artist_hero_preview: any } }) => release.metadata.artist_hero_preview)
-      ?.metadata || discography[0].metadata
+    discography.find(
+      (release: { metadata: { artist_hero_preview: any } }) =>
+        release.metadata.artist_hero_preview
+    )?.metadata || discography[0].metadata
   const stripHTML = useHTMLStripper()
 
   return (
@@ -67,22 +69,24 @@ const Artist = ({ artist, discography, slug }: any) => {
         animate="open"
         exit="closed"
       >
-        <div className={"fixed top-16 flex h-12 w-full items-center border-t-2  "}>
+        <div className={'fixed top-16 flex h-12 w-full items-center border-t-2  '}>
           <button
             onClick={() => router.back()}
-            className={"absolute left-7 rounded-full bg-[#ffffff78] p-1 hover:bg-white"}
+            className={'absolute left-7 rounded-full bg-[#ffffff78] p-1 hover:bg-white'}
           >
-            <ChevronLeftIcon width={"22px"} height={"22px"} className={"text-black"} />
+            <ChevronLeftIcon width={'22px'} height={'22px'} className={'text-black'} />
           </button>
         </div>
-        <div className={"mx-auto w-11/12 pt-32 sm:w-4/5"}>
+        <div className={'mx-auto w-11/12 pt-32 sm:w-4/5'}>
           <div>
             {metadata?.artist_hero_preview && (
-              <div className={"fixed left-0 top-0 -z-10 h-[100vh] w-full overflow-hidden"}>
+              <div
+                className={'fixed left-0 top-0 -z-10 h-[100vh] w-full overflow-hidden'}
+              >
                 <img
                   src={metadata?.artist_hero_preview}
-                  className={"h-full w-full object-cover"}
-                  alt={"artist cover image"}
+                  className={'h-full w-full object-cover'}
+                  alt={'artist cover image'}
                 />
               </div>
             )}
@@ -92,12 +96,16 @@ const Artist = ({ artist, discography, slug }: any) => {
         <div>
           {discography?.length > 0 ? (
             <div className="mx-auto mt-[40vh] h-full w-full rounded border-t bg-white sm:mt-[65vh] sm:min-h-[100vh] sm:w-11/12">
-              <div className={"mx-auto w-11/12"}>
-                <div className={"py-12 text-center text-6xl font-bold uppercase text-black"}>
+              <div className={'mx-auto w-11/12'}>
+                <div
+                  className={'py-12 text-center text-6xl font-bold uppercase text-black'}
+                >
                   {metadata?.artist || metadata?.metadata?.artist}
                 </div>
-                <div className={"mx-auto mb-20 w-1/2"}>
-                  <div className={"text-black gap-3"}>{ReactHtmlParser(metadata?.artistBio)}</div>
+                <div className={'mx-auto mb-20 w-1/2'}>
+                  <div className={'text-black gap-3'}>
+                    {ReactHtmlParser(metadata?.artistBio)}
+                  </div>
                 </div>
                 <div className=" grid grid-cols-2 gap-8 py-8 md:grid-cols-3 lg:grid-cols-4">
                   {discography?.map((release: any, i: any) => (
@@ -111,7 +119,7 @@ const Artist = ({ artist, discography, slug }: any) => {
       </motion.div>
       <Meta
         title={metadata?.artist || metadata?.metadata?.artist}
-        type={"website"}
+        type={'website'}
         image={metadata?.artist_hero_preview}
         description={stripHTML(metadata?.artistBio)}
         slug={slug}
@@ -120,7 +128,13 @@ const Artist = ({ artist, discography, slug }: any) => {
   )
 }
 
-export default function ArtistPage({ fallback, artist, artistDiscography, song, slug }: any) {
+export default function ArtistPage({
+  fallback,
+  artist,
+  artistDiscography,
+  song,
+  slug,
+}: any) {
   // SWR hooks inside the `SWRConfig` boundary will use those values.
   return (
     <SWRConfig value={{ fallback }}>

@@ -29,7 +29,6 @@ const CreateBid: React.FC<{ release: any }> = ({ release }) => {
   const [isSubmitting, setIsSubmitting] = React.useState<undefined | boolean>(undefined)
   const handeCreateBid = async (values: any) => {
     try {
-      console.log("hiii")
       const config = await prepareWriteContract({
         abi: AUCTION_ABI,
         address: ZORA_V3_ADDRESSES?.ReserveAuctionCoreEth as unknown as AddressType,

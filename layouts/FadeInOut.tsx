@@ -1,11 +1,11 @@
 import { AnimatePresence, motion } from "framer-motion"
 import React, { ReactNode } from "react"
 
-export const FadeInOut: React.FC<{ children: ReactNode; key: any }> = ({ children, key }) => {
+export const FadeInOut: React.FC<{ children: ReactNode; k: any }> = ({ children, k }) => {
   return (
     <AnimatePresence exitBeforeEnter={true}>
       <motion.div
-        key={key}
+        key={k}
         variants={{
           closed: {
             y: 0,

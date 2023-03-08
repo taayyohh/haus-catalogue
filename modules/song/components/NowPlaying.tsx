@@ -9,15 +9,22 @@ import { slugify } from 'utils'
 import React from 'react'
 
 export const NowPlaying: React.FC<{ track: PlayerTrack }> = ({ track }) => {
-  const { isPlaying, media, duration, currentTime, addToQueue } = usePlayerStore()
+  const { isPlaying, media, duration, currentTime, addToQueue, setIsPlaying } =
+    usePlayerStore()
 
-  const handleClick = () => {
+  const handleClick = React.useCallback(() => {
     if (!!media && media.src) {
-      isPlaying ? media.pause() : media.play()
+      if (isPlaying) {
+        media.pause()
+        setIsPlaying(false)
+      } else {
+        media.play()
+        setIsPlaying(true)
+      }
       return
     }
     addToQueue(track, 'play')
-  }
+  }, [isPlaying, media])
 
   return (
     <div className="sticky top-0 z-0 grid h-screen w-screen place-items-center ">
@@ -75,7 +82,6 @@ export const NowPlaying: React.FC<{ track: PlayerTrack }> = ({ track }) => {
                   </div>
                 )}
                 <Bid release={track?.release} />
-                {/*<Countdown countdownString={countdownString} />*/}
               </div>
             </motion.div>
           </AnimatePresence>

@@ -36,10 +36,10 @@ const SongNav: React.FC<{ artist: string; song: string }> = ({ artist, song }) =
   const notForAuction = auction?.seller === ZERO_ADDRESS
 
   return (
-    <div className={`fixed relative top-16 flex hidden h-12 w-full items-center border-y sm:flex`}>
+    <div className={`fixed relative top-16 flex hidden h-12 w-full items-center sm:flex`}>
       <button
         onClick={() => router.back()}
-        className={"absolute left-7 rounded-full bg-[#ffffff78] p-1 hover:bg-white"}
+        className={"absolute left-7 rounded-full p-1 hover:bg-white"}
       >
         <ChevronLeftIcon width={"22px"} height={"22px"} className={"text-black"} />
       </button>
@@ -84,7 +84,7 @@ const SongNav: React.FC<{ artist: string; song: string }> = ({ artist, song }) =
           </div>
         </div>
       )) || (
-        <div className={"mx-auto flex w-4/5 items-center justify-between"}>
+        <div className={"mx-auto flex w-4/5 items-center"}>
           <div className={"flex items-center gap-3"}>
             <span className={"font-bold"}>collected by</span>
             <div className={"flex items-center gap-2"}>

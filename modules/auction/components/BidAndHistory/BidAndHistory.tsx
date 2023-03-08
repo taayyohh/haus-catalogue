@@ -11,7 +11,7 @@ import axios from 'axios'
 import { ETHER_ACTOR_BASE_URL } from 'constants/etherscan'
 import { useContract, useProvider, useSigner } from 'wagmi'
 import AUCTION_ABI from 'data/contract/abi/ReserveAuctionCoreETH.json'
-import { AddressType } from '../../../../typings'
+import { AddressType } from 'typings'
 
 export const BidAndHistory: React.FC<{ release: ReleaseProps; auction: any }> = ({
   release,
@@ -111,7 +111,7 @@ export const BidAndHistory: React.FC<{ release: ReleaseProps; auction: any }> = 
   }, [activeAuctionBids])
 
   return (
-    <div>
+    <div className={'relative mb-24'}>
       <div className={'flex gap-5'}>
         <div
           className={`cursor-pointer text-2xl font-bold ${

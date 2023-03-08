@@ -7,7 +7,7 @@ export interface QueueItem {
   type: PlayerQueueType
 }
 
-interface PlayerState {
+export interface PlayerState {
   queuedItem: QueueItem | null
   addToQueue: (track: PlayerTrack, type: PlayerQueueType) => void
   media: HTMLAudioElement | undefined
