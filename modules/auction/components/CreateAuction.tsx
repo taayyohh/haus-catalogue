@@ -1,19 +1,19 @@
-import React from 'react'
+import { ConnectButton } from '@rainbow-me/rainbowkit'
+import { prepareWriteContract, writeContract } from '@wagmi/core'
 import Form from 'components/Fields/Form'
 import {
   createAuctionFields,
   createAuctionInitialValues,
 } from 'components/Fields/fields/createAuctionFields'
-import { ConnectButton } from '@rainbow-me/rainbowkit'
 import AnimatedModal from 'components/Modal/Modal'
-import { ethers } from 'ethers'
 import ZoraAuctionTag from 'components/ZoraAuctionTag'
-import { prepareWriteContract, writeContract } from '@wagmi/core'
-import AUCTION_ABI from 'data/contract/abi/ReserveAuctionCoreETH.json'
 import { ZORA_V3_ADDRESSES } from 'constants/addresses'
+import AUCTION_ABI from 'data/contract/abi/ReserveAuctionCoreETH.json'
+import { ethers } from 'ethers'
+import React from 'react'
 import { AddressType } from 'typings'
-import { useSigner } from 'wagmi'
 import { toSeconds } from 'utils'
+import { useSigner } from 'wagmi'
 
 const CreateAuction: React.FC<any> = ({ release }) => {
   const { data: signer } = useSigner()
@@ -76,8 +76,9 @@ const CreateAuction: React.FC<any> = ({ release }) => {
             initialValues={createAuctionInitialValues}
             submitCallback={handleCreateAuction}
             buttonText={'Create Auction'}
-            children={<ZoraAuctionTag />}
-          />
+          >
+            <ZoraAuctionTag />
+          </Form>
         )) || (
           <ConnectButton
             showBalance={true}

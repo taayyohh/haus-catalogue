@@ -3,7 +3,6 @@ import {
   singleImagePreview,
   singleImageUploadHelperText,
   singleImageUploadInputLabel,
-  singleImageUploadWrapper,
   uploadErrorBox,
 } from "./styles.css"
 import { FormikProps } from "formik"

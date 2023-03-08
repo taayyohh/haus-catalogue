@@ -3,5 +3,10 @@ module.exports = {
   singleQuote: true,
   printWidth: 90,
   importOrderSortSpecifiers: true,
-  // plugins: [require('@trivago/prettier-plugin-sort-imports')],
+  importOrderSeparation: true,
+  importOrder: [
+    '^modules/(.*)$',
+    '^[./]',
+  ],
+  plugins: [require('@trivago/prettier-plugin-sort-imports')],
 }

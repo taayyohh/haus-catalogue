@@ -3,7 +3,6 @@ import useSWR from 'swr'
 import { fetchTransaction } from '@wagmi/core'
 import axios from 'axios'
 import { ETHER_ACTOR_BASE_URL, ETHERSCAN_BASE_URL } from 'constants/etherscan'
-import { ethers } from 'ethers'
 import dayjs from 'dayjs'
 import {transformEvent} from "../../utils";
 

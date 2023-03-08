@@ -1,6 +1,6 @@
 import FieldSwitch from "./FieldSwitch"
 import { defaultFormButton, defaultFormStyleVariants } from "./styles.css"
-import { Formik, FormikHelpers, FormikProps, FormikValues } from "formik"
+import { Formik, FormikHelpers, FormikValues } from "formik"
 import React, { ReactNode } from "react"
 import { isEmpty } from "../../utils/isEmpty"
 

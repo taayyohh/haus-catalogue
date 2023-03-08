@@ -90,7 +90,7 @@ const SongNav: React.FC<{ artist: string; song: string }> = ({ artist, song }) =
             <div className={"flex items-center gap-2"}>
               {ensAvatar && (
                 <div className={"h-8 w-8 overflow-hidden rounded-full"}>
-                  <img src={ensAvatar} />
+                  <img src={ensAvatar} alt={'ens avatar'} />
                 </div>
               )}
 

@@ -1,7 +1,6 @@
 import React from "react"
 import PlayButton from "./PlayButton"
 import Link from "next/link"
-import Image from "next/image"
 import {slugify} from "../../../../utils/slugify";
 
 const SongCardInner = ({ release }: any) => {

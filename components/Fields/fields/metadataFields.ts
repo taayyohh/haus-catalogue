@@ -1,4 +1,4 @@
-import { NUMBER, RICH_TEXT, SINGLE_AUDIO_UPLOAD, SINGLE_IMAGE_UPLOAD, TEXT, TEXTAREA } from "components/Fields/types"
+import { NUMBER, RICH_TEXT, SINGLE_AUDIO_UPLOAD, SINGLE_IMAGE_UPLOAD, TEXT } from "components/Fields/types"
 
 export const metadataFields = [
   {
