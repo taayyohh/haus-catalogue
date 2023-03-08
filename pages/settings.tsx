@@ -86,9 +86,9 @@ const Settings: React.FC<any> = ({ allow }) => {
   const { writeAsync: setApprovalForAll } = useContractWrite(catalogueApprovalConfig)
 
   /*
-  
+
     generate root
-  
+
 
    */
   const leaves = allow?.map((x: string) => keccak256(x))
