@@ -13,7 +13,6 @@ import { NFTStorage } from 'nft.storage'
 import { TokenInput } from 'nft.storage/dist/src/token'
 import React from 'react'
 import { AddressType } from 'typings'
-import { getMerkleProof } from 'utils/merkleProof'
 import { useSigner } from 'wagmi'
 
 export const MetadataForm: React.FC<{ merkle: any }> = ({ merkle }) => {
