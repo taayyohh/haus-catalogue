@@ -14,7 +14,6 @@ export const AuctionInfo: React.FC<{ auction: any; release: ReleaseProps }> = ({
   release,
 }) => {
   const { data: royaltyPayoutAddress }: any = useContractRead({
-    enabled: !!release,
     abi: CATALOGUE_ABI,
     address: HAUS_CATALOGUE_PROXY as unknown as AddressType,
     functionName: 'royaltyPayoutAddress', // @ts-ignore
@@ -22,7 +21,6 @@ export const AuctionInfo: React.FC<{ auction: any; release: ReleaseProps }> = ({
   })
 
   const { data: royaltyInfo }: any = useContractRead({
-    enabled: !!release,
     abi: CATALOGUE_ABI,
     address: HAUS_CATALOGUE_PROXY as unknown as AddressType,
     functionName: 'royaltyInfo', // @ts-ignore
