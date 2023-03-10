@@ -56,8 +56,9 @@ export const NowPlaying: React.FC<{ track: PlayerTrack }> = ({ track }) => {
                   <Image
                     className={`h-full w-full ${isPlaying ? 'animate-spin-slow' : ''}`}
                     src={track?.image}
-                    layout="fill"
+                    fill
                     priority
+                    alt={`Cover Art for ${track.title}`}
                   />
                 )}
 

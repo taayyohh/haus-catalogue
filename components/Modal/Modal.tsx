@@ -1,7 +1,8 @@
-import { animatedModal, animatedModalContent } from "./Modal.css"
-import { AnimatePresence, motion } from "framer-motion"
-import React, { ReactElement } from "react"
-import { Portal } from "react-portal"
+import { AnimatePresence, motion } from 'framer-motion'
+import React, { ReactElement } from 'react'
+import { Portal } from 'react-portal'
+
+import { animatedModal, animatedModalContent } from './Modal.css'
 
 interface AnimatedModalProps {
   children: ReactElement
@@ -11,7 +12,13 @@ interface AnimatedModalProps {
   trigger?: ReactElement
 }
 
-const AnimatedModal: React.FC<AnimatedModalProps> = ({ children, open, close, size = "small", trigger }) => {
+const AnimatedModal: React.FC<AnimatedModalProps> = ({
+  children,
+  open,
+  close,
+  size = 'small',
+  trigger,
+}) => {
   const contentVariants = {
     initial: {
       y: 50,
@@ -22,7 +29,7 @@ const AnimatedModal: React.FC<AnimatedModalProps> = ({ children, open, close, si
       opacity: 1,
       transition: {
         delay: 0.5,
-        ease: "easeInOut",
+        ease: 'easeInOut',
       },
     },
   }
@@ -37,13 +44,13 @@ const AnimatedModal: React.FC<AnimatedModalProps> = ({ children, open, close, si
   }
 
   const [isOpen, setIsOpen] = React.useState<boolean>(false)
-  const handleClose = () => {
-    close && typeof close === "function" && close()
+  const handleClose = React.useCallback(() => {
+    close && typeof close === 'function' && close()
     setIsOpen(false)
-  }
+  }, [setIsOpen, close])
 
   React.useEffect(() => {
-    if (typeof close === "boolean") {
+    if (typeof close === 'boolean') {
       if (close) {
         handleClose()
       }
@@ -63,23 +70,29 @@ const AnimatedModal: React.FC<AnimatedModalProps> = ({ children, open, close, si
           {(isOpen || open) && (
             <motion.div
               variants={wrapperVariants}
-              initial={"initial"}
-              animate={"animate"}
-              exit={"initial"}
+              initial={'initial'}
+              animate={'animate'}
+              exit={'initial'}
               className={animatedModal}
               onClick={() => handleClose()}
             >
               <motion.div
                 variants={contentVariants}
-                initial={"initial"}
-                animate={"animate"}
-                exit={"initial"}
-                onClick={e => e.stopPropagation()}
+                initial={'initial'}
+                animate={'animate'}
+                exit={'initial'}
+                onClick={(e) => e.stopPropagation()}
               >
                 <div
                   className={`mx-auto flex flex-col ${
                     animatedModalContent[
-                      size === "small" ? "small" : size === "large" ? "large" : size === "auto" ? "auto" : "small"
+                      size === 'small'
+                        ? 'small'
+                        : size === 'large'
+                        ? 'large'
+                        : size === 'auto'
+                        ? 'auto'
+                        : 'small'
                     ]
                   }`}
                 >

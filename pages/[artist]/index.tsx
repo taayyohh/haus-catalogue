@@ -4,6 +4,7 @@ import { ReleaseProps } from 'data/query/typings'
 import { AnimatePresence, motion } from 'framer-motion'
 import { useHTMLStripper } from 'hooks/useHTMLStripper'
 import { GetServerSideProps } from 'next'
+import Image from 'next/image'
 import { useRouter } from 'next/router'
 import React from 'react'
 import ReactMarkdown from 'react-markdown'
@@ -92,10 +93,12 @@ const Artist = ({ artist, discography, slug }: any) => {
               <div
                 className={'fixed left-0 top-0 -z-10 h-[100vh] w-full overflow-hidden'}
               >
-                <img
+                <Image
                   src={metadata?.artist_hero_preview}
-                  className={'h-full w-full object-cover'}
+                  className={'-mt-12 sm:mt-0 h-full w-full object-cover'}
                   alt={'artist cover image'}
+                  priority
+                  fill
                 />
               </div>
             )}
