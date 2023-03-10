@@ -1,17 +1,20 @@
-import React from 'react'
-import { GetServerSideProps } from 'next'
-import useSWR, { SWRConfig } from 'swr'
-import { AnimatePresence, motion } from 'framer-motion'
-import { SongCard } from 'modules/song'
 import { ChevronLeftIcon } from '@radix-ui/react-icons'
-import { useRouter } from 'next/router'
-import { getDiscography } from 'modules/song'
 import Meta from 'components/Meta'
-import { useHTMLStripper } from 'hooks/useHTMLStripper'
-
-import { slugify } from 'utils'
 import { ReleaseProps } from 'data/query/typings'
-const ReactHtmlParser = require('react-html-parser').default
+import { AnimatePresence, motion } from 'framer-motion'
+import { useHTMLStripper } from 'hooks/useHTMLStripper'
+import { GetServerSideProps } from 'next'
+import { useRouter } from 'next/router'
+import React from 'react'
+import ReactMarkdown from 'react-markdown'
+import rehypeRaw from 'rehype-raw'
+import rehypeSanitize from 'rehype-sanitize'
+import remarkGfm from 'remark-gfm'
+import useSWR, { SWRConfig } from 'swr'
+import { ipfsGateway, slugify } from 'utils'
+
+import { SongCard } from 'modules/song'
+import { getDiscography } from 'modules/song'
 
 export const getServerSideProps: GetServerSideProps = async (context) => {
   const artist = context?.params?.artist as string
@@ -108,9 +111,14 @@ const Artist = ({ artist, discography, slug }: any) => {
                 >
                   {metadata?.artist || metadata?.metadata?.artist}
                 </div>
-                <div className={'mx-auto mb-20 w-1/2'}>
+                <div className={'mx-auto mb-20 w-11/12 sm:w-3/4 md:w-3/4 lg:w-1/2'}>
                   <div className={'text-black gap-3'}>
-                    {ReactHtmlParser(metadata?.artistBio)}
+                    <ReactMarkdown
+                      rehypePlugins={[rehypeRaw, rehypeSanitize]}
+                      remarkPlugins={[remarkGfm]}
+                    >
+                      {metadata?.artistBio}
+                    </ReactMarkdown>
                   </div>
                 </div>
                 <div className=" grid grid-cols-2 gap-8 py-8 md:grid-cols-3 lg:grid-cols-4">
@@ -126,7 +134,7 @@ const Artist = ({ artist, discography, slug }: any) => {
       <Meta
         title={metadata?.artist || metadata?.metadata?.artist}
         type={'website'}
-        image={metadata?.artist_hero_preview}
+        image={ipfsGateway(metadata?.artist_hero_uri)}
         description={stripHTML(metadata?.artistBio)}
         slug={slug}
       />

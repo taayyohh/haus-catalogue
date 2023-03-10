@@ -1,9 +1,10 @@
+import { ReleaseProps } from 'data/query/typings'
 import Image from 'next/image'
-import { PlayButton } from './PlayButton'
 import Link from 'next/link'
 import React from 'react'
-import { ReleaseProps } from 'data/query/typings'
 import { ipfsGateway, slugify } from 'utils'
+
+import { PlayButton } from './PlayButton'
 
 export const AlbumArt: React.FC<{ release: ReleaseProps }> = ({ release }) => {
   return (
@@ -21,7 +22,7 @@ export const AlbumArt: React.FC<{ release: ReleaseProps }> = ({ release }) => {
           >
             <Image
               layout="fill"
-              src={ipfsGateway(release?.metadata?.project.artwork.uri)}
+              src={ipfsGateway(release.metadata.project.artwork.uri)}
               alt={`Album cover for ${release?.name}`}
               priority
             />

@@ -1,4 +1,4 @@
-import { NUMBER, RICH_TEXT, SINGLE_AUDIO_UPLOAD, SINGLE_IMAGE_UPLOAD, TEXT } from "components/Fields/types"
+import {MARKDOWN, NUMBER, RICH_TEXT, SINGLE_AUDIO_UPLOAD, SINGLE_IMAGE_UPLOAD, TEXT} from "components/Fields/types"
 
 export const metadataFields = [
   {
@@ -30,7 +30,7 @@ export const metadataFields = [
   },
   {
     name: "description",
-    type: RICH_TEXT,
+    type: MARKDOWN,
     inputLabel: "Song description",
   },
   {
@@ -71,7 +71,7 @@ export const metadataFields = [
   },
   {
     name: "artistBio",
-    type: RICH_TEXT,
+    type: MARKDOWN,
     inputLabel: "Artist Biography",
   },
 ]
