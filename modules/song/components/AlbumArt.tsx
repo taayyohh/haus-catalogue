@@ -21,7 +21,7 @@ export const AlbumArt: React.FC<{ release: ReleaseProps }> = ({ release }) => {
             }
           >
             <Image
-              layout="fill"
+              fill
               src={ipfsGateway(release.metadata.project.artwork.uri)}
               alt={`Album cover for ${release?.name}`}
               priority
