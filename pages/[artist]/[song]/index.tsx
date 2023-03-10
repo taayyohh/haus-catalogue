@@ -1,16 +1,18 @@
-import React from 'react'
-import { GetServerSideProps } from 'next'
-import useSWR, { SWRConfig } from 'swr'
-import { getDiscography } from 'modules/song/utils/getDiscography'
 import Meta from 'components/Meta'
 import { ZORA_V3_ADDRESSES } from 'constants/addresses'
-import SongNav from 'modules/song/components/SongNav'
-import { AlbumArt, AuctionInfo, ReleaseDetails } from 'modules/song'
-import { BidAndHistory } from 'modules/auction'
-import { useContractRead } from 'wagmi'
 import ABI from 'data/contract/abi/ReserveAuctionCoreETH.json'
-import { AddressType } from 'typings'
 import { FadeInOut } from 'layouts/FadeInOut'
+import { GetServerSideProps } from 'next'
+import React from 'react'
+import useSWR, { SWRConfig } from 'swr'
+import { AddressType } from 'typings'
+import { ipfsGateway } from 'utils'
+import { useContractRead } from 'wagmi'
+
+import { BidAndHistory } from 'modules/auction'
+import { AlbumArt, AuctionInfo, ReleaseDetails } from 'modules/song'
+import SongNav from 'modules/song/components/SongNav'
+import { getDiscography } from 'modules/song/utils/getDiscography'
 
 export const getServerSideProps: GetServerSideProps = async (context) => {
   const artist = context?.params?.artist as string
@@ -61,19 +63,18 @@ const Song = ({ artist, song, slug }: any) => {
             <AuctionInfo auction={auction} release={release} />
             <BidAndHistory release={release} auction={auction} />
           </div>
-          <Meta
-            title={release?.name}
-            type={'music.song'}
-            image={release?.metadata?.image_uri?.replace(
-              'ipfs://',
-              'https://nftstorage.link/ipfs/'
-            )}
-            slug={slug}
-            album={release?.metadata?.albumTitle}
-            track={release?.metadata?.trackNumber}
-            musician={release?.metadata?.artist}
-            description={release?.metadata.artist}
-          />
+          {release?.metadata.image_uri && (
+            <Meta
+              title={release.name}
+              type={'music.song'}
+              image={ipfsGateway(release.metadata.image_uri)}
+              slug={slug}
+              album={release.metadata.albumTitle}
+              track={release.metadata.trackNumber}
+              musician={release.metadata.artist}
+              description={release.metadata.artist}
+            />
+          )}
         </FadeInOut>
       ) : null}
     </>

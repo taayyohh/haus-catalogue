@@ -86,6 +86,7 @@ export const MetadataForm: React.FC<{ merkle: any }> = ({ merkle }) => {
 
         const { wait } = await writeContract(config)
         await wait()
+        formik?.resetForm()
       } catch (err) {
         console.log('err', err)
       }
@@ -96,7 +97,7 @@ export const MetadataForm: React.FC<{ merkle: any }> = ({ merkle }) => {
   return (
     <div
       className={
-        'max-h-[75vh] overflow-hidden overflow-y-scroll rounded border  px-12 px-8 py-8 shadow-inner'
+        'max-h-[75vh] overflow-hidden overflow-y-scroll rounded px-12 px-8 py-8 '
       }
     >
       <div className={'mb-12 text-4xl font-bold'}>Mint</div>

@@ -1,11 +1,12 @@
+import Meta from 'components/Meta'
+import { ReleaseProps } from 'data/query/typings'
 import React from 'react'
 import { usePlayerStore } from 'stores/usePlayerStore'
 import { SWRConfig } from 'swr'
-import { getDiscography } from 'modules/song/utils/getDiscography'
-import Meta from 'components/Meta'
-import { ReleaseProps } from 'data/query/typings'
 import { ipfsGateway } from 'utils/ipfsGateway'
-import { randomSong, SongGrid, NowPlaying } from 'modules/song'
+
+import { NowPlaying, SongGrid, randomSong } from 'modules/song'
+import { getDiscography } from 'modules/song/utils/getDiscography'
 
 export async function getServerSideProps() {
   try {
@@ -32,11 +33,12 @@ const Home: React.FC<{ discography: ReleaseProps[] }> = ({ discography }) => {
   const addToQueue = usePlayerStore((state) => state.addToQueue)
   const queue = usePlayerStore((state) => state.queue)
   const currentPosition = usePlayerStore((state) => state.currentPosition)
+  const media = usePlayerStore((state) => state.media)
 
   /*  generate random song  */
 
   React.useEffect(() => {
-    if (!discography) return
+    if (!discography || media) return
 
     const random = randomSong(discography)
     addToQueue(random, 'front')

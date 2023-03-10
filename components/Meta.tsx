@@ -1,5 +1,5 @@
-import Head from "next/head"
-import React from "react"
+import Head from 'next/head'
+import React from 'react'
 
 interface MetaProps {
   title: string
@@ -9,11 +9,21 @@ interface MetaProps {
   description?: string
   duration?: string
   album?: string
-  track?:number
+  track?: number
   musician?: string
 }
 
-const Meta: React.FC<MetaProps> = ({ title, type, slug, image, description, duration, album, track, musician }) => {
+const Meta: React.FC<MetaProps> = ({
+  title,
+  type,
+  slug,
+  image,
+  description,
+  duration,
+  album,
+  track,
+  musician,
+}) => {
   return (
     <Head>
       <title>LucidHaus | {title}</title>
@@ -22,7 +32,7 @@ const Meta: React.FC<MetaProps> = ({ title, type, slug, image, description, dura
       <meta property="og:url" content={`https://lucid.haus${slug}`} />
       <meta property="og:image" content={image} />
       <meta property="og:description" content={description} />
-      {type === "music.song" && (
+      {type === 'music.song' && (
         <>
           <meta property="music:duration" content={duration} />
           <meta property="music:album" content={album} />

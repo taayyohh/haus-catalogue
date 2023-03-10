@@ -63,7 +63,7 @@ export const Bid: React.FC<{ release: ReleaseProps }> = ({ release }) => {
       }
       size={"auto"}
     >
-      {auctionHasEnded ? <SettleAuction release={release} auction={auction} /> : <CreateBid release={release} />}
+      {auctionHasEnded && isWinner ? <SettleAuction release={release} auction={auction} /> : <CreateBid release={release} />}
     </AnimatedModal>
   )
 }

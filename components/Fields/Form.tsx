@@ -1,8 +1,9 @@
-import FieldSwitch from "./FieldSwitch"
-import { defaultFormButton, defaultFormStyleVariants } from "./styles.css"
-import { Formik, FormikHelpers, FormikValues } from "formik"
-import React, { ReactNode } from "react"
-import { isEmpty } from "../../utils/isEmpty"
+import { Formik, FormikHelpers, FormikValues } from 'formik'
+import React, { ReactNode } from 'react'
+import { isEmpty } from 'utils'
+
+import FieldSwitch from './FieldSwitch'
+import { defaultFormButton, defaultFormStyleVariants } from './styles.css'
 
 export interface FieldProps {
   name: string
@@ -45,21 +46,30 @@ const Form: React.FC<FormProps> = ({
       validateOnMount={true}
       validateOnBlur={validateOnBlur}
     >
-      {formik => {
+      {(formik) => {
         return (
-          <form onSubmit={formik.handleSubmit} className={defaultFormStyleVariants["default"]}>
+          <form
+            onSubmit={formik.handleSubmit}
+            className={defaultFormStyleVariants['default']}
+          >
             <div className={`w-full`}>
               {fields.map((f, i) => (
-                <FieldSwitch key={i} formik={formik} field={f} options={options} submitCallback={submitCallback} />
+                <FieldSwitch
+                  key={i}
+                  formik={formik}
+                  field={f}
+                  options={options}
+                  submitCallback={submitCallback}
+                />
               ))}
             </div>
-            <div className={"flex"}>
+            <div className={'flex'}>
               <button
                 className={`cursor-pointer bg-gray-800 text-white hover:bg-gray-900 ${defaultFormButton}`}
-                type={"submit"}
+                type={'submit'}
                 disabled={!isEmpty(formik.errors)}
               >
-                {buttonText || "Submit"}
+                {buttonText || 'Submit'}
               </button>
             </div>
             {children}
