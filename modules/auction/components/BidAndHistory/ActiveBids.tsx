@@ -1,10 +1,11 @@
-import React from 'react'
-import useSWR from 'swr'
 import { fetchTransaction } from '@wagmi/core'
 import axios from 'axios'
-import { ETHER_ACTOR_BASE_URL, ETHERSCAN_BASE_URL } from 'constants/etherscan'
+import { ETHERSCAN_BASE_URL, ETHER_ACTOR_BASE_URL } from 'constants/etherscan'
 import dayjs from 'dayjs'
-import {transformEvent} from "../../utils";
+import React from 'react'
+import useSWR from 'swr'
+
+import { transformEvent } from '../../utils'
 
 export const ActiveBids: React.FC<{ history: any; tokenId: number }> = ({
   history,

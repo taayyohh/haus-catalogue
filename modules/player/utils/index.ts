@@ -1,1 +1,1 @@
-export { hhmmss } from "./hhmmss"
+export { hhmmss } from './hhmmss'

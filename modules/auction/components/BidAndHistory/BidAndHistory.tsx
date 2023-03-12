@@ -1,24 +1,24 @@
-import { History } from './History'
-import { ActiveBids } from './ActiveBids'
-import React from 'react'
-import { ReleaseProps } from 'data/query/typings'
-import useSWR from 'swr'
-import { ethers } from 'ethers'
-import { HAUS_CATALOGUE_PROXY, ZORA_V3_ADDRESSES } from 'constants/addresses'
-import { tokenEventHistory } from 'data/query/tokenEventHistory'
 import { fetchTransaction } from '@wagmi/core'
 import axios from 'axios'
+import { HAUS_CATALOGUE_PROXY, ZORA_V3_ADDRESSES } from 'constants/addresses'
 import { ETHER_ACTOR_BASE_URL } from 'constants/etherscan'
-import { useContract, useProvider, useSigner } from 'wagmi'
 import AUCTION_ABI from 'data/contract/abi/ReserveAuctionCoreETH.json'
+import { tokenEventHistory } from 'data/query/tokenEventHistory'
+import { ReleaseProps } from 'data/query/typings'
+import { ethers } from 'ethers'
+import React from 'react'
+import useSWR from 'swr'
 import { AddressType } from 'typings'
+import { useContract, useProvider } from 'wagmi'
+
+import { ActiveBids } from './ActiveBids'
+import { History } from './History'
 
 export const BidAndHistory: React.FC<{ release: ReleaseProps; auction: any }> = ({
   release,
   auction,
 }) => {
   const [activeTab, setIsActiveTab] = React.useState('')
-  const { data: signer } = useSigner()
   const provider = useProvider()
 
   const { data: eventHistory } = useSWR(
@@ -80,7 +80,7 @@ export const BidAndHistory: React.FC<{ release: ReleaseProps; auction: any }> = 
   const ReserveAuctionCoreEth = useContract({
     address: ZORA_V3_ADDRESSES?.ReserveAuctionCoreEth as unknown as AddressType,
     abi: AUCTION_ABI,
-    signerOrProvider: signer ?? provider,
+    signerOrProvider: provider,
   })
 
   const { data: activeAuctionBids } = useSWR(

@@ -1,12 +1,13 @@
-import React from 'react'
-import { PlayerState, QueueItem, usePlayerStore } from 'stores'
-import { BsFillPauseFill, BsFillPlayFill } from 'react-icons/bs'
-import { BiSkipNext, BiSkipPrevious } from 'react-icons/bi'
-import Link from 'next/link'
 import { PlayerTrack } from 'data/query/typings'
-import { CurrentTime } from './CurrentTime'
+import Link from 'next/link'
+import React from 'react'
+import { BiSkipNext, BiSkipPrevious } from 'react-icons/bi'
+import { BsFillPauseFill, BsFillPlayFill } from 'react-icons/bs'
+import { PlayerState, QueueItem, usePlayerStore } from 'stores'
 import { slugify } from 'utils'
+
 import { hhmmss } from '../utils'
+import { CurrentTime } from './CurrentTime'
 
 export const Player = () => {
   const audioRef = React.useRef<null | HTMLAudioElement>(null)

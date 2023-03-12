@@ -40,8 +40,12 @@ const Home: React.FC<{ discography: ReleaseProps[] }> = ({ discography }) => {
   React.useEffect(() => {
     if (!discography || media) return
 
+    console.log('d', discography)
+
     const random = randomSong(discography)
     addToQueue(random, 'front')
+
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [])
 
   return (

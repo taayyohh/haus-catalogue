@@ -1,8 +1,8 @@
-import React from "react"
-import Bundlr from "@bundlr-network/client"
-import { Formik } from "formik"
-import { ethers } from "ethers"
-import { useProvider } from "wagmi"
+import Bundlr from '@bundlr-network/client'
+import { ethers } from 'ethers'
+import { Formik } from 'formik'
+import React from 'react'
+import { useProvider } from 'wagmi'
 
 const Upload = () => {
   const provider = useProvider()
@@ -11,7 +11,7 @@ const Upload = () => {
   const bundlr = React.useMemo(async () => {
     if (!provider) return
 
-    return new Bundlr("https://node1.bundlr.network", "matic", provider)
+    return new Bundlr('https://node1.bundlr.network', 'matic', provider)
   }, [provider])
 
   /*  manage state */
@@ -20,7 +20,7 @@ const Upload = () => {
   const [buffer, setBuffer] = React.useState(null)
   const [txId, setTxId] = React.useState(null)
   const [priceOfUpload, setPriceOfUpload] = React.useState(0)
-  const [file, setFile] = React.useState({ name: "", type: "" })
+  const [file, setFile] = React.useState({ name: '', type: '' })
   const [localUrl, setLocalUrl] = React.useState(null)
 
   const getBalance = React.useMemo(async () => {
@@ -41,35 +41,32 @@ const Upload = () => {
         const price = await instance.getPrice(files[0]?.size)
         setPriceOfUpload(parseFloat(ethers.utils.formatEther(price.toString())))
       } catch (err) {
-        console.log("err", err)
+        console.log('err', err)
       }
     },
     [instance]
   )
 
-  const getBuffer = React.useCallback(
-    async (file: Blob) => {
-      const blob = new Blob([file], { type: file?.type })
+  const getBuffer = React.useCallback(async (file: Blob) => {
+    const blob = new Blob([file], { type: file?.type })
 
-      let reader = new FileReader()
-      reader.onload = async function (evt) {
-        // @ts-ignore
-        setBuffer(evt.target.result)
-      }
-      reader.readAsArrayBuffer(blob)
-    },
-    [instance]
-  )
+    let reader = new FileReader()
+    reader.onload = async function (evt) {
+      // @ts-ignore
+      setBuffer(evt.target.result)
+    }
+    reader.readAsArrayBuffer(blob)
+  }, [])
 
   const createBundlrTx = async (data: {}, value: string) => {
     try {
       await provider._ready()
-      const tags = [{ name: "Content-Type", value }]
+      const tags = [{ name: 'Content-Type', value }]
 
       const ex = await execute(await instance, tags)
       setTxId(ex)
     } catch (err) {
-      console.log("err", err)
+      console.log('err', err)
     }
   }
 
@@ -94,18 +91,18 @@ const Upload = () => {
         await instance.fund(amount, 1.1)
         await getBalance
       } catch (err) {
-        console.log("err", err)
+        console.log('err', err)
         await getBalance
       }
     },
-    [instance]
+    [instance, getBalance]
   )
 
   /* styles */
   const button =
-    "inline-flex self-start p-4  text-white font-bold shadow-xl rounded-xl hover: flex hover:cursor-pointer items-center justify-center mx-auto my-2 w-full"
-  const infoSection = "flex flex-col items-center  p-4 rounded-xl shadow-inner mb-2"
-  const infoSectionHeading = "text-lg font-bold"
+    'inline-flex self-start p-4  text-white font-bold shadow-xl rounded-xl hover: flex hover:cursor-pointer items-center justify-center mx-auto my-2 w-full'
+  const infoSection = 'flex flex-col items-center  p-4 rounded-xl shadow-inner mb-2'
+  const infoSectionHeading = 'text-lg font-bold'
 
   return (
     <div className="flex h-full min-h-screen justify-center">
@@ -115,7 +112,7 @@ const Upload = () => {
             <div className="mr-2 flex h-8 w-8 overflow-hidden rounded-full">
               <img src="https://docs.bundlr.network/img/logo.svg" alt="bundlr logo" />
             </div>
-            <a className="text-xl" href={"https://bundlr.network/"}>
+            <a className="text-xl" href={'https://bundlr.network/'}>
               Bundlr Uploader
             </a>
           </div>
@@ -140,17 +137,26 @@ const Upload = () => {
             </div>
             {priceOfUpload - walletBalance > 0 ? (
               <div className="flex items-center">
-                <button className={button} type="button" onClick={() => handleFund(priceOfUpload)}>
+                <button
+                  className={button}
+                  type="button"
+                  onClick={() => handleFund(priceOfUpload)}
+                >
                   Fund
                 </button>
               </div>
             ) : null}
             <div className="flex flex-col">
-              <Formik initialValues={{ file: {} }} onSubmit={values => handleSubmit(values)}>
-                {props => (
+              <Formik
+                initialValues={{ file: {} }}
+                onSubmit={(values) => handleSubmit(values)}
+              >
+                {(props) => (
                   <form onSubmit={props.handleSubmit} className="flex flex-col">
                     <>
-                      {priceOfUpload && walletBalance && priceOfUpload - walletBalance <= 0 ? (
+                      {priceOfUpload &&
+                      walletBalance &&
+                      priceOfUpload - walletBalance <= 0 ? (
                         <button type="submit" className={`${button}  hover:bg-[#081C15]`}>
                           Submit
                         </button>
@@ -164,9 +170,9 @@ const Upload = () => {
                         id="file-upload"
                         name="file"
                         type="file"
-                        onChange={event => {
+                        onChange={(event) => {
                           // @ts-ignore
-                          props.setFieldValue("file", event.currentTarget.files[0])
+                          props.setFieldValue('file', event.currentTarget.files[0])
                           // @ts-ignore
                           setFile(event.currentTarget.files[0])
                           // @ts-ignore
@@ -212,17 +218,17 @@ const Upload = () => {
                 <span className="font-bold">type:</span> {file.type}
               </div>
             </div>
-            {localUrl && file.type.includes("image") && (
+            {localUrl && file.type.includes('image') && (
               <div className="flex h-32 w-32 overflow-hidden">
                 <img src={localUrl} alt="uploaded image thumbnail" />
               </div>
             )}
-            {localUrl && file.type.includes("audio") && (
+            {localUrl && file.type.includes('audio') && (
               <audio controls>
                 <source src={localUrl} type={file.type} />
               </audio>
             )}
-            {localUrl && file.type.includes("video") && (
+            {localUrl && file.type.includes('video') && (
               <video controls>
                 <source src={localUrl} type={file.type} />
               </video>
@@ -239,8 +245,8 @@ const Upload = () => {
           </div>
         )}
         <div className="mt-4 flex justify-end text-xs">
-          built by{" "}
-          <a href={"https://github.com/taayyohh"} className="ml-1">
+          built by{' '}
+          <a href={'https://github.com/taayyohh'} className="ml-1">
             taayohh
           </a>
         </div>

@@ -1,13 +1,14 @@
-import { BigNumber, ethers } from 'ethers'
 import CopyButton from 'components/CopyButton'
-import { AuctionAction } from './AuctionAction'
-import React from 'react'
-import { useContractRead } from 'wagmi'
-import CATALOGUE_ABI from 'data/contract/abi/HausCatalogueABI.json'
 import { HAUS_CATALOGUE_PROXY, ZERO_ADDRESS } from 'constants/addresses'
-import { AddressType } from 'typings'
-import { useEnsData } from 'hooks/useEnsData'
+import CATALOGUE_ABI from 'data/contract/abi/HausCatalogueABI.json'
 import { ReleaseProps } from 'data/query/typings'
+import { BigNumber, ethers } from 'ethers'
+import { useEnsData } from 'hooks/useEnsData'
+import React from 'react'
+import { AddressType } from 'typings'
+import { useContractRead } from 'wagmi'
+
+import { AuctionAction } from './AuctionAction'
 
 export const AuctionInfo: React.FC<{ auction: any; release: ReleaseProps }> = ({
   auction,

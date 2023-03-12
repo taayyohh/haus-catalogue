@@ -4,10 +4,10 @@ import { ReleaseProps } from 'data/query/typings'
 import dayjs from 'dayjs'
 import React from 'react'
 import ReactMarkdown from 'react-markdown'
-import remarkGfm from 'remark-gfm'
-import useSWR from 'swr'
 import rehypeRaw from 'rehype-raw'
 import rehypeSanitize from 'rehype-sanitize'
+import remarkGfm from 'remark-gfm'
+import useSWR from 'swr'
 
 const ReactHtmlParser = require('react-html-parser').default
 

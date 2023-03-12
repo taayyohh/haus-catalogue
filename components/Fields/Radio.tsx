@@ -1,6 +1,7 @@
-import { radioStyles } from "./styles.css"
-import { FormikErrors, FormikProps } from "formik"
-import React from "react"
+import { FormikErrors, FormikProps } from 'formik'
+import React from 'react'
+
+import { radioStyles } from './styles.css'
 
 interface RadioProps {
   inputLabel: string
@@ -20,13 +21,13 @@ const Radio: React.FC<RadioProps> = ({ inputLabel, formik, id, options, value })
   }
 
   return (
-    <div className={"mb-8 flex-col"}>
+    <div className={'mb-8 flex-col'}>
       {options &&
         options?.[id].map((option: string, key: number) => (
           <div
             key={key}
             className={`mt-4 h-16 w-full items-center justify-center border-2 ${
-              radioStyles[value === key ? "active" : "default"]
+              radioStyles[value === key ? 'active' : 'default']
             }`}
             onClick={() => handleSelection(key)}
           >

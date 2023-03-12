@@ -1,8 +1,8 @@
-import { ipfsGateway } from 'utils'
-import { BsFillPauseFill, BsFillPlayFill } from 'react-icons/bs'
-import React from 'react'
 import { ReleaseProps } from 'data/query/typings'
+import React from 'react'
+import { BsFillPauseFill, BsFillPlayFill } from 'react-icons/bs'
 import { usePlayerStore } from 'stores/usePlayerStore'
+import { ipfsGateway } from 'utils'
 
 export const PlayButton: React.FC<{ release: ReleaseProps }> = ({ release }) => {
   const { isPlaying, addToQueue, media, queue, setIsPlaying } = usePlayerStore()

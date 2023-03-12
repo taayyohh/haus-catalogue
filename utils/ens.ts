@@ -1,5 +1,5 @@
-import { ethers } from "ethers"
-import {Provider} from "@wagmi/core";
+import { Provider } from '@wagmi/core'
+import { ethers } from 'ethers'
 
 export async function isValidAddress(address: string, provider: Provider | undefined) {
   const resolvedName = await provider?.resolveName(address)
@@ -14,5 +14,5 @@ export async function getEnsAddress(address: string, provider: Provider | undefi
 }
 
 export async function getEnsName(address: string, provider: Provider | undefined) {
-  return provider?.lookupAddress(address);
+  return provider?.lookupAddress(address)
 }

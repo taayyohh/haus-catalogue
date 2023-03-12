@@ -1,6 +1,6 @@
-import { CheckCircledIcon, CopyIcon } from "@radix-ui/react-icons"
-import { motion } from "framer-motion"
-import React from "react"
+import { CheckCircledIcon, CopyIcon } from '@radix-ui/react-icons'
+import { motion } from 'framer-motion'
+import React from 'react'
 
 interface CopyButtonProps {
   title?: string
@@ -29,13 +29,21 @@ const CopyButton = ({ title, text, all }: CopyButtonProps) => {
   return (
     <React.Fragment>
       {!copied ? (
-        <div className={"pointer border border-transparent bg-transparent"} onClick={() => handleCopy(text as string)}>
-          <CopyIcon color={"#B3B3B3"} />
+        <div
+          className={'pointer border border-transparent bg-transparent'}
+          onClick={() => handleCopy(text as string)}
+        >
+          <CopyIcon color={'#B3B3B3'} />
         </div>
       ) : (
-        <div className={"pointer border border-transparent bg-transparent"}>
-          <motion.div initial={{ scale: 0 }} animate={{ scale: 1 }} transition={{ duration: 0.2 }} exit={{ scale: 0 }}>
-            <CheckCircledIcon color={"#00C853"} />
+        <div className={'pointer border border-transparent bg-transparent'}>
+          <motion.div
+            initial={{ scale: 0 }}
+            animate={{ scale: 1 }}
+            transition={{ duration: 0.2 }}
+            exit={{ scale: 0 }}
+          >
+            <CheckCircledIcon color={'#00C853'} />
           </motion.div>
         </div>
       )}

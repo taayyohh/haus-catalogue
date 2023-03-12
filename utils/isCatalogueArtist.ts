@@ -11,5 +11,3 @@ export const isCatalogueArtist = function (signerAddress: `0x${string}`) {
 
   return tree.verify(proof, leaf.toString(), root)
 }
-
-

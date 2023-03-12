@@ -1,10 +1,16 @@
-import React from "react"
-import { FormikErrors, FormikProps } from "formik"
-import flatpickr from "flatpickr"
-import { defaultFieldsetStyle, defaultInputErrorStyle, defaultInputLabelStyle, defaultInputStyle } from "./styles.css"
-import { Instance } from "flatpickr/dist/types/instance"
+import flatpickr from 'flatpickr'
+import { Instance } from 'flatpickr/dist/types/instance'
+import { FormikErrors, FormikProps } from 'formik'
+import React from 'react'
 
-require("flatpickr/dist/themes/light.css")
+import {
+  defaultFieldsetStyle,
+  defaultInputErrorStyle,
+  defaultInputLabelStyle,
+  defaultInputStyle,
+} from './styles.css'
+
+require('flatpickr/dist/themes/light.css')
 
 interface DateProps {
   inputLabel: string
@@ -40,8 +46,9 @@ const Date: React.FC<DateProps> = ({
     if (!ref.current) return
 
     flatpickr(ref.current, {
-      dateFormat: "Y-m-d",
-      onChange: (selectedDates, dateStr, instance) => handleDateSelect(selectedDates, dateStr, instance),
+      dateFormat: 'Y-m-d',
+      onChange: (selectedDates, dateStr, instance) =>
+        handleDateSelect(selectedDates, dateStr, instance),
     })
   }, [ref.current])
 
@@ -66,7 +73,7 @@ const Date: React.FC<DateProps> = ({
     if (
       autoSubmit &&
       parentValues.length === 0 &&
-      formik.values.founderAddress === "0x2ce8D64CB1d6aFCc6654d2C4AeA77068187A98b8"
+      formik.values.founderAddress === '0x2ce8D64CB1d6aFCc6654d2C4AeA77068187A98b8'
     ) {
       formik.submitForm()
     }
@@ -78,9 +85,9 @@ const Date: React.FC<DateProps> = ({
       <input
         className={!!errorMessage ? defaultInputErrorStyle : defaultInputStyle}
         ref={ref}
-        type={"text"}
+        type={'text'}
         data-input={true}
-        value={value || ""}
+        value={value || ''}
         placeholder={placeholder}
         readOnly={true}
       />

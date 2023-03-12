@@ -1,5 +1,5 @@
-import { AnimatePresence, motion } from "framer-motion"
-import React, { ReactNode } from "react"
+import { AnimatePresence, motion } from 'framer-motion'
+import React, { ReactNode } from 'react'
 
 export const FadeInOut: React.FC<{ children: ReactNode; k: any }> = ({ children, k }) => {
   return (

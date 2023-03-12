@@ -1,8 +1,8 @@
-import React from 'react'
+import { ReleaseProps } from 'data/query/typings'
 import { motion } from 'framer-motion'
+import React from 'react'
 import { BsFillPauseFill, BsFillPlayFill } from 'react-icons/bs'
 import { PlayerState, usePlayerStore } from 'stores/usePlayerStore'
-import { ReleaseProps } from 'data/query/typings'
 import { ipfsGateway } from 'utils'
 
 const PlayButton: React.FC<{ release: ReleaseProps; isHover: boolean }> = ({

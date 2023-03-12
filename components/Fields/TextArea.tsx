@@ -1,11 +1,12 @@
+import { FormikProps } from 'formik'
+import React, { ChangeEventHandler } from 'react'
+
 import {
   defaultHelperTextStyle,
   defaultInputLabelStyle,
   defaultTextAreaErrorStyle,
   defaultTextAreaStyle,
-} from "./styles.css"
-import { FormikProps } from "formik"
-import React, { ChangeEventHandler } from "react"
+} from './styles.css'
 
 interface TextAreaProps {
   id: string
@@ -40,7 +41,7 @@ const TextArea: React.FC<TextAreaProps> = ({
   }
 
   return (
-    <div className={"flex flex-col pb-5"}>
+    <div className={'flex flex-col pb-5'}>
       <label className={defaultInputLabelStyle}>{inputLabel}</label>
       <textarea
         id={id}
@@ -49,9 +50,11 @@ const TextArea: React.FC<TextAreaProps> = ({
         value={value}
         className={!!errorMessage ? defaultTextAreaErrorStyle : defaultTextAreaStyle}
         placeholder={placeholder}
-        style={{ minHeight: minHeight || "none" }}
+        style={{ minHeight: minHeight || 'none' }}
       />
-      {!!helperText && helperText?.length > 0 ? <div className={defaultHelperTextStyle}>{helperText}</div> : null}
+      {!!helperText && helperText?.length > 0 ? (
+        <div className={defaultHelperTextStyle}>{helperText}</div>
+      ) : null}
     </div>
   )
 }

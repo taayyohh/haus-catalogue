@@ -1,3 +1,10 @@
+import { FormikProps } from 'formik'
+import { MemoryBlockStore } from 'ipfs-car/blockstore/memory'
+import { packToBlob } from 'ipfs-car/pack/blob'
+import { NFTStorage } from 'nft.storage'
+import React from 'react'
+import urlJoin from 'url-join'
+
 import {
   defaultUploadStyle,
   singleImagePreview,
@@ -5,14 +12,7 @@ import {
   singleImageUploadInputLabel,
   singleImageUploadWrapper,
   uploadErrorBox,
-} from "./styles.css"
-import { FormikProps } from "formik"
-import { MemoryBlockStore } from "ipfs-car/blockstore/memory"
-import { packToBlob } from "ipfs-car/pack/blob"
-import React from "react"
-
-import urlJoin from "url-join"
-import { NFTStorage } from "nft.storage"
+} from './styles.css'
 
 interface SingleImageUploadProps {
   formik: FormikProps<any>
@@ -22,11 +22,18 @@ interface SingleImageUploadProps {
   value: string
 }
 
-const SingleImageUpload: React.FC<SingleImageUploadProps> = ({ id, formik, inputLabel, helperText }) => {
-  const client = new NFTStorage({ token: process.env.NFT_STORAGE_TOKEN ? process.env.NFT_STORAGE_TOKEN : "" })
-  const acceptableMIME = ["image/jpeg", "image/png", "image/svg+xml", "image/webp"]
+const SingleImageUpload: React.FC<SingleImageUploadProps> = ({
+  id,
+  formik,
+  inputLabel,
+  helperText,
+}) => {
+  const client = new NFTStorage({
+    token: process.env.NFT_STORAGE_TOKEN ? process.env.NFT_STORAGE_TOKEN : '',
+  })
+  const acceptableMIME = ['image/jpeg', 'image/png', 'image/svg+xml', 'image/webp']
   const [uploadArtworkError, setUploadArtworkError] = React.useState<any>()
-  const [preview, setPreview] = React.useState<string>("")
+  const [preview, setPreview] = React.useState<string>('')
   const [isUploading, setIsUploading] = React.useState<boolean>(false)
   const handleFileUpload = async (_input: FileList | null) => {
     if (!_input) return
@@ -46,8 +53,8 @@ const SingleImageUpload: React.FC<SingleImageUploadProps> = ({ id, formik, input
         blockstore: new MemoryBlockStore(),
       })
       const cid = await client.storeCar(car.car)
-      const uri = encodeURI(urlJoin("ipfs://", cid, input.name))
-      const url = encodeURI(urlJoin("https://ipfs.io/ipfs/", cid, input.name))
+      const uri = encodeURI(urlJoin('ipfs://', cid, input.name))
+      const url = encodeURI(urlJoin('https://ipfs.io/ipfs/', cid, input.name))
       setPreview(url)
       formik.setFieldValue(id, car.car)
       formik.setFieldValue(`${id}_preview`, url)
@@ -63,19 +70,25 @@ const SingleImageUpload: React.FC<SingleImageUploadProps> = ({ id, formik, input
   }
 
   return (
-    <div className={"relative mb-8 flex flex-col"}>
-      <div className={"relative flex w-full flex-col items-center"}>
+    <div className={'relative mb-8 flex flex-col'}>
+      <div className={'relative flex w-full flex-col items-center'}>
         <label
           className={`flex flex-col items-center justify-center round ${singleImageUploadWrapper}`}
           htmlFor={`${id}_audio-file-upload`}
         >
-          {(isUploading && <div className={"m-0 flex items-center"} />) || (
+          {(isUploading && <div className={'m-0 flex items-center'} />) || (
             <>
               <>
-                {(preview && <img src={preview} className={singleImagePreview} alt={"preview"} />) || (
+                {(preview && (
+                  <img src={preview} className={singleImagePreview} alt={'preview'} />
+                )) || (
                   <>
-                    <div className={`flex ${singleImageUploadInputLabel}`}>{inputLabel}</div>
-                    <div className={`flex ${singleImageUploadHelperText}`}>{helperText}</div>
+                    <div className={`flex ${singleImageUploadInputLabel}`}>
+                      {inputLabel}
+                    </div>
+                    <div className={`flex ${singleImageUploadHelperText}`}>
+                      {helperText}
+                    </div>
                   </>
                 )}
               </>
@@ -87,14 +100,14 @@ const SingleImageUpload: React.FC<SingleImageUploadProps> = ({ id, formik, input
             name="file"
             type="file"
             multiple={true}
-            onChange={event => {
+            onChange={(event) => {
               handleFileUpload(event.currentTarget.files)
             }}
           />
         </label>
         {uploadArtworkError?.mime && (
           <div className={`p-4 text-sm ${uploadErrorBox}`}>
-            <ul className={"m-0"}>
+            <ul className={'m-0'}>
               <li>{uploadArtworkError.mime}</li>
             </ul>
           </div>

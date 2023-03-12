@@ -1,8 +1,9 @@
-import { gql, request } from "graphql-request"
-import { HAUS_CATALOGUE_PROXY } from "constants/addresses"
-import { CHAIN } from "constants/network"
-import { ZORA_API } from "constants/api"
-import { ReleaseProps } from "./typings"
+import { HAUS_CATALOGUE_PROXY } from 'constants/addresses'
+import { ZORA_API } from 'constants/api'
+import { CHAIN } from 'constants/network'
+import { gql, request } from 'graphql-request'
+
+import { ReleaseProps } from './typings'
 
 export const discographyQuery = async () => {
   const req = gql`

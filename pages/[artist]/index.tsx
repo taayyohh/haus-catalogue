@@ -62,9 +62,12 @@ const Artist = ({ artist, discography, slug }: any) => {
     )?.metadata || discography[0].metadata
   const stripHTML = useHTMLStripper()
 
+  console.log('_', _artist)
+
   return (
     <AnimatePresence>
       <motion.div
+        key={metadata?.artist_hero_preview}
         variants={{
           closed: {
             y: 0,
@@ -134,13 +137,15 @@ const Artist = ({ artist, discography, slug }: any) => {
           ) : null}
         </div>
       </motion.div>
-      <Meta
-        title={metadata?.artist || metadata?.metadata?.artist}
-        type={'website'}
-        image={ipfsGateway(metadata?.artist_hero_uri)}
-        description={stripHTML(metadata?.artistBio)}
-        slug={slug}
-      />
+      {metadata?.artist_hero_uri && (
+        <Meta
+          title={metadata?.artist || metadata?.metadata?.artist}
+          type={'website'}
+          image={ipfsGateway(metadata?.artist_hero_uri)}
+          description={stripHTML(metadata?.artistBio)}
+          slug={slug}
+        />
+      )}
     </AnimatePresence>
   )
 }
