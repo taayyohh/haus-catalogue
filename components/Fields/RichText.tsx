@@ -1,7 +1,8 @@
-import { defaultHelperTextStyle, defaultInputLabelStyle } from "./styles.css"
-import { RichTextEditor } from "@mantine/rte"
-import { FormikProps } from "formik"
-import React, { ChangeEventHandler } from "react"
+import { RichTextEditor } from '@mantine/rte'
+import { FormikProps } from 'formik'
+import React, { ChangeEventHandler } from 'react'
+
+import { defaultHelperTextStyle, defaultInputLabelStyle } from './styles.css'
 
 interface RichTextProps {
   id: string
@@ -45,22 +46,24 @@ const RichText: React.FC<RichTextProps> = ({
   }, [value])
 
   return (
-    <div className={"flex-col pb-5"}>
+    <div className={'flex-col pb-5'}>
       <label className={defaultInputLabelStyle}>{inputLabel}</label>
       <RichTextEditor
         value={editorValue}
         onChange={handleChange}
         onMouseLeave={() => handleMouseLeave()}
         onBlur={handleBlur}
-        style={{ minHeight: "250px" }}
+        style={{ minHeight: '250px' }}
         controls={[
-          ["bold", "italic", "underline", "link"],
-          ["unorderedList", "h1", "h2", "h3"],
+          ['bold', 'italic', 'underline', 'link'],
+          ['unorderedList', 'h1', 'h2', 'h3'],
         ]}
         placeholder={placeholder}
         sticky={false}
       />
-      {!!helperText && helperText?.length > 0 ? <div className={defaultHelperTextStyle}>{helperText}</div> : null}
+      {!!helperText && helperText?.length > 0 ? (
+        <div className={defaultHelperTextStyle}>{helperText}</div>
+      ) : null}
       {errorMessage && <>{errorMessage}</>}
     </div>
   )

@@ -1,16 +1,24 @@
-import React from "react"
+import React from 'react'
 
 const ZoraAuctionTag = () => {
   return (
-    <div className={"mt-6 flex items-center justify-end gap-3 text-xs uppercase"}>
+    <div className={'mt-6 flex items-center justify-end gap-3 text-xs uppercase'}>
       <a
-        target={"_blank"}
-        href={"https://docs.zora.co/docs/smart-contracts/modules/ReserveAuctions/Core/zora-v3-auctions-coreETH"}
-        className={"flex  items-center justify-center  gap-3 "}
+        target={'_blank'}
+        href={
+          'https://docs.zora.co/docs/smart-contracts/modules/ReserveAuctions/Core/zora-v3-auctions-coreETH'
+        }
+        className={'flex  items-center justify-center  gap-3 '}
       >
         <span>Powered by</span>
         <div>
-          <svg width="33" height="32" fill="none" xmlns="http://www.w3.org/2000/svg" role="img">
+          <svg
+            width="33"
+            height="32"
+            fill="none"
+            xmlns="http://www.w3.org/2000/svg"
+            role="img"
+          >
             <rect x="0.5" width="32" height="32" rx="16" fill="url(#zorb_svg__a)"></rect>
             <defs>
               <radialGradient

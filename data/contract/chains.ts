@@ -5,7 +5,7 @@ import { alchemyProvider } from 'wagmi/providers/alchemy'
 
 const CHAIN_IDS = ['1', '5']
 
-function isValidChainEnv(chainEnv: string): chainEnv is typeof CHAIN_IDS[number] {
+function isValidChainEnv(chainEnv: string): chainEnv is (typeof CHAIN_IDS)[number] {
   return CHAIN_IDS.includes(chainEnv)
 }
 

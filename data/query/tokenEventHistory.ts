@@ -1,14 +1,21 @@
-import { gql, request } from "graphql-request"
-import { HAUS_CATALOGUE_PROXY } from "../../constants/addresses"
-import { CHAIN } from "../../constants/network"
+import { gql, request } from 'graphql-request'
+
+import { HAUS_CATALOGUE_PROXY } from '../../constants/addresses'
+import { CHAIN } from '../../constants/network'
 
 export const tokenEventHistory = async (tokenId: string) => {
-  const endpoint = "https://api.zora.co/graphql"
+  const endpoint = 'https://api.zora.co/graphql'
 
   const req = gql`
     query TokenEventHistoryQuery($address: String!, $tokenId: String!, $chain: Chain!) {
-      token(token: { address: $address, tokenId: $tokenId }, network: { network: ETHEREUM, chain: $chain }) {
-        events(pagination: { limit: 100 }, sort: { sortKey: CREATED, sortDirection: DESC }) {
+      token(
+        token: { address: $address, tokenId: $tokenId }
+        network: { network: ETHEREUM, chain: $chain }
+      ) {
+        events(
+          pagination: { limit: 100 }
+          sort: { sortKey: CREATED, sortDirection: DESC }
+        ) {
           transactionInfo {
             blockNumber
             logIndex

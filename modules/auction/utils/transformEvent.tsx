@@ -1,5 +1,6 @@
 import { ethers } from 'ethers'
 import React from 'react'
+
 import { walletSnippet } from '../../../utils'
 
 export const transformEvent = (event: any) => {

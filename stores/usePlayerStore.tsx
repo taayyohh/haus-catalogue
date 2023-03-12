@@ -1,7 +1,7 @@
-import { create } from "zustand"
-import { PlayerTrack } from "data/query/typings"
+import { PlayerTrack } from 'data/query/typings'
+import { create } from 'zustand'
 
-export type PlayerQueueType = "play" | "front" | "back"
+export type PlayerQueueType = 'play' | 'front' | 'back'
 export interface QueueItem {
   track: PlayerTrack
   type: PlayerQueueType
@@ -24,28 +24,28 @@ export interface PlayerState {
   setCurrentPosition: (position: number) => void
 }
 
-export const usePlayerStore = create<PlayerState>(set => ({
+export const usePlayerStore = create<PlayerState>((set) => ({
   isPlaying: false,
   setIsPlaying: (is: boolean) => {
-    set(state => ({
+    set((state) => ({
       isPlaying: is,
     }))
   },
   addToQueue: (track: PlayerTrack, type: PlayerQueueType) => {
-    set(state => ({
+    set((state) => ({
       queue: [{ track, type }, ...state.queue],
       queuedItem: { track, type },
     }))
   },
   media: undefined,
   setCurrentMedia: (media: HTMLAudioElement) => set({ media }),
-  duration: "",
-  setDuration: duration => set({ duration }),
-  currentTime: "",
-  setCurrentTime: currentTime => set({ currentTime }),
+  duration: '',
+  setDuration: (duration) => set({ duration }),
+  currentTime: '',
+  setCurrentTime: (currentTime) => set({ currentTime }),
   queue: [],
   queuedItem: null,
   clearQueueItem: () => set({ queuedItem: null }),
   currentPosition: 0,
-  setCurrentPosition: currentPosition => set({ currentPosition }),
+  setCurrentPosition: (currentPosition) => set({ currentPosition }),
 }))

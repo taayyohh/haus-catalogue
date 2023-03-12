@@ -1,11 +1,12 @@
+import React, { InputHTMLAttributes, WheelEvent } from 'react'
+
 import {
   defaultFieldsetStyle,
   errorMessageStyle,
   numberInputErrorStyle,
   numberInputStyle,
   placeholderStyle,
-} from "./styles.css"
-import React, { InputHTMLAttributes, WheelEvent } from "react"
+} from './styles.css'
 
 interface NumberInputProps extends InputHTMLAttributes<HTMLInputElement> {
   label?: string
@@ -26,13 +27,21 @@ const NumberInput = ({
 }: NumberInputProps) => {
   return (
     <fieldset className={`${defaultFieldsetStyle} mb-8`}>
-      {errorMessage && <div className={`absolute right-2 bottom-6 ${errorMessageStyle}`}>{errorMessage}</div>}
+      {errorMessage && (
+        <div className={`absolute right-2 bottom-6 ${errorMessageStyle}`}>
+          {errorMessage}
+        </div>
+      )}
       <input
         {...rest}
         type="number"
         value={value}
         className={hasError ? numberInputErrorStyle : numberInputStyle}
-        onWheel={disableWheelEvent ? (e: WheelEvent<HTMLInputElement>) => e.currentTarget.blur() : undefined}
+        onWheel={
+          disableWheelEvent
+            ? (e: WheelEvent<HTMLInputElement>) => e.currentTarget.blur()
+            : undefined
+        }
       />
 
       {label && <div className={`${placeholderStyle} absolute`}>{label}</div>}

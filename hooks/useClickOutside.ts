@@ -1,4 +1,4 @@
-import React from "react"
+import React from 'react'
 
 /**
  * Detect clicks outside of the specified element or those having specified selectors, and apply a function when triggered.
@@ -13,20 +13,21 @@ const useClickOutside = (ref: any, handler: Function, ignoreClasses?: string) =>
       if (
         ref?.current &&
         !ref?.current.contains(event.target) &&
-        (ignoreClasses === undefined || (ignoreClasses && (event.target as Element)?.closest(ignoreClasses) === null))
+        (ignoreClasses === undefined ||
+          (ignoreClasses && (event.target as Element)?.closest(ignoreClasses) === null))
       ) {
         handler(event)
       }
     }
-    if (typeof window !== "undefined") {
-      document.addEventListener("mousedown", listener)
-      document.addEventListener("touchstart", listener)
+    if (typeof window !== 'undefined') {
+      document.addEventListener('mousedown', listener)
+      document.addEventListener('touchstart', listener)
     }
 
     return () => {
-      if (typeof window !== "undefined") {
-        document.removeEventListener("mousedown", listener)
-        document.removeEventListener("touchstart", listener)
+      if (typeof window !== 'undefined') {
+        document.removeEventListener('mousedown', listener)
+        document.removeEventListener('touchstart', listener)
       }
     }
   }, [ref, handler, ignoreClasses])

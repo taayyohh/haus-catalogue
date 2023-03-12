@@ -1,6 +1,12 @@
-import React, { ChangeEventHandler } from "react"
-import { FormikProps } from "formik"
-import { motion } from "framer-motion"
+import { CheckIcon } from '@radix-ui/react-icons'
+import { FormikProps } from 'formik'
+import { motion } from 'framer-motion'
+import React, { ChangeEventHandler } from 'react'
+import useSWR from 'swr'
+import { useProvider } from 'wagmi'
+
+import { getEnsName } from '../../utils/ens'
+import { isEmpty } from '../../utils/isEmpty'
 import {
   defaultFieldsetStyle,
   defaultHelperTextStyle,
@@ -8,12 +14,7 @@ import {
   defaultInputErrorStyle,
   defaultInputLabelStyle,
   defaultInputStyle,
-} from "./styles.css"
-import useSWR from "swr"
-import { CheckIcon } from "@radix-ui/react-icons"
-import { getEnsName } from "../../utils/ens"
-import { useProvider } from "wagmi"
-import {isEmpty} from "../../utils/isEmpty";
+} from './styles.css'
 
 interface SmartInputProps {
   id: string
@@ -57,7 +58,7 @@ const SmartInput: React.FC<SmartInputProps> = ({
   const provider = useProvider()
 
   const { data: ensName } = useSWR(
-    isAddress ? ["ens", value] : null,
+    isAddress ? ['ens', value] : null,
     async () => await getEnsName(value as string, provider),
     { revalidateOnFocus: false }
   )
@@ -70,7 +71,7 @@ const SmartInput: React.FC<SmartInputProps> = ({
   const input = React.useRef<HTMLInputElement>(null)
   React.useEffect(() => {
     if (input.current !== null) {
-      input.current.setAttribute("autocomplete", "off")
+      input.current.setAttribute('autocomplete', 'off')
     }
   }, [input])
 
@@ -98,10 +99,10 @@ const SmartInput: React.FC<SmartInputProps> = ({
   const helperVariants = {
     init: {
       height: 0,
-      overflow: "hidden",
+      overflow: 'hidden',
     },
     open: {
-      height: "auto",
+      height: 'auto',
     },
   }
 
@@ -109,7 +110,11 @@ const SmartInput: React.FC<SmartInputProps> = ({
     <fieldset className={`mb-8 p-0 ${defaultFieldsetStyle}`}>
       {inputLabel && <label className={defaultInputLabelStyle}>{inputLabel}</label>}
       {errorMessage && (
-        <div className={`absolute right-2 top-8 text-sm ${defaultInputErrorMessageStyle}`}>{errorMessage}</div>
+        <div
+          className={`absolute right-2 top-8 text-sm ${defaultInputErrorMessageStyle}`}
+        >
+          {errorMessage}
+        </div>
       )}
       <input
         id={id}
@@ -117,25 +122,31 @@ const SmartInput: React.FC<SmartInputProps> = ({
         onChange={onChange}
         onBlur={handleBlur}
         onFocus={handleFocus}
-        value={typeof value === "number" && isNaN(value) ? "" : value}
+        value={typeof value === 'number' && isNaN(value) ? '' : value}
         className={!!errorMessage ? defaultInputErrorStyle : defaultInputStyle}
         min={0}
         max={max}
         step={step}
-        placeholder={perma || placeholder || ""}
+        placeholder={perma || placeholder || ''}
         ref={input}
         disabled={disabled}
       />
       {isAddress && !!value?.toString().length && !errorMessage && (
-        <div className={"absolute flex items-center justify-center "}>
-          <CheckIcon color={"#fff"} height={"22px"} width={"22px"} />
+        <div className={'absolute flex items-center justify-center '}>
+          <CheckIcon color={'#fff'} height={'22px'} width={'22px'} />
         </div>
       )}
-      {(typeof value === "number" || value) && perma ? (
+      {(typeof value === 'number' || value) && perma ? (
         <div className={`absolute right-4 top-[52px]`}>{perma}</div>
       ) : null}
-      <motion.div variants={helperVariants} initial={"init"} animate={isFocus ? "open" : "init"}>
-        {!!helperText && helperText?.length > 0 ? <div className={defaultHelperTextStyle}>{helperText}</div> : null}
+      <motion.div
+        variants={helperVariants}
+        initial={'init'}
+        animate={isFocus ? 'open' : 'init'}
+      >
+        {!!helperText && helperText?.length > 0 ? (
+          <div className={defaultHelperTextStyle}>{helperText}</div>
+        ) : null}
       </motion.div>
     </fieldset>
   )

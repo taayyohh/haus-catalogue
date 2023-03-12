@@ -7,11 +7,11 @@
  * @returns {T | undefined[]}
  */
 export function unpackOptionalArray<T = []>(
-    array: T | undefined,
-    expectedLength: number
+  array: T | undefined,
+  expectedLength: number
 ): T | undefined[] {
-    if (!array) {
-        return Array(expectedLength).fill(undefined)
-    }
-    return array
+  if (!array) {
+    return Array(expectedLength).fill(undefined)
+  }
+  return array
 }

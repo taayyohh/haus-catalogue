@@ -1,6 +1,6 @@
-import { ethers } from "ethers"
-import { ALCHEMY_RPC_URL } from "constants/rpc"
-import { StaticJsonRpcProvider } from "@ethersproject/providers"
+import { StaticJsonRpcProvider } from '@ethersproject/providers'
+import { ALCHEMY_RPC_URL } from 'constants/rpc'
+import { ethers } from 'ethers'
 
 let provider: StaticJsonRpcProvider | undefined
 

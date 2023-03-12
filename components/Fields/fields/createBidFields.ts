@@ -1,20 +1,20 @@
-import { NUMBER } from "components/Fields/types"
-import * as Yup from "yup"
+import { NUMBER } from 'components/Fields/types'
+import * as Yup from 'yup'
 
 export const createBidFields = ({ helperText, balance }: any) => {
   return [
     {
-      name: "amount",
+      name: 'amount',
       type: NUMBER,
-      inputLabel: "Amount",
-      perma: "ETH",
+      inputLabel: 'Amount',
+      perma: 'ETH',
       helperText: `The minimum bid is ${helperText.toFixed(3)} ETH`,
       step: 0.00000001,
     },
     {
-      name: "balance",
+      name: 'balance',
       type: NUMBER,
-      inputLabel: "Your Balance",
+      inputLabel: 'Your Balance',
       disabled: true,
       perma: `${balance} ETH`,
       step: 0.00000001,
@@ -23,14 +23,14 @@ export const createBidFields = ({ helperText, balance }: any) => {
 }
 
 export const createBidInitialValues = {
-  amount: "",
-  balance: "",
+  amount: '',
+  balance: '',
 }
 
 export const validateCreateBid = (min: number) =>
   Yup.object().shape({
     amount: Yup.number()
-      .transform(value => (isNaN(value) ? undefined : value))
-      .required("*")
+      .transform((value) => (isNaN(value) ? undefined : value))
+      .required('*')
       .min(min, `>= ${min.toFixed(3)} ETH`),
   })

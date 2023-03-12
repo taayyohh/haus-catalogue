@@ -1,5 +1,6 @@
-import { useEnsAddress, useEnsAvatar, useEnsName } from "wagmi"
-import {walletSnippet} from "../utils/walletSnippet";
+import { useEnsAddress, useEnsAvatar, useEnsName } from 'wagmi'
+
+import { walletSnippet } from '../utils/walletSnippet'
 
 export const useEnsData = (address?: string | undefined) => {
   const { data: ensName, isLoading: ensNameLoading } = useEnsName({

@@ -1,6 +1,7 @@
-import React from "react"
-import { SongCard } from "modules/song"
-import { ReleaseProps } from "data/query/typings"
+import { ReleaseProps } from 'data/query/typings'
+import React from 'react'
+
+import { SongCard } from 'modules/song'
 
 export const SongGrid: React.FC<{ discography: ReleaseProps[] }> = ({ discography }) => {
   return (

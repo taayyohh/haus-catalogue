@@ -1,7 +1,8 @@
-import React from 'react'
-import useSWR from 'swr'
 import { ETHERSCAN_BASE_URL } from 'constants/etherscan'
 import dayjs from 'dayjs'
+import React from 'react'
+import useSWR from 'swr'
+
 import { transformEvent } from 'modules/auction/utils'
 
 export const History: React.FC<{ release: any }> = ({ release }) => {
