@@ -3,7 +3,6 @@ import { ReleaseProps } from 'data/query/typings'
 import React from 'react'
 import { usePlayerStore } from 'stores/usePlayerStore'
 import { SWRConfig } from 'swr'
-import { ipfsGateway } from 'utils/ipfsGateway'
 
 import { NowPlaying, SongGrid, randomSong } from 'modules/song'
 import { getDiscography } from 'modules/song/utils/getDiscography'

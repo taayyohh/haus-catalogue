@@ -6,7 +6,6 @@ import { GetServerSideProps } from 'next'
 import React from 'react'
 import useSWR, { SWRConfig } from 'swr'
 import { AddressType } from 'typings'
-import { ipfsGateway } from 'utils'
 import { useContractRead } from 'wagmi'
 
 import { BidAndHistory } from 'modules/auction'
@@ -54,7 +53,10 @@ const Song = ({ artist, song, slug }: any) => {
       <Meta
         title={release?.name}
         type={'music.song'}
-        image={release?.metadata?.image_uri?.track?.image.replace('ipfs://', 'https://nftstorage.link/ipfs/')}
+        image={release?.metadata?.image_uri?.track?.image.replace(
+          'ipfs://',
+          'https://nftstorage.link/ipfs/'
+        )}
         slug={slug}
         album={release?.metadata?.albumTitle}
         track={release?.metadata?.trackNumber}
