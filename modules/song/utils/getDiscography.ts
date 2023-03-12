@@ -32,6 +32,7 @@ export async function getDiscography() {
   } catch (err: any) {
     if (err.response.state === 502 && retry > 0) {
       const timeout = setTimeout(async () => {
+        console.log('retry')
         retry--
         return await discography()
       }, 5000)

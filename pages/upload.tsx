@@ -58,7 +58,7 @@ const Upload = () => {
       }
       reader.readAsArrayBuffer(blob)
     },
-    [instance]
+    []
   )
 
   const createBundlrTx = async (data: {}, value: string) => {
@@ -98,7 +98,7 @@ const Upload = () => {
         await getBalance
       }
     },
-    [instance]
+    [instance, getBalance]
   )
 
   /* styles */
