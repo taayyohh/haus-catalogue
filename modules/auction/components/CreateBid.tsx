@@ -11,6 +11,7 @@ import { ZORA_V3_ADDRESSES } from 'constants/addresses'
 import AUCTION_ABI from 'data/contract/abi/ReserveAuctionCoreETH.json'
 import { BigNumber, ethers } from 'ethers'
 import React from 'react'
+import { mutate } from 'swr'
 import { AddressType } from 'typings'
 import { useBalance, useContractRead, useSigner } from 'wagmi'
 
@@ -45,6 +46,9 @@ const CreateBid: React.FC<{ release: any }> = ({ release }) => {
       const { wait } = await writeContract(config)
       await wait()
       setIsSubmitting(false)
+      await mutate(['token-event-history', release.tokenId])
+      await mutate(['auction-bid-events', release.tokenId])
+      await mutate(['active-bids', release.tokenId])
     } catch (error) {
       console.log('error', error)
     } finally {

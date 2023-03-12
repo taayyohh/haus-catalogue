@@ -40,6 +40,24 @@ const Meta: React.FC<MetaProps> = ({
           <meta property="music:musician" content={musician} />
         </>
       )}
+      <meta name="twitter:card" content="summary_large_image" />
+      <meta name="twitter:site" content="@lucidhaus" />
+      <meta name="twitter:creator" content="@lucidahaus" />
+      <meta name="twitter:title" content={title} />
+      <meta name="twitter:url" content={`https://lucid.haus${slug}`} />
+      <meta
+        name="twitter:description"
+        content={
+          description || 'Lucidhaus is the home of timeless post-genre black musicians.'
+        }
+      />
+      <meta
+        name="twitter:image"
+        content={
+          image ||
+          'https://ipfs.io/ipfs/bafybeidhiby7h2vp4n36imehevfcxwvacipnd2ta7ya5tegkmduuk4emw4/lucidhaus-yellow.png'
+        }
+      />
     </Head>
   )
 }
