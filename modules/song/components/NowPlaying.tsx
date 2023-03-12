@@ -1,12 +1,13 @@
+import { PlayerTrack } from 'data/query/typings'
 import { AnimatePresence, motion } from 'framer-motion'
 import Image from 'next/image'
-import { BsArrowDown, BsFillPlayCircleFill, BsPauseCircleFill } from 'react-icons/bs'
 import Link from 'next/link'
-import { PlayerTrack } from 'data/query/typings'
-import { usePlayerStore } from 'stores/usePlayerStore'
-import { Bid } from 'modules/auction/components'
-import { slugify } from 'utils'
 import React from 'react'
+import { BsArrowDown, BsFillPlayCircleFill, BsPauseCircleFill } from 'react-icons/bs'
+import { usePlayerStore } from 'stores/usePlayerStore'
+import { slugify } from 'utils'
+
+import { Bid } from 'modules/auction/components'
 
 export const NowPlaying: React.FC<{ track: PlayerTrack }> = ({ track }) => {
   const { isPlaying, media, duration, currentTime, addToQueue, setIsPlaying } =
@@ -49,7 +50,7 @@ export const NowPlaying: React.FC<{ track: PlayerTrack }> = ({ track }) => {
               exit="closed"
             >
               <div
-                className={`sm-h-32 w-h-32 relative h-72 w-72 overflow-hidden rounded-full border sm:h-96 sm:min-h-[330px] sm:w-96 sm:min-w-[330px] cursor-pointer`}
+                className={`relative h-72 w-72 min-h-72 min-w-72 overflow-hidden rounded-full border sm:h-96 sm:min-h-96 sm:w-96 sm:min-w-96 cursor-pointer`}
                 onClick={handleClick}
               >
                 {track?.image && (
