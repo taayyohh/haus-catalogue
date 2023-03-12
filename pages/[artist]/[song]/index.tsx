@@ -6,7 +6,6 @@ import { GetServerSideProps } from 'next'
 import React from 'react'
 import useSWR, { SWRConfig } from 'swr'
 import { AddressType } from 'typings'
-import { ipfsGateway } from 'utils'
 import { useContractRead } from 'wagmi'
 
 import { BidAndHistory } from 'modules/auction'
