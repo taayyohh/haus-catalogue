@@ -51,6 +51,16 @@ const Song = ({ artist, song, slug }: any) => {
 
   return (
     <>
+      <Meta
+        title={release?.name}
+        type={'music.song'}
+        image={release?.metadata?.image_uri?.track?.image.replace('ipfs://', 'https://nftstorage.link/ipfs/')}
+        slug={slug}
+        album={release?.metadata?.albumTitle}
+        track={release?.metadata?.trackNumber}
+        musician={release?.metadata?.artist}
+        description={release?.metadata?.artist}
+      />
       {release ? (
         <FadeInOut k={release?.name}>
           <AlbumArt release={release} />
@@ -63,18 +73,6 @@ const Song = ({ artist, song, slug }: any) => {
             <AuctionInfo auction={auction} release={release} />
             <BidAndHistory release={release} auction={auction} />
           </div>
-          {release?.metadata.image_uri && (
-            <Meta
-              title={release.name}
-              type={'music.song'}
-              image={ipfsGateway(release.metadata.image_uri)}
-              slug={slug}
-              album={release.metadata.albumTitle}
-              track={release.metadata.trackNumber}
-              musician={release.metadata.artist}
-              description={release.metadata.artist}
-            />
-          )}
         </FadeInOut>
       ) : null}
     </>

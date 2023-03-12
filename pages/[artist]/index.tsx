@@ -12,7 +12,7 @@ import rehypeRaw from 'rehype-raw'
 import rehypeSanitize from 'rehype-sanitize'
 import remarkGfm from 'remark-gfm'
 import useSWR, { SWRConfig } from 'swr'
-import { ipfsGateway, slugify } from 'utils'
+import { slugify } from 'utils'
 
 import { SongCard } from 'modules/song'
 import { getDiscography } from 'modules/song'
@@ -66,6 +66,16 @@ const Artist = ({ artist, discography, slug }: any) => {
 
   return (
     <AnimatePresence>
+      <Meta
+        title={metadata?.artist || metadata?.metadata?.artist}
+        type={'website'}
+        image={metadata?.artist_hero_uri?.track?.image?.replace(
+          'ipfs://',
+          'https://nftstorage.link/ipfs/'
+        )}
+        description={stripHTML(metadata?.artistBio)}
+        slug={slug}
+      />
       <motion.div
         key={metadata?.artist_hero_preview}
         variants={{
@@ -137,15 +147,6 @@ const Artist = ({ artist, discography, slug }: any) => {
           ) : null}
         </div>
       </motion.div>
-      {metadata?.artist_hero_uri && (
-        <Meta
-          title={metadata?.artist || metadata?.metadata?.artist}
-          type={'website'}
-          image={ipfsGateway(metadata?.artist_hero_uri)}
-          description={stripHTML(metadata?.artistBio)}
-          slug={slug}
-        />
-      )}
     </AnimatePresence>
   )
 }

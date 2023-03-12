@@ -30,7 +30,8 @@ const Meta: React.FC<MetaProps> = ({
       <meta property="og:title" content={title} />
       <meta property="og:type" content={type} />
       <meta property="og:url" content={`https://lucid.haus${slug}`} />
-      <meta property="og:image" content={image} />
+      <meta property="og:image" content={image ||
+          'https://ipfs.io/ipfs/bafybeidhiby7h2vp4n36imehevfcxwvacipnd2ta7ya5tegkmduuk4emw4/lucidhaus-yellow.png'} />
       <meta property="og:description" content={description} />
       {type === 'music.song' && (
         <>
@@ -48,7 +49,7 @@ const Meta: React.FC<MetaProps> = ({
       <meta
         name="twitter:description"
         content={
-          description || 'Lucidhaus is the home of timeless post-genre black musicians.'
+          description || 'Lucidhaus is the home of timeless, post-genre black musicians.'
         }
       />
       <meta
