@@ -1,8 +1,11 @@
-import { discographyQuery } from 'data/query/discography'
-import { ReleaseProps } from 'data/query/typings'
-import { slugify } from 'utils'
+import { discographyQuery } from 'data/query/discography';
+import { ReleaseProps } from 'data/query/typings';
+import { slugify } from 'utils';
 
-import { repairMetadata, sanitizeDiscography } from 'modules/song/index'
+
+
+import { repairMetadata, sanitizeDiscography } from 'modules/song/index';
+
 
 const discography = async () => {
   const discography: ReleaseProps[] = [
@@ -30,7 +33,7 @@ export async function getDiscography() {
   try {
     return await discography()
   } catch (err: any) {
-    if (err.response.state === 502 && retry > 0) {
+    if (err.response.state === 502 || (err.response.state === 504 && retry > 0)) {
       const timeout = setTimeout(async () => {
         console.log('retry')
         retry--

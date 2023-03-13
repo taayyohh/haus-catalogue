@@ -10,10 +10,13 @@ import ZoraAuctionTag from 'components/ZoraAuctionTag'
 import { ZORA_V3_ADDRESSES } from 'constants/addresses'
 import AUCTION_ABI from 'data/contract/abi/ReserveAuctionCoreETH.json'
 import { BigNumber, ethers } from 'ethers'
+import Image from 'next/image'
 import React from 'react'
 import { mutate } from 'swr'
 import { AddressType } from 'typings'
 import { useBalance, useContractRead, useSigner } from 'wagmi'
+
+import { deployPendingButtonStyle } from './styles.css'
 
 const CreateBid: React.FC<{ release: any }> = ({ release }) => {
   const { data: signer } = useSigner()
@@ -51,6 +54,7 @@ const CreateBid: React.FC<{ release: any }> = ({ release }) => {
       await mutate(['active-bids', release.tokenId])
     } catch (error) {
       console.log('error', error)
+      setIsSubmitting(undefined)
     } finally {
     }
   }
@@ -64,13 +68,15 @@ const CreateBid: React.FC<{ release: any }> = ({ release }) => {
 
   return (
     <div className={'flex flex-col'}>
-      <div className={'mb-8 flex items-center gap-5'}>
-        <div className={'h-20 w-20'}>
-          <img
+      <div className={'mb-8 flex-col sm:flex-row flex items-center gap-5'}>
+        <div className={'relative h-48 w-48 sm:h-20 sm:w-20 rounded-lg overflow-hidden'}>
+          <Image
+            fill
             src={release?.metadata?.project?.artwork.uri.replace(
               'ipfs://',
               'https://nftstorage.link/ipfs/'
             )}
+            alt={`${release?.name} cover art`}
           />
         </div>
         <div className={'flex flex-col'}>
@@ -80,8 +86,22 @@ const CreateBid: React.FC<{ release: any }> = ({ release }) => {
       </div>
       {(!!signer && (
         <>
-          {isSubmitting === false && <div>Bid Placed!</div>}
-          {isSubmitting === true && <div>Is Submitting</div>}
+          {isSubmitting === false && (
+            <div
+              className={
+                'py-4 px-8 rounded-xl flex items-center justify-center bg-white text-2xl font-bold text-emerald-600'
+              }
+            >
+              Bid Placed!
+            </div>
+          )}
+          {isSubmitting === true && (
+            <div
+              className={`py-4 px-8 border rounded-xl flex items-center justify-center text-white text-2xl font-bold ${deployPendingButtonStyle}`}
+            >
+              Placing Bid
+            </div>
+          )}
           {isSubmitting === undefined && (
             <Form
               fields={createBidFields({

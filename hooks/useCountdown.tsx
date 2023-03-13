@@ -17,9 +17,9 @@ export const useCountdown = (auctionInfo: any) => {
       setCountdownString(
         //@ts-ignore
         auctionInfo?.highestBidder === signer?._address
-          ? `You won with a bid of ${ethers.utils.formatEther(
+          ? `Congrats! You won with a bid of ${ethers.utils.formatEther(
               auctionInfo.highestBid.toString()
-            )} ETH!`
+            )} ETH.`
           : ``
       )
     }

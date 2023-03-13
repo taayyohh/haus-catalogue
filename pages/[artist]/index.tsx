@@ -137,7 +137,7 @@ const Artist = ({ artist, discography, slug }: any) => {
                     </ReactMarkdown>
                   </div>
                 </div>
-                <div className=" grid grid-cols-2 gap-8 py-8 md:grid-cols-3 lg:grid-cols-4">
+                <div className="grid grid-cols-2 gap-8 py-8 md:grid-cols-3 lg:grid-cols-4">
                   {discography?.map((release: any, i: any) => (
                     <SongCard key={i} release={release} />
                   ))}

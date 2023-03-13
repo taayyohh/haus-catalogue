@@ -1,7 +1,7 @@
 import Link from 'next/link'
 import React from 'react'
+import { slugify } from 'utils'
 
-import { slugify } from '../../../../utils/slugify'
 import PlayButton from './PlayButton'
 
 const SongCardInner = ({ release }: any) => {
