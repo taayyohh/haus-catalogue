@@ -47,6 +47,7 @@ specifiers:
   keccak256: ^1.0.6
   merkletreejs: ^0.2.32
   next: ^13.0.3
+  next-sitemap: ^4.0.5
   nft.storage: ^7.0.3
   postcss: ^8.4.21
   postcss-flexbugs-fixes: ^5.0.2
@@ -107,6 +108,7 @@ dependencies:
   keccak256: 1.0.6
   merkletreejs: 0.2.32
   next: 13.2.4_ef5jwxihqo6n7gxfmzogljlgcm
+  next-sitemap: 4.0.5_next@13.2.4
   nft.storage: 7.0.3
   postcss-flexbugs-fixes: 5.0.2_postcss@8.4.21
   postcss-preset-env: 7.8.3_postcss@8.4.21
@@ -505,6 +507,10 @@ packages:
       - encoding
       - supports-color
       - utf-8-validate
+    dev: false
+
+  /@corex/deepmerge/4.0.37:
+    resolution: {integrity: sha512-PX90bEnrLdxd5e6rSFWsghExMuSw0Uov3fWJuuaoFuUQIS/446diu/4seExK5b+43L+SOBbd2uBGwYUkG1JfCw==}
     dev: false
 
   /@cspotcode/source-map-support/0.8.1:
@@ -7916,6 +7922,19 @@ packages:
       bs58: 4.0.1
       near-hd-key: 1.2.1
       tweetnacl: 1.0.3
+    dev: false
+
+  /next-sitemap/4.0.5_next@13.2.4:
+    resolution: {integrity: sha512-kIABX4n8wJqY2sttRjivBF2r1MgQ1pg12y87qGT+5meippq0ivxaNSRldMDOj8pIGhXW6uFAsCxyH/JftqkwWQ==}
+    engines: {node: '>=14.18'}
+    hasBin: true
+    peerDependencies:
+      '@next/env': '*'
+      next: '*'
+    dependencies:
+      '@corex/deepmerge': 4.0.37
+      minimist: 1.2.8
+      next: 13.2.4_ef5jwxihqo6n7gxfmzogljlgcm
     dev: false
 
   /next/13.2.4_ef5jwxihqo6n7gxfmzogljlgcm:

@@ -62,10 +62,84 @@ const Artist = ({ artist, discography, slug }: any) => {
     )?.metadata || discography[0].metadata
   const stripHTML = useHTMLStripper()
 
-  console.log('_', _artist)
-
   return (
-    <AnimatePresence>
+    <>
+      <AnimatePresence>
+        <motion.div
+          key={metadata?.artist_hero_preview}
+          variants={{
+            closed: {
+              y: 0,
+              opacity: 0,
+            },
+            open: {
+              y: 0,
+              opacity: 1,
+            },
+          }}
+          initial="closed"
+          animate="open"
+          exit="closed"
+        >
+          <div className={'fixed top-16 flex h-12 w-full items-center border-t-2  '}>
+            <button
+              onClick={() => router.back()}
+              className={'absolute left-7 rounded-full bg-[#ffffff78] p-1 hover:bg-white'}
+            >
+              <ChevronLeftIcon width={'22px'} height={'22px'} className={'text-black'} />
+            </button>
+          </div>
+          <div className={'mx-auto w-11/12 pt-32 sm:w-4/5'}>
+            <div>
+              {metadata?.artist_hero_preview && (
+                <div
+                  className={'fixed left-0 top-0 -z-10 h-[100vh] w-full overflow-hidden'}
+                >
+                  <Image
+                    src={metadata?.artist_hero_preview}
+                    className={'-mt-12 sm:mt-0 h-full w-full object-cover'}
+                    alt={'artist cover image'}
+                    priority
+                    fill
+                  />
+                </div>
+              )}
+            </div>
+          </div>
+
+          <div>
+            {discography?.length > 0 ? (
+              <div className="mx-auto mt-[40vh] h-full w-full rounded border-t bg-white sm:mt-[65vh] sm:min-h-[100vh] sm:w-11/12">
+                <div className={'mx-auto w-11/12'}>
+                  <div
+                    className={
+                      'py-12 text-center text-6xl font-bold uppercase text-black'
+                    }
+                  >
+                    {metadata?.artist || metadata?.metadata?.artist}
+                  </div>
+                  <div className={'mx-auto mb-20 w-11/12 sm:w-3/4 md:w-3/4 lg:w-1/2'}>
+                    <div className={'text-black gap-3'}>
+                      <ReactMarkdown
+                        rehypePlugins={[rehypeRaw, rehypeSanitize]}
+                        remarkPlugins={[remarkGfm]}
+                      >
+                        {metadata?.artistBio}
+                      </ReactMarkdown>
+                    </div>
+                  </div>
+                  <div className="grid grid-cols-2 gap-8 py-8 md:grid-cols-3 lg:grid-cols-4">
+                    {discography?.map((release: any, i: any) => (
+                      <SongCard key={i} release={release} />
+                    ))}
+                  </div>
+                </div>
+              </div>
+            ) : null}
+          </div>
+        </motion.div>
+      </AnimatePresence>
+
       <Meta
         title={metadata?.artist || metadata?.metadata?.artist}
         type={'website'}
@@ -76,78 +150,7 @@ const Artist = ({ artist, discography, slug }: any) => {
         description={stripHTML(metadata?.artistBio)}
         slug={slug}
       />
-      <motion.div
-        key={metadata?.artist_hero_preview}
-        variants={{
-          closed: {
-            y: 0,
-            opacity: 0,
-          },
-          open: {
-            y: 0,
-            opacity: 1,
-          },
-        }}
-        initial="closed"
-        animate="open"
-        exit="closed"
-      >
-        <div className={'fixed top-16 flex h-12 w-full items-center border-t-2  '}>
-          <button
-            onClick={() => router.back()}
-            className={'absolute left-7 rounded-full bg-[#ffffff78] p-1 hover:bg-white'}
-          >
-            <ChevronLeftIcon width={'22px'} height={'22px'} className={'text-black'} />
-          </button>
-        </div>
-        <div className={'mx-auto w-11/12 pt-32 sm:w-4/5'}>
-          <div>
-            {metadata?.artist_hero_preview && (
-              <div
-                className={'fixed left-0 top-0 -z-10 h-[100vh] w-full overflow-hidden'}
-              >
-                <Image
-                  src={metadata?.artist_hero_preview}
-                  className={'-mt-12 sm:mt-0 h-full w-full object-cover'}
-                  alt={'artist cover image'}
-                  priority
-                  fill
-                />
-              </div>
-            )}
-          </div>
-        </div>
-
-        <div>
-          {discography?.length > 0 ? (
-            <div className="mx-auto mt-[40vh] h-full w-full rounded border-t bg-white sm:mt-[65vh] sm:min-h-[100vh] sm:w-11/12">
-              <div className={'mx-auto w-11/12'}>
-                <div
-                  className={'py-12 text-center text-6xl font-bold uppercase text-black'}
-                >
-                  {metadata?.artist || metadata?.metadata?.artist}
-                </div>
-                <div className={'mx-auto mb-20 w-11/12 sm:w-3/4 md:w-3/4 lg:w-1/2'}>
-                  <div className={'text-black gap-3'}>
-                    <ReactMarkdown
-                      rehypePlugins={[rehypeRaw, rehypeSanitize]}
-                      remarkPlugins={[remarkGfm]}
-                    >
-                      {metadata?.artistBio}
-                    </ReactMarkdown>
-                  </div>
-                </div>
-                <div className="grid grid-cols-2 gap-8 py-8 md:grid-cols-3 lg:grid-cols-4">
-                  {discography?.map((release: any, i: any) => (
-                    <SongCard key={i} release={release} />
-                  ))}
-                </div>
-              </div>
-            </div>
-          ) : null}
-        </div>
-      </motion.div>
-    </AnimatePresence>
+    </>
   )
 }
 
