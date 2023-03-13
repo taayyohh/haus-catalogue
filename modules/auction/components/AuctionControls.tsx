@@ -53,6 +53,7 @@ export const AuctionControls: React.FC<any> = ({ release }) => {
     functionName: 'setApprovalForModule',
     args: [ZORA_V3_ADDRESSES?.ReserveAuctionCoreEth, true],
   })
+
   const { writeAsync: setApprovalForModule } = useContractWrite(zoraModuleApprovalConfig)
 
   const { data: isApprovedForAll }: any = useContractRead({
@@ -63,6 +64,11 @@ export const AuctionControls: React.FC<any> = ({ release }) => {
     args: [signer?._address, ZORA_V3_ADDRESSES?.ERC721TransferHelper],
   })
 
+  const allowZoraManager = async () => {
+    const txn = await setApprovalForModule?.()
+    await txn?.wait()
+  }
+
   const { config: catalogueApprovalConfig } = usePrepareContractWrite({
     enabled: !!signer,
     address: HAUS_CATALOGUE_PROXY as unknown as AddressType,
@@ -71,6 +77,11 @@ export const AuctionControls: React.FC<any> = ({ release }) => {
     args: [ZORA_V3_ADDRESSES?.ERC721TransferHelper, true],
   })
   const { writeAsync: setApprovalForAll } = useContractWrite(catalogueApprovalConfig)
+
+  const allowZoraAuction = async () => {
+    const txn = await setApprovalForAll?.()
+    await txn?.wait()
+  }
 
   const handleSetAuctionReservePrice = async (values: FormikValues) => {
     if (!release) return
@@ -174,7 +185,6 @@ export const AuctionControls: React.FC<any> = ({ release }) => {
           'absolute top-1 left-5 top-9 box-border h-0 w-10/12 overflow-hidden rounded bg-[#f9f9f9] shadow-2xl'
         }
       >
-        <div className={'mb-2  text-xl  text-gray-500'}>Auction Controls</div>
         {auction?.seller !== ZERO_ADDRESS ? (
           <>
             <AnimatedModal
@@ -214,7 +224,7 @@ export const AuctionControls: React.FC<any> = ({ release }) => {
             <CreateAuction release={release} />
             <button
               className={
-                'mb-2 flex w-full justify-center rounded border bg-white py-1 px-2 text-black'
+                'mb-2 flex w-full justify-center rounded border bg-white py-1 px-2 text-white font-bold bg-red-600 border-red-700'
               }
               onClick={() => handleBurn()}
             >
@@ -228,10 +238,7 @@ export const AuctionControls: React.FC<any> = ({ release }) => {
                 className={
                   'mb-2 flex w-full justify-center rounded border bg-white py-1 px-2 text-black'
                 }
-                onClick={async () => {
-                  const txn = await setApprovalForAll?.()
-                  await txn?.wait()
-                }}
+                onClick={allowZoraAuction}
               >
                 allow zora auction
               </button>
@@ -241,10 +248,7 @@ export const AuctionControls: React.FC<any> = ({ release }) => {
                 className={
                   'mb-2 flex w-full justify-center rounded border bg-white py-1 px-2 text-black'
                 }
-                onClick={async () => {
-                  const txn = await setApprovalForModule?.()
-                  await txn?.wait()
-                }}
+                onClick={allowZoraManager}
               >
                 allow zora manager{' '}
               </button>

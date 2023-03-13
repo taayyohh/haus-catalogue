@@ -1,6 +1,7 @@
 import { HamburgerMenuIcon } from '@radix-ui/react-icons'
 import { ConnectButton } from '@rainbow-me/rainbowkit'
 import { motion } from 'framer-motion'
+import Image from 'next/image'
 import Link from 'next/link'
 import React from 'react'
 import { isCatalogueArtist } from 'utils/isCatalogueArtist'
@@ -23,18 +24,13 @@ const Nav = () => {
   return (
     <>
       <div className="fixed z-10 hidden h-16 w-full items-center justify-end bg-[#F9F9F9] p-4 sm:flex">
-        {/*<input*/}
-        {/*  className="focus:shadow-outline h-8 w-36 rounded bg-[#f9f9f9] px-4 placeholder:text-slate-500 focus:outline-none"*/}
-        {/*  placeholder="Search"*/}
-        {/*/>*/}
-
-        <button className="w-24 absolute left-1/2 -m-12">
-          <Link href={'/'}>
-            <img src="/lucidhaus.png" alt={'LucidHaus Logo'} />
+        <button>
+          <Link href={'/'} className="w-24 h-10 absolute left-1/2 -m-5 -ml-12">
+            <Image fill src="/lucidhaus.png" alt={'lucidhaus logo'} />
           </Link>
         </button>
-        {isCatalogueArtist(signerAddress) && (
-          <div className={'absolute right-[220px]'}>
+        {signer && isCatalogueArtist(signerAddress) && (
+          <div className={'relative right-0'}>
             <Link href={'/mint'}>Mint</Link>
           </div>
         )}
@@ -44,9 +40,9 @@ const Nav = () => {
         </div>
       </div>
       <div className="fixed z-10 flex h-16 w-full items-center justify-between  border-b bg-white p-4 sm:hidden">
-        <button className="w-24">
-          <Link href={'/'}>
-            <img src="/lucidhaus.png" />
+        <button className="relative w-24">
+          <Link href={'/'} className="flex relative w-24 h-10">
+            <Image fill src="/lucidhaus.png" alt={'lucidhaus logo'} />
           </Link>
         </button>
         <div className={'ml-4'} onClick={() => setIsOpen((flag) => !flag)}>

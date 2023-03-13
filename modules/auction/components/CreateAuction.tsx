@@ -15,8 +15,11 @@ import { AddressType } from 'typings'
 import { toSeconds } from 'utils'
 import { useSigner } from 'wagmi'
 
+import { deployPendingButtonStyle } from './styles.css'
+
 const CreateAuction: React.FC<any> = ({ release }) => {
   const { data: signer } = useSigner()
+  const [isSubmitting, setIsSubmitting] = React.useState<undefined | boolean>(undefined)
 
   const handleCreateAuction = async (values: any) => {
     try {
@@ -34,10 +37,13 @@ const CreateAuction: React.FC<any> = ({ release }) => {
           Math.floor(Date.now() / 1000),
         ],
       })
+      setIsSubmitting(true)
       const { wait } = await writeContract(config)
       await wait()
+      setIsSubmitting(false)
     } catch (error) {
       console.log('error', error)
+      setIsSubmitting(undefined)
     } finally {
     }
   }
@@ -47,7 +53,7 @@ const CreateAuction: React.FC<any> = ({ release }) => {
       trigger={
         <button
           className={
-            'hover: mb-2 flex w-full justify-center bg-white py-1 px-2 text-black border rounded'
+            'hover: mb-2 flex w-full justify-center text-white bg-emerald-600 font-bold border-black py-1 px-2 text-black border-emerald-700 rounded'
           }
         >
           create auction
@@ -71,14 +77,34 @@ const CreateAuction: React.FC<any> = ({ release }) => {
           </div>
         </div>
         {(!!signer && (
-          <Form
-            fields={createAuctionFields()}
-            initialValues={createAuctionInitialValues}
-            submitCallback={handleCreateAuction}
-            buttonText={'Create Auction'}
-          >
-            <ZoraAuctionTag />
-          </Form>
+          <>
+            {isSubmitting === undefined && (
+              <Form
+                fields={createAuctionFields()}
+                initialValues={createAuctionInitialValues}
+                submitCallback={handleCreateAuction}
+                buttonText={'Create Auction'}
+              >
+                <ZoraAuctionTag />
+              </Form>
+            )}
+            {isSubmitting === false && (
+              <div
+                className={
+                  'py-4 px-8 rounded-xl flex items-center justify-center bg-white text-2xl font-bold text-emerald-600'
+                }
+              >
+                Auction Created!
+              </div>
+            )}
+            {isSubmitting === true && (
+              <div
+                className={`py-4 px-8 border rounded-xl flex items-center justify-center text-white text-2xl font-bold ${deployPendingButtonStyle}`}
+              >
+                Creating Auction
+              </div>
+            )}
+          </>
         )) || (
           <ConnectButton
             showBalance={true}

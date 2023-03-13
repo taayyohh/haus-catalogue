@@ -59,6 +59,7 @@ export const ActiveBids: React.FC<{ history: any; tokenId: number }> = ({
                   className="inline-flex w-full flex-col p-4 hover:bg-gray-50"
                   href={`${ETHERSCAN_BASE_URL}/tx/${event.tx.hash}`}
                   target={'_blank'}
+                  rel="noreferrer"
                 >
                   <div>{transformEvent(event)}</div>
                   <div className={'mt-4 text-xs'}>
