@@ -54,7 +54,7 @@ const Meta: React.FC<MetaProps> = ({
       <meta
         name="twitter:description"
         content={
-          description || 'Lucidhaus is the home of timeless, post-genre black musicians.'
+          description || 'Lucidhaus is the home of timeless, post-genre black music'
         }
       />
       <meta
