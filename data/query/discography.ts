@@ -11,7 +11,7 @@ export const discographyQuery = async () => {
       tokens(
         networks: { chain: $chain, network: ETHEREUM }
         where: { collectionAddresses: $address }
-        pagination: { limit: 50 }
+        pagination: { limit: 20 }
         sort: { sortKey: TOKEN_ID, sortDirection: DESC }
       ) {
         nodes {
