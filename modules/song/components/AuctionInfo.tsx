@@ -37,6 +37,9 @@ export const AuctionInfo: React.FC<{ auction: any; release: ReleaseProps }> = ({
     release?.owner as string
   )
 
+  const { displayName: displaySellerRecipient, ensAvatar: sellerRecipientEnsAvatar } =
+    useEnsData(auction?.sellerFundsRecipient as string)
+
   return (
     <div>
       <div className={'text-2xl font-bold'}>Auction Info</div>
@@ -60,6 +63,13 @@ export const AuctionInfo: React.FC<{ auction: any; release: ReleaseProps }> = ({
             <div className={'text-lg text-gray-500'}>Current owner</div>
             <div className={'flex cursor-pointer items-center gap-2'}>
               {displayOwner} <CopyButton text={release?.owner} />
+            </div>
+          </div>
+          <div className={'flex justify-between'}>
+            <div className={'text-lg text-gray-500'}>Sales Recipient</div>
+            <div className={'flex cursor-pointer items-center gap-2'}>
+              {displaySellerRecipient}{' '}
+              <CopyButton text={auction?.sellerFundsRecipient || ''} />
             </div>
           </div>
           <div className={'flex items-center justify-between'}>
