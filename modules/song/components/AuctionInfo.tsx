@@ -65,13 +65,15 @@ export const AuctionInfo: React.FC<{ auction: any; release: ReleaseProps }> = ({
               {displayOwner} <CopyButton text={release?.owner} />
             </div>
           </div>
-          <div className={'flex justify-between'}>
-            <div className={'text-lg text-gray-500'}>Sales Recipient</div>
-            <div className={'flex cursor-pointer items-center gap-2'}>
-              {displaySellerRecipient}{' '}
-              <CopyButton text={auction?.sellerFundsRecipient || ''} />
+          {auction?.sellerFundsRecipient !== ZERO_ADDRESS && (
+            <div className={'flex justify-between'}>
+              <div className={'text-lg text-gray-500'}>Sales Recipient</div>
+              <div className={'flex cursor-pointer items-center gap-2'}>
+                {displaySellerRecipient}{' '}
+                <CopyButton text={auction?.sellerFundsRecipient || ''} />
+              </div>
             </div>
-          </div>
+          )}
           <div className={'flex items-center justify-between'}>
             <div className={'text-lg text-gray-500'}>Royalty Recipient</div>
             <div className={'flex cursor-pointer items-center gap-2'}>
