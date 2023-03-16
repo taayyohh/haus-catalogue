@@ -61,7 +61,7 @@ const Song = ({ artist, song, slug }: any) => {
         album={release?.metadata?.albumTitle}
         track={release?.metadata?.trackNumber}
         musician={release?.metadata?.artist}
-        description={release?.metadata?.artist}
+        description={`Listen to ${release?.name} by ${release?.metadata?.artist}.`}
       />
       {release ? (
         <FadeInOut k={release?.name}>

@@ -12,11 +12,11 @@ const Layout = ({ children }: Props) => {
     initialize SWR variables
    */
   return (
-    <div className="min-h-screen">
+    <>
       <Nav />
       {children}
       <Player />
-    </div>
+    </>
   )
 }
 

@@ -2,7 +2,6 @@ import { ChevronLeftIcon } from '@radix-ui/react-icons'
 import Meta from 'components/Meta'
 import { ReleaseProps } from 'data/query/typings'
 import { AnimatePresence, motion } from 'framer-motion'
-import { useHTMLStripper } from 'hooks/useHTMLStripper'
 import { GetServerSideProps } from 'next'
 import Image from 'next/image'
 import { useRouter } from 'next/router'
@@ -11,7 +10,7 @@ import ReactMarkdown from 'react-markdown'
 import rehypeRaw from 'rehype-raw'
 import rehypeSanitize from 'rehype-sanitize'
 import remarkGfm from 'remark-gfm'
-import useSWR, { SWRConfig } from 'swr'
+import { SWRConfig } from 'swr'
 import { slugify } from 'utils'
 
 import { SongCard } from 'modules/song'
@@ -52,15 +51,13 @@ export const getServerSideProps: GetServerSideProps = async (context) => {
   }
 }
 
-const Artist = ({ artist, discography, slug }: any) => {
-  const { data: _artist } = useSWR(`${artist}`, { revalidateOnFocus: false })
+const Artist = ({ discography, slug }: any) => {
   const router = useRouter()
   const metadata =
     discography.find(
       (release: { metadata: { artist_hero_preview: any } }) =>
         release.metadata.artist_hero_preview
     )?.metadata || discography[0].metadata
-  const stripHTML = useHTMLStripper()
 
   return (
     <>
@@ -139,7 +136,6 @@ const Artist = ({ artist, discography, slug }: any) => {
           </div>
         </motion.div>
       </AnimatePresence>
-
       <Meta
         title={metadata?.artist || metadata?.metadata?.artist}
         type={'website'}
@@ -147,24 +143,18 @@ const Artist = ({ artist, discography, slug }: any) => {
           'ipfs://',
           'https://nftstorage.link/ipfs/'
         )}
-        description={stripHTML(metadata?.artistBio)}
+        description={`Explore ${metadata?.artist}'s discography onchain.`}
         slug={slug}
       />
     </>
   )
 }
 
-export default function ArtistPage({
-  fallback,
-  artist,
-  artistDiscography,
-  song,
-  slug,
-}: any) {
+export default function ArtistPage({ fallback, artistDiscography, song, slug }: any) {
   // SWR hooks inside the `SWRConfig` boundary will use those values.
   return (
     <SWRConfig value={{ fallback }}>
-      <Artist artist={artist} song={song} discography={artistDiscography} slug={slug} />
+      <Artist song={song} discography={artistDiscography} slug={slug} />
     </SWRConfig>
   )
 }
