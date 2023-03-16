@@ -7,6 +7,8 @@ import { SWRConfig } from 'swr'
 import { NowPlaying, SongGrid, randomSong } from 'modules/song'
 import { getDiscography } from 'modules/song/utils/getDiscography'
 
+import { ipfsGateway } from '../utils'
+
 export async function getServerSideProps() {
   try {
     const { fallback, discography } = await getDiscography()
@@ -39,8 +41,6 @@ const Home: React.FC<{ discography: ReleaseProps[] }> = ({ discography }) => {
   React.useEffect(() => {
     if (!discography || media) return
 
-    console.log('d', discography)
-
     const random = randomSong(discography)
     addToQueue(random, 'front')
 
@@ -52,10 +52,7 @@ const Home: React.FC<{ discography: ReleaseProps[] }> = ({ discography }) => {
       <Meta
         title={queue[currentPosition]?.track?.title}
         type={'music.song'}
-        image={queue[currentPosition]?.track?.image?.replace(
-          'ipfs://',
-          'https://nftstorage.link/ipfs/'
-        )}
+        image={ipfsGateway(queue[currentPosition]?.track?.image)}
         slug={'/'}
         track={queue[currentPosition]?.track?.trackNumber}
         musician={queue[currentPosition]?.track?.artist}
